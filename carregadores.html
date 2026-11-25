@@ -59,6 +59,7 @@ h1 span{color:var(--accent)}
 .chip small{opacity:.65}
 .ddconn{display:flex;align-items:center;gap:10px}.ddconn svg{width:30px;height:30px;flex:none;color:var(--fg)}.ddconn>span{display:grid;line-height:1.2}.ddconn small{font-size:.72rem;color:var(--muted)}
 .dd-v .ddconn svg{width:20px;height:20px}.dd-v .ddconn small{display:none}
+.sortdd{max-width:280px;margin-bottom:8px}
 .chip.conn{padding:6px 14px 6px 8px;border-radius:10px;gap:10px;text-align:left}
 .chip.conn svg{width:40px;height:40px;flex:none;color:var(--fg)}
 .chip.conn[aria-pressed="true"] svg{color:var(--surface)}
@@ -209,7 +210,7 @@ h1 span{color:var(--accent)}
     </div>
     <div class="list">
       <div class="selbar" id="selbar" hidden><strong id="selcount"></strong><a href="#trayTitle">Ver o meu percurso ↓</a><button type="button" class="btn ghost" id="clearTop">Limpar seleção</button></div>
-      <div class="chips" id="sortrow"><span class="lbl">Ordenar</span><button type="button" class="chip" id="sortPow" aria-pressed="true">Mais potência</button><button type="button" class="chip" id="sortFree" aria-pressed="false">Mais tomadas livres</button><button type="button" class="chip" id="sortPrice" aria-pressed="false" title="Custo estimado do operador para carregar 20 kWh">Mais barato</button><button type="button" class="chip" id="sortDist" aria-pressed="false" hidden>Mais perto</button></div>
+      <div class="sortdd" id="sortrow"></div>
       <div class="count" id="count" aria-live="polite"></div>
       <div id="items" class="list"></div>
     </div>
@@ -520,14 +521,15 @@ async function start(){
 }
 
 /* Ordenação e localização */
-function setSort(s){sortBy=s;for(const[id,v]of[["sortPow","pow"],["sortFree","free"],["sortPrice","price"],["sortDist","dist"]])$(id).setAttribute("aria-pressed",s===v);shown=40;renderList()}
-$("sortPow").onclick=()=>setSort("pow");$("sortPrice").onclick=()=>setSort("price");$("sortFree").onclick=()=>setSort("free");$("sortDist").onclick=()=>setSort("dist");
+const ddSort=Dropdown.create($("sortrow"),{label:"Ordenar por",multi:false,search:false,onChange:v=>setSort(v)});
+function setSort(s){sortBy=s;ddSort.setOptions([["pow","Mais potência"],["free","Mais tomadas livres"],["price","Mais barato (estimativa do operador)"],...(me?[["dist","Mais perto"]]:[])].map(([v,l])=>({value:v,label:l,selected:v===s})));shown=40;if(stations.length)renderList()}
+setSort(sortBy);
 $("q").oninput=()=>{shown=40;draw()};
 let centered=false;
 function onPos(p){
   me={lat:p.coords.latitude,lon:p.coords.longitude,acc:p.coords.accuracy};
   Route.me={lat:me.lat,lng:me.lon};
-  $("zme").classList.add("on");$("sortDist").hidden=false;
+  $("zme").classList.add("on");if(!centered)setSort(sortBy);
   $("locmsg").textContent=`Localização ativa (precisão ±${Math.round(me.acc)} m).`;
   meLayer.clearLayers();
   L.circle([me.lat,me.lon],{radius:me.acc,color:"#1a73e8",weight:1,opacity:.5,fillColor:"#1a73e8",fillOpacity:.12,interactive:false}).addTo(meLayer);

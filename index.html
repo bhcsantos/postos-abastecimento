@@ -80,6 +80,7 @@ dialog.dlg::backdrop{background:rgba(10,16,26,.55)}
 .selbar a{color:var(--accent);font-weight:600;font-size:.88rem;text-decoration:none}
 .selbar a:hover{text-decoration:underline}
 .selbar .btn{margin-left:auto;padding:5px 12px;font-size:.85rem}
+.sortdd{max-width:260px;margin-bottom:8px}
 .chip.fuel{padding:4px 12px 4px 5px;gap:7px}
 .chip.fuel[aria-pressed="true"]{background:var(--fc);border-color:var(--fc);color:#fff;box-shadow:0 0 0 2px var(--surface),0 0 0 4px var(--accent)}
 .fb{flex:none;display:block}
@@ -227,7 +228,7 @@ dialog.dlg::backdrop{background:rgba(10,16,26,.55)}
     </div>
     <div class="list">
       <div class="selbar" id="selbar" hidden><strong id="selcount"></strong><a href="#trayTitle">Ver o meu percurso ↓</a><button type="button" class="btn ghost" id="clearTop">Limpar seleção</button></div>
-      <div class="chips" id="sortrow" hidden><span class="lbl">Ordenar</span><button type="button" class="chip" id="sortPrice" aria-pressed="true">Mais barato</button><button type="button" class="chip" id="sortDist" aria-pressed="false">Mais perto</button></div>
+      <div class="sortdd" id="sortrow" hidden></div>
       <div class="count" id="count"></div>
       <div id="items" class="list"></div>
     </div>
@@ -482,8 +483,9 @@ $("zme").onclick=()=>{
   $("locmsg").textContent="A obter a sua localização…";
   watchId=navigator.geolocation.watchPosition(onPos,onPosErr,{enableHighAccuracy:true,maximumAge:30000,timeout:20000});
 };
-function setSort(s){sortBy=s;$("sortPrice").setAttribute("aria-pressed",s==="price");$("sortDist").setAttribute("aria-pressed",s==="dist");renderList()}
-$("sortPrice").onclick=()=>setSort("price");$("sortDist").onclick=()=>setSort("dist");
+const ddSort=Dropdown.create($("sortrow"),{label:"Ordenar por",multi:false,search:false,onChange:v=>setSort(v)});
+function setSort(s){sortBy=s;ddSort.setOptions([["price","Mais barato (custo real)"],["dist","Mais perto"]].map(([v,l])=>({value:v,label:l,selected:v===s})));if(data.length)renderList()}
+setSort(sortBy);
 
 Route.onchange=()=>{drawPins();renderList();setTimeout(()=>map.invalidateSize(),0)};
 let curProfile=null;
