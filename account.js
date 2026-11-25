@@ -92,13 +92,24 @@ const A = {
   switchProfile(id) { this.save({ perfilAtivo: id }, true); this.emit() },
   applyProfile() {
     const p = this.profile();
-    if (p && (p.tipo === "combustivel" || p.tipo === "hibrido") && window.Discounts && p.descontos) {
-      const cur = JSON.stringify(Discounts.prefs), nw = JSON.stringify({ programas: p.descontos.programas || [], condicoes: p.descontos.condicoes || [] });
-      if (cur !== nw) Discounts.setPrefs(p.descontos);
+    /* Cartões de desconto: são da pessoa, não do carro. Ficam iguais em todos os perfis da conta.
+       Se a conta ainda não tem cartões mas este navegador tem, os do navegador passam para a conta (nunca se apagam). */
+    if (window.Discounts && this.data && this.user) {
+      const all = (this.data.perfis || []).map(x => (x.descontos && x.descontos.programas) || []);
+      const conta = [...new Set(all.flat())];
+      const local = Discounts.prefs.programas || [];
+      if (conta.length) { if (JSON.stringify([...conta].sort()) !== JSON.stringify([...local].sort())) Discounts.setPrefs({ programas: conta }) }
+      else if (local.length) this.saveDiscounts(local);
     }
     if (typeof window.onProfile === "function") window.onProfile(p);
   },
 
+  /* Grava os cartões de desconto em todos os perfis (são da pessoa, não do carro) */
+  saveDiscounts(programas) {
+    if (!this.data) return;
+    (this.data.perfis || []).forEach(x => { x.descontos = { programas: [...programas], condicoes: [] } });
+    this.save({ perfis: this.data.perfis });
+  },
   /* Favoritos: {k:"fuel"|"ev", id, t, sub, lat, lng} */
   isFav(k, id) { return !!(this.data && (this.data.favoritos || []).some(f => f.k === k && f.id === id)) },
   toggleFav(item) {
@@ -194,7 +205,7 @@ A.ready = new Promise(res => onAuthStateChanged(auth, async u => { await A.loadU
 const hook = () => {
   if (window.Discounts && !Discounts._acct) {
     Discounts._acct = true; const orig = Discounts.save.bind(Discounts);
-    Discounts.save = () => { orig(); const p = A.profile(); if (A.user && p && (p.tipo === "combustivel" || p.tipo === "hibrido")) { p.descontos = { ...Discounts.prefs }; A.save({ perfis: A.data.perfis }) } };
+    Discounts.save = () => { orig(); if (A.user && A.data) A.saveDiscounts(Discounts.prefs.programas || []) };
   }
   if (window.Route && !Route._acct) {
     Route._acct = true; const orig = Route.save.bind(Route);

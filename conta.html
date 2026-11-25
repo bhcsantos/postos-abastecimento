@@ -246,6 +246,7 @@ function renderProfiles(){
     el.querySelector('[data-act="save"]').onclick=()=>{
       const pl=normPlate(dr.matricula); if(pl===null){el.querySelector("[data-err]").textContent="A matrícula deve ter 6 letras ou números, por exemplo AA-00-BB.";return}
       dr.matricula=pl; dr.nome=(dr.nome||"").trim()||TIPO[dr.tipo];
+      dr.descontos={programas:[...((window.Discounts&&Discounts.prefs.programas)||[])],condicoes:[]};
       const i=saved.findIndex(x=>x.id===id); const next=i>=0?saved.map(x=>x.id===id?dr:x):[...saved,dr];
       editing.delete(id); A.setProfiles(next,saved.length?d.perfilAtivo:dr.id);
     };
