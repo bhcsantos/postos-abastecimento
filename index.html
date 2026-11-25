@@ -81,6 +81,9 @@ h1 span{color:var(--accent)}
 .gm{display:flex;flex-wrap:wrap;gap:6px 16px;padding:0 12px 10px 82px;font-size:.82rem}
 .gm a{color:var(--accent);font-weight:600;text-decoration:none}
 .gm a:hover{text-decoration:underline}
+.gm a.enter{background:var(--accent);color:var(--surface);border-radius:5px;padding:3px 10px}
+.gm a.enter:hover{text-decoration:none;filter:brightness(1.1)}
+.gm{align-items:center}
 @media (max-width:480px){.gm{padding-left:12px}}
 .more{font:inherit;font-weight:600;border:1px dashed var(--line);background:transparent;color:var(--accent);border-radius:8px;padding:10px;cursor:pointer}
 .empty{color:var(--muted);padding:20px;text-align:center;border:1px dashed var(--line);border-radius:8px}
@@ -333,7 +336,7 @@ function renderList(){
       <span><h3>${esc(s.n)}</h3><span class="addr">${me?`<span class="dist">${km(distKm(me,s))}</span> · `:""}${esc(s.a)} · ${esc(s.cp)}${s.loc?" · "+esc(s.loc):""}</span></span>
       <span class="price${diff<0.0005?" best":""}">${eur(s.price)}<small>${diff<0.0005?"mais barato aqui":"+"+(diff*100).toFixed(1).replace(".",",")+" cênt."}</small></span>
       <span class="check" aria-hidden="true">✓</span></button>
-      <div class="gm"><a href="${gmView(s)}" target="_blank" rel="noopener">Ver no Google Maps ↗</a><a href="${gmGo(s)}" target="_blank" rel="noopener">Navegar até aqui ↗</a></div></div>`}).join("")
+      <div class="gm"><a class="enter" href="posto.html?id=${s.id}">Entrar no posto →</a><a href="${gmView(s)}" target="_blank" rel="noopener">Ver no Google Maps ↗</a><a href="${gmGo(s)}" target="_blank" rel="noopener">Navegar até aqui ↗</a></div></div>`}).join("")
     +(vis.length>shown?`<button type="button" class="more" id="more">Mostrar mais ${Math.min(50,vis.length-shown)} de ${vis.length-shown} postos</button>`:"")
     :`<div class="empty">${data.length?"Não há postos com estes filtros nesta zona do mapa. Afaste o mapa, retire uma marca ou mude a pesquisa.":"Sem postos para mostrar."}</div>`;
   document.querySelectorAll(".st").forEach(el=>{const s=data.find(x=>x.id===+el.dataset.id);el.onclick=()=>toggle(s)});
