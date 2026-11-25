@@ -101,6 +101,7 @@ h1 span{color:var(--accent)}
 .more{font:inherit;font-weight:600;border:1px dashed var(--line);background:transparent;color:var(--accent);border-radius:8px;padding:10px;cursor:pointer}
 .empty{color:var(--muted);padding:20px;text-align:center;border:1px dashed var(--line);border-radius:8px}
 .err{color:var(--oos)}
+.pricesum{font-size:.84rem;font-family:var(--mono);color:var(--fg)}
 .selbar{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;background:var(--surface);border:1px solid var(--sel);box-shadow:inset 4px 0 0 var(--sel);border-radius:8px;padding:8px 10px 8px 14px}
 .selbar strong{font-weight:600}
 .selbar a{color:var(--accent);font-weight:600;font-size:.88rem;text-decoration:none}
@@ -172,7 +173,7 @@ h1 span{color:var(--accent)}
     </div>
     <div class="list">
       <div class="selbar" id="selbar" hidden><strong id="selcount"></strong><a href="#trayTitle">Ver o meu percurso ↓</a><button type="button" class="btn ghost" id="clearTop">Limpar seleção</button></div>
-      <div class="chips" id="sortrow"><span class="lbl">Ordenar</span><button type="button" class="chip" id="sortPow" aria-pressed="true">Mais potência</button><button type="button" class="chip" id="sortFree" aria-pressed="false">Mais tomadas livres</button><button type="button" class="chip" id="sortDist" aria-pressed="false" hidden>Mais perto</button></div>
+      <div class="chips" id="sortrow"><span class="lbl">Ordenar</span><button type="button" class="chip" id="sortPow" aria-pressed="true">Mais potência</button><button type="button" class="chip" id="sortFree" aria-pressed="false">Mais tomadas livres</button><button type="button" class="chip" id="sortPrice" aria-pressed="false" title="Custo estimado do operador para carregar 20 kWh">Mais barato</button><button type="button" class="chip" id="sortDist" aria-pressed="false" hidden>Mais perto</button></div>
       <div class="count" id="count" aria-live="polite"></div>
       <div id="items" class="list"></div>
     </div>
@@ -241,7 +242,49 @@ const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v)
 function stationCode(evse){const m=/(?:^|-E|^E)?([A-Z]{3})-(\d{5})(?:-|$)/.exec(String(evse).replace(/^PT-[A-Z0-9]{3}-E/,""));return m?`${m[1]}-${m[2]}`:null}
 function statusKey(evse){const a=stationCode(evse),n=/(\d+)$/.exec(evse)?.[1];return a&&n!==undefined?`${a}#${Number(n)}`:evse}
 
-let stations=[], live={}, liveAt=null;
+let stations=[], live={}, liveAt=null, tariffs=null;
+/* Tarifários do operador do posto (OPC), publicados pela MOBI.E: plano "regular" (com contrato) e "adhoc" (pagamento avulso) */
+const PLAN_LABEL={regular:"Com contrato",adhoc:"Avulso"};
+function socketTariff(s,k){
+  if(!tariffs)return[];
+  const code=stationCode(k.evse), ent=tariffs.stations[code??s.id]; if(!ent)return[];
+  const n=code?/(\d+)$/.exec(k.evse)?.[1]:undefined, idx=ent[n!==undefined?String(Number(n)):k.evse]??ent["*"];
+  return idx===undefined?[]:(tariffs.sets[idx]||[]);
+}
+const eur2=v=>v.toLocaleString("pt-PT",{minimumFractionDigits:2,maximumFractionDigits:4})+" €";
+function partText(p){
+  const u=p.unit==="kWh"?"/kWh":p.unit==="min"?"/min":" por carregamento";
+  const w=p.after>0?` a partir do minuto ${p.after}`:"";
+  return eur2(p.price)+u+w;
+}
+function planText(parts,plan){
+  const ps=parts.filter(p=>p.plan===plan&&p.price>0);
+  const seen=new Set(); return ps.filter(p=>{const k=p.unit+"|"+p.price+"|"+(p.after||0);if(seen.has(k))return false;seen.add(k);return true}).map(partText).join(" + ");
+}
+/* Custo estimado do operador para carregar 20 kWh: taxa de início + kWh + minutos.
+   Tempo com uma potência realista: até 11 kW em corrente alternada (Tipo 2) e até 50 kW em rápida (CCS/CHAdeMO). */
+const EST_KWH=20;
+function socketEstimate(s,k){
+  const parts=socketTariff(s,k); if(!parts.length)return null;
+  const plan=parts.some(p=>p.plan==="regular")?"regular":"adhoc";
+  const fast=k.connector==="CCS"||k.connector==="CHAdeMO";
+  const powerKw=Math.max(1,Math.min(k.kw||3.7,fast?50:11)), mins=EST_KWH/powerKw*60;
+  let cost=0;
+  for(const p of parts.filter(p=>p.plan===plan)){
+    if(p.unit==="charge")cost+=p.price;
+    else if(p.unit==="kWh"){if(!(p.after>0))cost+=p.price*EST_KWH}
+    else if(p.unit==="min"){const from=p.after||0,to=p.until!=null?Math.min(p.until,mins):mins;cost+=p.price*Math.max(0,to-from)}
+  }
+  return {cost,plan,mins};
+}
+function bestEstimate(s,socks){let best=null;for(const k of socks){const e=socketEstimate(s,k);if(e&&(!best||e.cost<best.cost))best=e}return best}
+function kwhPrice(s,socks){const e=bestEstimate(s,socks);return e?e.cost:Infinity}
+function priceSummary(s,socks){
+  const k=[...socks].sort((a,b)=>(b.kw||0)-(a.kw||0))[0]; if(!k)return"";
+  const parts=socketTariff(s,k); if(!parts.length)return tariffs?"Preço do operador não publicado":"";
+  const r=planText(parts,"regular")||planText(parts,"adhoc"), e=bestEstimate(s,socks);
+  return (r?`Operador: ${r}`:"Sem custo do operador")+(e?` · ≈ ${e.cost.toFixed(2).replace(".",",")} € por ${EST_KWH} kWh`:"");
+}
 const f=store.get("ev-f",{conn:[],pow:0,free:false,ops:[]});
 const fConn=new Set(f.conn), fOps=new Set(f.ops); let fPow=f.pow, fFree=f.free;
 let sortBy="pow", shown=40, me=null, watchId=null, openId=null;
@@ -362,6 +405,7 @@ function renderList(){
   const b=map.getBounds();
   let list=visible.filter(s=>b.contains([s.lat,s.lng])).map(s=>{const socks=relevantSockets(s);return{s,socks,st:stationState(socks),free:socks.filter(k=>sockState(k)==="available").length,maxKw:Math.max(...socks.map(k=>k.kw||0))}});
   if(sortBy==="dist"&&me)list.sort((a,b)=>distKm(me,a.s)-distKm(me,b.s));
+  else if(sortBy==="price")list.sort((a,b)=>kwhPrice(a.s,a.socks)-kwhPrice(b.s,b.socks)||b.maxKw-a.maxKw);
   else if(sortBy==="free")list.sort((a,b)=>b.free-a.free||b.maxKw-a.maxKw);
   else list.sort((a,b)=>b.maxKw-a.maxKw||b.free-a.free);
   if(openId)list.sort((a,b)=>(b.s.id===openId)-(a.s.id===openId));
@@ -374,6 +418,7 @@ function renderList(){
         <span class="addr">${me?`<span class="dist">${km(distKm(me,s))}</span> · `:""}${esc(s.conc)} · ${esc(s.operator||"")} · <span style="font-family:var(--mono)">${esc(s.name)}</span></span></div>
         <span class="right"><span class="state s-${st}">${st==="available"?`${free} ${free===1?"livre":"livres"}`:STATE_LABEL[st]}</span><button type="button" class="check" data-sel="${esc(s.id)}" aria-pressed="${isSel(s.id)}" aria-label="${isSel(s.id)?"Retirar da seleção":"Selecionar este posto"}" title="${isSel(s.id)?"Retirar da seleção":"Selecionar"}">✓</button></span></div>
       <div class="sockets">${groupSockets(socks).map(g=>`<span class="sock"><i style="background:${g.free?STATE_COLOR.available:STATE_COLOR.inUse}"></i>${connIcon(g.c)}${g.n}× ${esc(CONN_LABEL[g.c]||g.c||"?")} <b>${kw(g.kw)}</b> · ${g.free} ${g.free===1?"livre":"livres"}</span>`).join("")}</div>
+      ${(()=>{const ps=priceSummary(s,socks);return ps?`<div class="pricesum">${esc(ps)}</div>`:""})()}
       <div class="links"><button type="button" data-open="${esc(s.id)}">${openId===s.id?"Esconder tomadas ▴":"Ver tomadas e preços ▾"}</button>
         <a href="https://www.google.com/maps/dir/?api=1&destination=${s.lat},${s.lng}&travelmode=driving" target="_blank" rel="noopener">Navegar até aqui ↗</a>
         <a href="https://www.google.com/maps/search/?api=1&query=${s.lat},${s.lng}" target="_blank" rel="noopener">Ver no Google Maps ↗</a></div>
@@ -394,10 +439,10 @@ async function loadDetail(s){
   const rows=s.sockets.map((k,i)=>{
     const d=ds[String(i+1)]||ds[String(Number(/(\d+)$/.exec(k.evse)?.[1]))]||null;
     const st=(d&&d.status)||sockState(k);
-    const pr=d&&d.prices?(Array.isArray(d.prices)?d.prices.map(p=>esc(typeof p==="object"?Object.values(p).join(" "):p)).join("; "):esc(JSON.stringify(d.prices))):"—";
+    const parts=socketTariff(s,k), pr=parts.length?["regular","adhoc"].map(pl=>{const x=planText(parts,pl);return x?`<div><small style="color:var(--muted)">${PLAN_LABEL[pl]}:</small> ${esc(x)}</div>`:""}).join("")||"Sem custo do operador":"—";
     return `<tr><td style="font-family:var(--mono)">${esc(k.evse)}</td><td><span style="display:inline-flex;align-items:center;gap:6px"><span style="display:inline-flex;width:18px;height:18px">${connIcon(k.connector)}</span>${esc(CONN_LABEL[k.connector]||k.connector||"?")}</span></td><td class="num">${kw(k.kw||0)}</td><td><span class="state s-${st}">${STATE_LABEL[st]}</span></td><td>${pr}</td></tr>`}).join("");
   box2.innerHTML=`<div class="tablewrap"><table><thead><tr><th>Tomada</th><th>Ficha</th><th>Potência</th><th>Estado</th><th>Preço</th></tr></thead><tbody>${rows}</tbody></table></div>
-    <p class="count" style="margin:6px 0 0">${det&&det.asOf?`Estado de ${hhmm(new Date(det.asOf))}.`:"Estado da última atualização geral."} A MOBI.E só publica preços de alguns operadores; quando aparece —, consulte o preço na aplicação do seu comercializador.</p>`;
+    <p class="count" style="margin:6px 0 0">${det&&det.asOf?`Estado de ${hhmm(new Date(det.asOf))}.`:"Estado da última atualização geral."} Preço do operador do posto, publicado pela MOBI.E. Ao valor final somam-se a energia do seu comercializador (CEME), a taxa da MOBI.E e os impostos; "Com contrato" aplica-se a quem carrega com cartão ou app de um comercializador e "Avulso" a quem paga sem contrato. Quando aparece —, o operador não publicou preço. A estimativa "por 20 kWh" usa até 11 kW em Tipo 2 e até 50 kW em carregamento rápido; o tempo real depende do carro.</p>`;
 }
 
 /* Seleção e percurso */
@@ -432,6 +477,7 @@ async function loadStatus(){
 }
 async function start(){
   if(!(await loadStations()))return;
+  const tp=fetch(`${PROXY}/tariffs`).then(r=>r.ok?r.json():null).catch(()=>null).then(j=>{tariffs=j;if(stations.length)draw()});
   await loadStatus();
   $("loading").hidden=true;
   buildAreas(); updateTitle(); buildFilters(); if(scope!=="pt")fitArea(); draw();
@@ -440,8 +486,8 @@ async function start(){
 }
 
 /* Ordenação e localização */
-function setSort(s){sortBy=s;for(const[id,v]of[["sortPow","pow"],["sortFree","free"],["sortDist","dist"]])$(id).setAttribute("aria-pressed",s===v);shown=40;renderList()}
-$("sortPow").onclick=()=>setSort("pow");$("sortFree").onclick=()=>setSort("free");$("sortDist").onclick=()=>setSort("dist");
+function setSort(s){sortBy=s;for(const[id,v]of[["sortPow","pow"],["sortFree","free"],["sortPrice","price"],["sortDist","dist"]])$(id).setAttribute("aria-pressed",s===v);shown=40;renderList()}
+$("sortPow").onclick=()=>setSort("pow");$("sortPrice").onclick=()=>setSort("price");$("sortFree").onclick=()=>setSort("free");$("sortDist").onclick=()=>setSort("dist");
 $("q").oninput=()=>{shown=40;draw()};
 let centered=false;
 function onPos(p){

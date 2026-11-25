@@ -1,10 +1,11 @@
 // Intermediário para os dados públicos de carregadores da MOBI.E (data.mobie.pt).
 // O servidor da MOBI.E não envia cabeçalhos CORS, por isso o site no GitHub Pages
-// não os consegue pedir diretamente. Este Worker só serve três caminhos, só responde
+// não os consegue pedir diretamente. Este Worker só serve quatro caminhos, só responde
 // ao site autorizado e guarda as respostas em cache para poupar o servidor da MOBI.E.
 //
 //   GET /stations      lista de postos e tomadas (cache 1 hora)
 //   GET /status        estado de cada tomada: available, inUse, outOfService, unknown (cache 60 s)
+//   GET /tariffs       tarifários dos operadores por posto e tomada (cache 1 hora)
 //   GET /station/:id   estado e preços de um posto (cache 60 s)
 
 const ORIGEM = "https://data.mobie.pt";
@@ -12,6 +13,7 @@ const PERMITIDOS = ["https://bhcsantos.github.io"];
 const ROTAS = [
   { re: /^\/stations$/, alvo: () => "/data/stations.json", ttl: 3600 },
   { re: /^\/status$/, alvo: () => "/api/v1/stations/status", ttl: 60 },
+  { re: /^\/tariffs$/, alvo: () => "/data/tariffs.json", ttl: 3600 },
   { re: /^\/station\/([A-Za-z0-9._-]{1,40})$/, alvo: (m) => `/api/v1/stations/${encodeURIComponent(m[1])}`, ttl: 60 },
 ];
 
