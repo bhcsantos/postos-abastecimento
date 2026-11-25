@@ -69,6 +69,15 @@ textarea{min-height:110px;resize:vertical}
 .kind.fuel{background:#1d1f23}.kind.ev{background:#1d8a4a}
 .state{font-size:.72rem;border-radius:999px;padding:1px 8px;background:var(--accent-soft);color:var(--accent)}
 a{color:var(--accent)}
+.pc{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:12px;align-items:center}
+.pcico{font-size:1.4rem}
+.pctitle{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.pctitle strong{font-size:1.05rem}
+.pcact{display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+.btn.sm{padding:5px 12px;font-size:.85rem}
+.plate{font-family:var(--mono);font-weight:500;font-size:.85rem;letter-spacing:.06em;background:#fff;color:#111;border:1px solid #9aa3ad;border-left:10px solid #1f4fa8;border-radius:4px;padding:1px 8px}
+.prof.editing{border-color:var(--accent)}
+@media (max-width:560px){.pc{grid-template-columns:auto minmax(0,1fr)}.pcact{grid-column:1/-1;justify-content:flex-start}}
 .picker{border:1px dashed var(--accent);border-radius:8px;padding:10px;display:grid;gap:8px;background:var(--surface)}
 .picker .grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
 @media (max-width:640px){.picker .grid4{grid-template-columns:1fr 1fr}}
@@ -179,46 +188,80 @@ $("forgotBtn").onclick=async()=>{const em=$("fEmail").value.trim();if(!em){setMs
 /* ---------- Perfis ---------- */
 const ICON={combustivel:"⛽",eletrico:"⚡",hibrido:"⛽⚡"};
 const TIPO={combustivel:"Combustível",eletrico:"Elétrico",hibrido:"Híbrido plug-in"};
-function profileCard(p,active){
+const editing=new Map(); // id do perfil -> rascunho em edição (só grava ao carregar em "Gravar")
+const clone=o=>JSON.parse(JSON.stringify(o));
+const fuelName=id=>(FUELS.find(f=>f[0]==id)||[,""])[1];
+const nf=v=>String(v).replace(".",",");
+/* Matrícula portuguesa: 3 pares (AA-00-AA, 00-AA-00, 00-00-AA…); aceita com ou sem traços */
+function normPlate(v){const s=String(v||"").toUpperCase().replace(/[^A-Z0-9]/g,"");if(!s)return"";return /^[A-Z0-9]{6}$/.test(s)?`${s.slice(0,2)}-${s.slice(2,4)}-${s.slice(4)}`:null}
+function summary(p){
+  return [p.tipo!=="eletrico"&&p.combustivel?fuelName(p.combustivel):"",p.deposito?`depósito ${p.deposito} L`:"",p.bateria?`bateria ${nf(p.bateria)} kWh`:"",
+    p.tipo!=="combustivel"&&(p.fichas||[]).length?`fichas ${(p.fichas||[]).map(f=>f==="Mennekes"?"Tipo 2":f).join(", ")}`:"",
+    p.consumo?`${nf(p.consumo)} ${p.tipo==="eletrico"?"kWh":"L"}/100 km`:"",p.consumoEletrico?`${nf(p.consumoEletrico)} kWh/100 km`:""].filter(Boolean).join(" · ")||"Ainda sem dados do carro — carregue em Editar";
+}
+function compactCard(p,active){
+  return `<div class="prof pc${active?" active":""}" data-id="${esc(p.id)}">
+    <span class="pcico" aria-hidden="true">${ICON[p.tipo]||""}</span>
+    <div class="pctxt"><div class="pctitle"><strong>${esc(p.nome)}</strong>${p.matricula?`<span class="plate">${esc(p.matricula)}</span>`:""}</div>
+      <div class="muted">${TIPO[p.tipo]||""}${p.carro?` · ${esc(p.carro.rotulo.replace(p.nome,"").replace(/^ /,""))}`:""}</div>
+      <div class="muted">${esc(summary(p))}</div></div>
+    <div class="pcact">${active?`<span class="pill on">Perfil ativo</span>`:`<button type="button" class="btn ghost sm" data-act="use">Usar</button>`}<button type="button" class="btn ghost sm" data-act="edit">Editar</button></div>
+  </div>`;
+}
+function editCard(p,active,isNew){
   const fuel=p.tipo==="combustivel"||p.tipo==="hibrido", ev=p.tipo==="eletrico"||p.tipo==="hibrido";
   const num=(k,l,min,max,step,ph)=>`<label class="f">${l}<input type="number" min="${min}" max="${max}" step="${step}" data-k="${k}" value="${p[k]??""}" placeholder="${ph}"></label>`;
-  return `<div class="prof${active?" active":""}" data-id="${esc(p.id)}">
-    <header><strong>${ICON[p.tipo]||""} ${esc(p.nome)}</strong><span class="pill">${TIPO[p.tipo]||""}</span>${active?`<span class="pill on">Perfil ativo</span>`:`<button type="button" class="btn ghost" data-act="use">Usar este perfil</button>`}</header>
-    <div class="carinfo">${p.carro?`Carro: <strong>${esc(p.carro.rotulo)}</strong> · dados do catálogo${p.carro.fonte?` (<a href="${esc(p.carro.fonte)}" target="_blank" rel="noopener">fonte</a>)`:""}. Pode corrigir os valores abaixo.`:"Escolha o seu carro para preencher os dados automaticamente."} <button type="button" class="btn ghost" data-act="pick" style="padding:4px 10px;font-size:.85rem">${p.carro?"Mudar de carro":"Escolher o meu carro"}</button></div>
+  return `<div class="prof editing${active?" active":""}" data-id="${esc(p.id)}">
+    <header><strong>${ICON[p.tipo]||""} ${isNew?"Novo perfil":"Editar perfil"}</strong><span class="pill">${TIPO[p.tipo]||""}</span></header>
+    <div class="carinfo">${p.carro?`Carro: <strong>${esc(p.carro.rotulo)}</strong> · dados do catálogo${p.carro.fonte?` (<a href="${esc(p.carro.fonte)}" target="_blank" rel="noopener">fonte</a>)`:""}. Pode corrigir os valores abaixo.`:"Escolha o seu carro para preencher os dados automaticamente."} <button type="button" class="btn ghost sm" data-act="pick">${p.carro?"Mudar de carro":"Escolher o meu carro"}</button></div>
     <div class="picker" data-picker hidden></div>
     <div class="grid2">
-      <label class="f">Nome do perfil<input type="text" data-k="nome" value="${esc(p.nome)}" maxlength="40"></label>
+      <label class="f">Nome<input type="text" data-k="nome" value="${esc(p.nome)}" maxlength="40" placeholder="ex.: BMW 530e"></label>
+      <label class="f">Matrícula (opcional)<input type="text" data-k="matricula" value="${esc(p.matricula||"")}" maxlength="10" placeholder="ex.: AA-00-BB" autocapitalize="characters" style="text-transform:uppercase"></label>
       ${fuel?`<label class="f">Combustível<select data-k="combustivel">${FUELS.filter(([v])=>p.tipo!=="hibrido"||v!==1120).map(([v,l])=>`<option value="${v}" ${p.combustivel==v?"selected":""}>${l}</option>`).join("")}</select></label>`:""}
       ${fuel?num("deposito","Depósito (litros)",10,150,1,"ex.: 45")+num("consumo","Consumo a combustível (L/100 km)",1,30,0.1,p.tipo==="hibrido"?"ex.: 5,5":"ex.: 6,5"):""}
       ${ev?`<label class="f">Potência mínima do carregador<select data-k="potenciaMin">${[[0,"Qualquer"],[11,"≥ 11 kW"],[22,"≥ 22 kW"],[50,"≥ 50 kW"],[150,"≥ 150 kW"]].map(([v,l])=>`<option value="${v}" ${(p.potenciaMin||0)==v?"selected":""}>${l}</option>`).join("")}</select></label>`:""}
       ${ev?num("bateria","Bateria (kWh)",3,200,0.1,p.tipo==="hibrido"?"ex.: 13":"ex.: 60")+num(p.tipo==="hibrido"?"consumoEletrico":"consumo","Consumo elétrico (kWh/100 km)",5,40,0.1,"ex.: 17"):""}
     </div>
     ${ev?`<div><div class="muted" style="margin-bottom:4px">Fichas do carro${p.tipo==="hibrido"?" (a maioria dos híbridos plug-in só tem Tipo 2)":""}</div><div class="chk">${CONNS.map(([v,l])=>`<label><input type="checkbox" data-conn="${v}" ${(p.fichas||[]).includes(v)?"checked":""}>${l}</label>`).join("")}</div></div>`:""}
-    ${fuel?`<div class="muted">Cartões de desconto: ${(p.descontos?.programas||[]).length?`${p.descontos.programas.length} escolhido(s)`:"nenhum"} — escolha-os com o botão "Os meus cartões de desconto" na página dos combustíveis, com este perfil ativo.</div>`:""}
-    <div class="row"><button type="button" class="btn ghost" data-act="del">Apagar perfil</button></div>
+    <div class="msg err" data-err></div>
+    <div class="row"><button type="button" class="btn" data-act="save">Gravar</button><button type="button" class="btn ghost" data-act="cancel">Cancelar</button>${isNew?"":`<button type="button" class="btn danger" data-act="del" style="margin-left:auto">Apagar perfil</button>`}</div>
   </div>`;
 }
 function renderProfiles(){
   const d=A.data; if(!d)return;
-  $("profiles").innerHTML=(d.perfis||[]).map(p=>profileCard(p,p.id===d.perfilAtivo)).join("")||`<p class="muted">Ainda não tem perfis.</p>`;
+  const saved=d.perfis||[], drafts=[...editing.values()].filter(x=>!saved.some(s=>s.id===x.id));
+  const list=[...saved,...drafts];
+  $("profiles").innerHTML=list.map(p=>editing.has(p.id)?editCard(editing.get(p.id),p.id===d.perfilAtivo,!saved.some(s=>s.id===p.id)):compactCard(p,p.id===d.perfilAtivo)).join("")||`<p class="muted">Ainda não tem perfis.</p>`;
   $("profiles").querySelectorAll(".prof").forEach(el=>{
-    const id=el.dataset.id, p=d.perfis.find(x=>x.id===id);
-    el.querySelectorAll("[data-k]").forEach(inp=>inp.onchange=()=>{const k=inp.dataset.k;let v=inp.value;if(inp.type==="number"||k==="combustivel"||k==="potenciaMin")v=v===""?null:Number(String(v).replace(",","."));p[k]=v;A.setProfiles(d.perfis)});
-    el.querySelectorAll("[data-conn]").forEach(c=>c.onchange=()=>{p.fichas=[...el.querySelectorAll("[data-conn]:checked")].map(x=>x.dataset.conn);A.setProfiles(d.perfis)});
-    el.querySelector('[data-act="use"]')?.addEventListener("click",()=>{A.switchProfile(id)});
-    el.querySelector('[data-act="pick"]').onclick=()=>openPicker(el.querySelector("[data-picker]"),p,d);
-    el.querySelector('[data-act="del"]').onclick=()=>{if(d.perfis.length<=1){$("dataErr").textContent="Precisa de ter pelo menos um perfil.";return}const left=d.perfis.filter(x=>x.id!==id);A.setProfiles(left,d.perfilAtivo===id?left[0].id:d.perfilAtivo)};
+    const id=el.dataset.id;
+    el.querySelector('[data-act="use"]')?.addEventListener("click",()=>A.switchProfile(id));
+    el.querySelector('[data-act="edit"]')?.addEventListener("click",()=>{editing.set(id,clone(saved.find(x=>x.id===id)));renderProfiles()});
+    if(!editing.has(id))return;
+    const dr=editing.get(id);
+    el.querySelectorAll("[data-k]").forEach(inp=>inp.oninput=inp.onchange=()=>{const k=inp.dataset.k;let v=inp.value;if(inp.type==="number"||k==="combustivel"||k==="potenciaMin")v=v===""?null:Number(String(v).replace(",","."));dr[k]=v});
+    el.querySelectorAll("[data-conn]").forEach(c=>c.onchange=()=>{dr.fichas=[...el.querySelectorAll("[data-conn]:checked")].map(x=>x.dataset.conn)});
+    el.querySelector('[data-act="pick"]').onclick=()=>openPicker(el.querySelector("[data-picker]"),dr);
+    el.querySelector('[data-act="cancel"]').onclick=()=>{editing.delete(id);renderProfiles()};
+    el.querySelector('[data-act="save"]').onclick=()=>{
+      const pl=normPlate(dr.matricula); if(pl===null){el.querySelector("[data-err]").textContent="A matrícula deve ter 6 letras ou números, por exemplo AA-00-BB.";return}
+      dr.matricula=pl; dr.nome=(dr.nome||"").trim()||TIPO[dr.tipo];
+      const i=saved.findIndex(x=>x.id===id); const next=i>=0?saved.map(x=>x.id===id?dr:x):[...saved,dr];
+      editing.delete(id); A.setProfiles(next,saved.length?d.perfilAtivo:dr.id);
+    };
+    el.querySelector('[data-act="del"]')?.addEventListener("click",()=>{if(saved.length<=1){el.querySelector("[data-err]").textContent="Precisa de ter pelo menos um perfil.";return}const left=saved.filter(x=>x.id!==id);editing.delete(id);A.setProfiles(left,d.perfilAtivo===id?left[0].id:d.perfilAtivo)});
   });
 }
 const newId=()=>Math.random().toString(36).slice(2,9);
-$("addFuel").onclick=()=>{const p={id:newId(),nome:"Carro a combustível",tipo:"combustivel",combustivel:2101,deposito:null,consumo:null,descontos:{programas:[],condicoes:[]}};A.setProfiles([...A.data.perfis,p])};
-$("addHyb").onclick=()=>{const p={id:newId(),nome:"Híbrido plug-in",tipo:"hibrido",combustivel:3201,deposito:null,consumo:null,descontos:{programas:[],condicoes:[]},fichas:["Mennekes"],potenciaMin:0,bateria:null,consumoEletrico:null};A.setProfiles([...A.data.perfis,p])};
-$("addEv").onclick=()=>{const p={id:newId(),nome:"Carro elétrico",tipo:"eletrico",fichas:["Mennekes","CCS"],potenciaMin:0,bateria:null,consumo:null};A.setProfiles([...A.data.perfis,p])};
+const startNew=p=>{editing.set(p.id,p);renderProfiles();document.querySelector(`.prof[data-id="${p.id}"]`)?.scrollIntoView({behavior:"smooth",block:"center"})};
+$("addFuel").onclick=()=>startNew({id:newId(),nome:"",matricula:"",tipo:"combustivel",combustivel:2101,deposito:null,consumo:null,descontos:{programas:[],condicoes:[]}});
+$("addHyb").onclick=()=>startNew({id:newId(),nome:"",matricula:"",tipo:"hibrido",combustivel:3201,deposito:null,consumo:null,descontos:{programas:[],condicoes:[]},fichas:["Mennekes"],potenciaMin:0,bateria:null,consumoEletrico:null});
+$("addEv").onclick=()=>startNew({id:newId(),nome:"",matricula:"",tipo:"eletrico",fichas:["Mennekes","CCS"],potenciaMin:0,bateria:null,consumo:null});
 
 /* ---------- Catálogo de carros (OpenEV Data para elétricos + versões acrescentadas à mão) ---------- */
 let CARS=null;
 async function cars(){if(!CARS){try{CARS=await fetch("data/carros.json").then(r=>r.json())}catch(e){CARS={versoes:[]}}}return CARS}
-async function openPicker(box,p,d){
+async function openPicker(box,p){
   if(!box.hidden){box.hidden=true;return}
   box.hidden=false; box.innerHTML=`<span class="muted">A carregar o catálogo…</span>`;
   const all=(await cars()).versoes.filter(v=>v.tipo===p.tipo);
@@ -247,8 +290,8 @@ async function openPicker(box,p,d){
   box.querySelector("[data-cancel]").onclick=()=>{box.hidden=true};
   box.querySelector("[data-use]").onclick=()=>{
     const c=chosen; if(!c)return;
-    const defaults=["O meu carro","O meu elétrico","Carro a combustível","Carro elétrico","Híbrido plug-in"];
-    if(defaults.includes(p.nome))p.nome=`${c.marca} ${c.modelo}`.slice(0,40);
+    const defaults=["","O meu carro","O meu elétrico","Carro a combustível","Carro elétrico","Híbrido plug-in"];
+    if(defaults.includes(p.nome||""))p.nome=`${c.marca} ${c.modelo}`.slice(0,40);
     if(c.deposito!=null)p.deposito=c.deposito;
     if(c.combustivel!=null)p.combustivel=c.combustivel;
     if(c.consumo!=null)p.consumo=c.consumo;
@@ -256,7 +299,7 @@ async function openPicker(box,p,d){
     if(c.fichas&&c.fichas.length&&p.tipo!=="combustivel")p.fichas=[...c.fichas];
     if(c.consumoEletrico!=null){if(p.tipo==="hibrido")p.consumoEletrico=c.consumoEletrico;else p.consumo=c.consumoEletrico}
     p.carro={id:c.id,rotulo:`${c.marca} ${c.modelo} ${c.ano} · ${c.versao}`,fonte:(c.fontes||[])[0]||null};
-    A.setProfiles(d.perfis);
+    renderProfiles(); // fica no rascunho; grava com "Gravar"
   };
   bindAsk(box,p);
 }
