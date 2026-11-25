@@ -101,6 +101,28 @@ h1 span{color:var(--accent)}
 .more{font:inherit;font-weight:600;border:1px dashed var(--line);background:transparent;color:var(--accent);border-radius:8px;padding:10px;cursor:pointer}
 .empty{color:var(--muted);padding:20px;text-align:center;border:1px dashed var(--line);border-radius:8px}
 .err{color:var(--oos)}
+.selbar{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;background:var(--surface);border:1px solid var(--sel);box-shadow:inset 4px 0 0 var(--sel);border-radius:8px;padding:8px 10px 8px 14px}
+.selbar strong{font-weight:600}
+.selbar a{color:var(--accent);font-weight:600;font-size:.88rem;text-decoration:none}
+.selbar a:hover{text-decoration:underline}
+.selbar .btn{margin-left:auto;padding:5px 12px;font-size:.85rem}
+.item.on{border-color:var(--sel);box-shadow:inset 3px 0 0 var(--sel)}
+.right{display:flex;align-items:center;gap:8px}
+.check{width:26px;height:26px;border:2px solid var(--line);border-radius:6px;display:grid;place-items:center;font-size:15px;color:transparent;background:var(--surface);cursor:pointer;padding:0;flex:none}
+.check:hover{border-color:var(--sel)}
+.item.on .check{background:var(--sel);border-color:var(--sel);color:#1a1300}
+.tray{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:14px;display:grid;gap:10px}
+.tray h2{font-family:var(--display);font-size:1.4rem;margin:0}
+.traydesc{margin:0;color:var(--muted);font-size:.88rem;max-width:70ch}
+.tray ol{margin:0;padding-left:22px;display:grid;gap:4px}
+.tray li{font-size:.92rem}
+.tray li a{color:var(--accent);font-size:.8rem}
+.tray li button{font:inherit;font-size:.78rem;background:none;border:none;color:var(--muted);cursor:pointer;text-decoration:underline}
+.actions{display:flex;flex-wrap:wrap;gap:8px}
+.btn{font:inherit;font-weight:600;font-size:.9rem;border-radius:6px;padding:8px 14px;cursor:pointer;border:1px solid var(--accent);background:var(--accent);color:var(--surface);text-decoration:none;display:inline-block}
+.btn.ghost{background:transparent;color:var(--accent)}
+.btn[aria-disabled="true"],.btn:disabled{opacity:.4;pointer-events:none}
+.toast{font-size:.82rem;color:var(--accent);min-height:1.2em}
 </style>
 </head>
 <body>
@@ -130,15 +152,28 @@ h1 span{color:var(--accent)}
     <div class="mapbox">
       <div id="map" role="region" aria-label="Mapa dos carregadores"></div>
       <div class="loading" id="loading">A carregar carregadores…</div>
-      <div class="legend"><span><i style="background:var(--free)"></i>Com tomada livre</span><span><i style="background:var(--busy)"></i>Todas ocupadas</span><span><i style="background:var(--oos)"></i>Fora de serviço</span><span><i style="background:var(--unk)"></i>Estado desconhecido</span></div>
+      <div class="legend"><span><i style="background:transparent;box-shadow:0 0 0 3px var(--sel)"></i>Selecionado</span><span><i style="background:var(--free)"></i>Com tomada livre</span><span><i style="background:var(--busy)"></i>Todas ocupadas</span><span><i style="background:var(--oos)"></i>Fora de serviço</span><span><i style="background:var(--unk)"></i>Estado desconhecido</span></div>
       <div class="locmsg" id="locmsg" aria-live="polite"></div>
     </div>
     <div class="list">
+      <div class="selbar" id="selbar" hidden><strong id="selcount"></strong><a href="#trayTitle">Ver o meu percurso ↓</a><button type="button" class="btn ghost" id="clearTop">Limpar seleção</button></div>
       <div class="chips" id="sortrow"><span class="lbl">Ordenar</span><button type="button" class="chip" id="sortPow" aria-pressed="true">Mais potência</button><button type="button" class="chip" id="sortFree" aria-pressed="false">Mais tomadas livres</button><button type="button" class="chip" id="sortDist" aria-pressed="false" hidden>Mais perto</button></div>
       <div class="count" id="count" aria-live="polite"></div>
       <div id="items" class="list"></div>
     </div>
   </div>
+
+  <section class="tray" aria-live="polite">
+    <h2 id="trayTitle">O meu percurso</h2>
+    <p class="traydesc">Os postos que selecionar ficam aqui, pela ordem em que os escolheu. Use <strong>Abrir percurso no Google Maps</strong> para ser guiado por todos, um a seguir ao outro, ou <strong>Copiar lista</strong> para a enviar a alguém.</p>
+    <div id="trayBody"></div>
+    <div class="actions">
+      <a id="route" class="btn" href="#" target="_blank" rel="noopener">Abrir percurso no Google Maps</a>
+      <button id="copy" class="btn ghost" type="button">Copiar lista</button>
+      <button id="clear" class="btn ghost" type="button">Limpar seleção</button>
+    </div>
+    <div class="toast" id="toast"></div>
+  </section>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
@@ -194,6 +229,8 @@ let stations=[], live={}, liveAt=null;
 const f=store.get("ev-f",{conn:[],pow:0,free:false,ops:[]});
 const fConn=new Set(f.conn), fOps=new Set(f.ops); let fPow=f.pow, fFree=f.free;
 let sortBy="pow", shown=40, me=null, watchId=null, openId=null;
+let selected=store.get("ev-sel",[]); // {id,name,address,conc,operator,lat,lng}
+const isSel=id=>selected.some(x=>x.id===id);
 let scope=store.get("ev-scope","pt"); if(!SCOPES.some(x=>x[0]===scope))scope="pt";
 const activeConc=new Set(scope==="pt"?[]:store.get("ev-conc",[]));
 const inArea=s=>(scope==="pt"||s.dist===scope)&&(!activeConc.size||activeConc.has(s.conc));
@@ -223,7 +260,7 @@ const cluster=L.markerClusterGroup({
     return L.divIcon({html:`<div style="background:${bg}" title="${n} postos · ${free} com tomada livre">${n}</div>`,className:"cl",iconSize:[size,size]});
   }
 }).addTo(map);
-const meLayer=L.layerGroup().addTo(map);
+const selLayer=L.layerGroup().addTo(map), meLayer=L.layerGroup().addTo(map);
 const LocCtl=L.Control.extend({options:{position:"topleft"},onAdd(){
   const d=L.DomUtil.create("div","leaflet-bar");
   d.innerHTML=`<button type="button" class="locbtn" id="zme" title="A minha localização" aria-label="A minha localização"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="4" fill="currentColor"/><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 1v4M12 19v4M1 12h4M19 12h4" stroke="currentColor" stroke-width="2"/></svg></button>`;
@@ -283,13 +320,16 @@ function matches(s){
 let visible=[];
 function draw(){
   visible=stations.filter(matches);
-  cluster.clearLayers();
-  const ms=visible.map(s=>{
+  cluster.clearLayers(); selLayer.clearLayers();
+  const ms=[];
+  visible.forEach(s=>{
     const socks=relevantSockets(s), st=stationState(socks), free=socks.filter(k=>sockState(k)==="available").length;
     const maxKw=Math.max(...socks.map(k=>k.kw||0));
-    return L.circleMarker([s.lat,s.lng],{radius:7,color:"#fff",weight:1.5,fillColor:STATE_COLOR[st],fillOpacity:1,st})
+    const sel=isSel(s.id);
+    const m=L.circleMarker([s.lat,s.lng],{radius:sel?9:7,color:sel?"#e8a317":"#fff",weight:sel?4:1.5,fillColor:STATE_COLOR[st],fillOpacity:1,st})
       .bindTooltip(`<strong>${esc(s.operator||"")}</strong> · ${esc(s.address||s.name)}<br>${free} de ${socks.length} ${socks.length===1?"tomada livre":"tomadas livres"} · até ${kw(maxKw)}`,{direction:"top",offset:[0,-6]})
-      .on("click",()=>{openId=s.id;renderList();setTimeout(()=>document.querySelector(`[data-sid="${CSS.escape(s.id)}"]`)?.scrollIntoView({behavior:"smooth",block:"center"}),50)});
+      .on("click",()=>toggleSel(s,true));
+    if(sel)m.addTo(selLayer);else ms.push(m);
   });
   cluster.addLayers(ms);
   renderList();
@@ -309,14 +349,15 @@ function renderList(){
   if(sortBy==="dist"&&me)list.sort((a,b)=>distKm(me,a.s)-distKm(me,b.s));
   else if(sortBy==="free")list.sort((a,b)=>b.free-a.free||b.maxKw-a.maxKw);
   else list.sort((a,b)=>b.maxKw-a.maxKw||b.free-a.free);
-  if(openId)list.sort((a,b)=>(b.s.id===openId)-(a.s.id===openId)); // posto escolhido no mapa vai para o topo
+  if(openId)list.sort((a,b)=>(b.s.id===openId)-(a.s.id===openId));
+  list.sort((a,b)=>isSel(b.s.id)-isSel(a.s.id)); // selecionados no topo, pela ordem atual
   const freeSt=list.filter(x=>x.free>0).length;
   $("count").textContent=list.length?`${list.length} ${list.length===1?"posto":"postos"} nesta zona do mapa, ${freeSt} com tomada livre agora (${visible.length} no total com estes filtros)`:"";
   $("items").innerHTML=list.length?list.slice(0,shown).map(({s,socks,st,free})=>`
-    <div class="item" data-sid="${esc(s.id)}">
+    <div class="item${isSel(s.id)?" on":""}" data-sid="${esc(s.id)}">
       <div class="top"><div><h3>${esc(s.address||s.name)}</h3>
         <span class="addr">${me?`<span class="dist">${km(distKm(me,s))}</span> · `:""}${esc(s.conc)} · ${esc(s.operator||"")} · <span style="font-family:var(--mono)">${esc(s.name)}</span></span></div>
-        <span class="state s-${st}">${st==="available"?`${free} ${free===1?"livre":"livres"}`:STATE_LABEL[st]}</span></div>
+        <span class="right"><span class="state s-${st}">${st==="available"?`${free} ${free===1?"livre":"livres"}`:STATE_LABEL[st]}</span><button type="button" class="check" data-sel="${esc(s.id)}" aria-pressed="${isSel(s.id)}" aria-label="${isSel(s.id)?"Retirar da seleção":"Selecionar este posto"}" title="${isSel(s.id)?"Retirar da seleção":"Selecionar"}">✓</button></span></div>
       <div class="sockets">${groupSockets(socks).map(g=>`<span class="sock"><i style="background:${g.free?STATE_COLOR.available:STATE_COLOR.inUse}"></i>${connIcon(g.c)}${g.n}× ${esc(CONN_LABEL[g.c]||g.c||"?")} <b>${kw(g.kw)}</b> · ${g.free} ${g.free===1?"livre":"livres"}</span>`).join("")}</div>
       <div class="links"><button type="button" data-open="${esc(s.id)}">${openId===s.id?"Esconder tomadas ▴":"Ver tomadas e preços ▾"}</button>
         <a href="https://www.google.com/maps/dir/?api=1&destination=${s.lat},${s.lng}&travelmode=driving" target="_blank" rel="noopener">Navegar até aqui ↗</a>
@@ -325,6 +366,8 @@ function renderList(){
     </div>`).join("")+(list.length>shown?`<button type="button" class="more" id="more">Mostrar mais ${Math.min(40,list.length-shown)} de ${list.length-shown} postos</button>`:"")
     :`<div class="empty">${stations.length?"Não há carregadores com estes filtros nesta zona do mapa. Afaste o mapa ou retire um filtro.":"Sem carregadores para mostrar."}</div>`;
   document.querySelectorAll("[data-open]").forEach(b=>b.onclick=()=>{openId=openId===b.dataset.open?null:b.dataset.open;renderList()});
+  document.querySelectorAll("[data-sel]").forEach(b=>b.onclick=()=>toggleSel(stations.find(x=>x.id===b.dataset.sel),false));
+  renderTray();
   if($("more"))$("more").onclick=()=>{shown+=40;renderList()};
   if(openId&&$("det-"+openId))loadDetail(stations.find(x=>x.id===openId));
 }
@@ -341,6 +384,40 @@ async function loadDetail(s){
   box2.innerHTML=`<div class="tablewrap"><table><thead><tr><th>Tomada</th><th>Ficha</th><th>Potência</th><th>Estado</th><th>Preço</th></tr></thead><tbody>${rows}</tbody></table></div>
     <p class="count" style="margin:6px 0 0">${det&&det.asOf?`Estado de ${hhmm(new Date(det.asOf))}.`:"Estado da última atualização geral."} A MOBI.E só publica preços de alguns operadores; quando aparece —, consulte o preço na aplicação do seu comercializador.</p>`;
 }
+
+/* Seleção e percurso */
+function toggleSel(s,fromMap){
+  if(!s)return;
+  if(isSel(s.id))selected=selected.filter(x=>x.id!==s.id);
+  else selected=[...selected,{id:s.id,name:s.name,address:s.address,conc:s.conc,operator:s.operator,lat:s.lat,lng:s.lng}];
+  store.set("ev-sel",selected);
+  if(fromMap&&isSel(s.id))openId=s.id;
+  draw();
+  if(fromMap&&isSel(s.id))document.querySelector(`[data-sid="${CSS.escape(s.id)}"]`)?.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"nearest"});
+}
+function renderTray(){
+  $("trayTitle").textContent=selected.length?`O meu percurso (${selected.length} ${selected.length===1?"paragem":"paragens"})`:"O meu percurso";
+  $("selbar").hidden=!selected.length; $("selcount").textContent=`${selected.length} ${selected.length===1?"posto selecionado":"postos selecionados"}`;
+  $("trayBody").innerHTML=selected.length?`<ol>${selected.map(s=>{
+      const live=stations.find(x=>x.id===s.id), socks=live?live.sockets:[], free=socks.filter(k=>sockState(k)==="available").length;
+      return `<li><strong>${esc(s.address||s.name)}</strong> · ${esc(s.conc||"")} · ${esc(s.operator||"")}${live?` · <span class="mono" style="font-family:var(--mono);font-size:.8rem">${free} de ${socks.length} livres</span>`:""} <a href="https://www.google.com/maps/search/?api=1&query=${s.lat},${s.lng}" target="_blank" rel="noopener">Google Maps ↗</a> <button type="button" data-rm="${esc(s.id)}">remover</button></li>`}).join("")}</ol>`
+    :`<p class="count" style="margin:0">Ainda não selecionou nenhum posto. Toque num posto no mapa ou na caixa ✓ da lista.</p>`;
+  document.querySelectorAll("[data-rm]").forEach(b=>b.onclick=()=>{selected=selected.filter(x=>x.id!==b.dataset.rm);store.set("ev-sel",selected);draw()});
+  const r=$("route");
+  if(selected.length){
+    const c=s=>`${s.lat},${s.lng}`, dest=selected[selected.length-1], wp=selected.slice(0,-1).map(c).join("|");
+    r.href=`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(c(dest))}${wp?"&waypoints="+encodeURIComponent(wp):""}&travelmode=driving`;
+    r.removeAttribute("aria-disabled");
+  }else{r.href="#";r.setAttribute("aria-disabled","true")}
+  $("copy").disabled=$("clear").disabled=!selected.length;
+}
+$("clearTop").onclick=()=>$("clear").click();
+$("clear").onclick=()=>{selected=[];store.set("ev-sel",selected);draw()};
+$("copy").onclick=()=>{
+  const txt=selected.map((s,i)=>`${i+1}. ${s.address||s.name}, ${s.conc||""} (${s.operator||""}) | ${s.name} | ${s.lat}, ${s.lng}`).join("\n");
+  const fail=()=>{$("toast").textContent="Não foi possível copiar. Selecione a lista acima e copie manualmente."};
+  try{navigator.clipboard.writeText(txt).then(()=>{$("toast").textContent="Lista copiada."},fail)}catch(e){fail()}
+};
 
 /* Dados */
 async function loadStations(){
