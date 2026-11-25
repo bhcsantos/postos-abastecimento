@@ -23,7 +23,7 @@ Site para encontrar e comparar postos de abastecimento em Portugal continental, 
 | `index.html` | Página principal: mapa, filtros, lista e seleção. Inclui uma cópia dos preços do concelho do Porto (25/11/2026), usada só quando a DGEG não responde. |
 | `posto.html` | Ficha de um posto, aberta como `posto.html?id=<número do posto na DGEG>`. |
 | `carregadores.html` | Carregadores elétricos da MOBI.E, com estado em direto. |
-| `worker/mobie-proxy.js` | Intermediário (Cloudflare Worker) publicado em `https://mobie-proxy.bhcsantos.workers.dev`. Não é publicado pelo GitHub Pages. |
+| `worker/mobie-proxy.js` | Código do intermediário (Cloudflare Worker) que corre em `https://mobie-proxy.bhcsantos.workers.dev`. Está no repositório para consulta; não corre no GitHub Pages. |
 | `.nojekyll` | Faz o GitHub Pages publicar os ficheiros tal como estão. |
 
 Não há passo de compilação: são páginas HTML com JavaScript, publicadas pelo GitHub Pages a partir do ramo `main`. Qualquer alteração enviada para `main` fica online em 1 a 2 minutos.
