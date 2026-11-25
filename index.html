@@ -444,7 +444,7 @@ function renderList(){
   if(me&&sortBy==="dist")vis.sort((a,b)=>distKm(me,a)-distKm(me,b));
   vis.sort((a,b)=>isSel(b.id)-isSel(a.id)); // selecionados primeiro, pela ordem atual
   const name=FUEL_NAME[fuelId];
-  $("count").textContent=vis.length?`${vis.length} ${vis.length===1?"posto":"postos"} com ${name} nesta zona do mapa (${all.length} no total), ${me&&sortBy==="dist"?"do mais perto para o mais longe":Discounts.active()?"do mais barato para o mais caro, já com os seus descontos":"do mais barato para o mais caro"}`:"";
+  $("count").textContent=vis.length?`${vis.length} ${vis.length===1?"posto":"postos"} com ${name} nesta zona do mapa (${all.length} no total), ${me&&sortBy==="dist"?"do mais perto para o mais longe":Discounts.active()?"ordenados pelo custo real (com os seus descontos), do mais baixo para o mais alto":"do mais barato para o mais caro"}`:"";
   $("items").innerHTML=vis.length?vis.slice(0,shown).map(s=>{
     const dc=D.get(s.id), diff=dc.efetivo-best, on=isSel(s.id), has=dc.regras.length>0;
     return `<div class="item${on?" on":""}"><button type="button" class="st" data-id="${s.id}" aria-pressed="${on}">

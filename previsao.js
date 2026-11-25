@@ -8,6 +8,8 @@
   const cent=v=>(Math.abs(v)*100).toLocaleString("pt-PT",{maximumFractionDigits:1})+" cênt./l";
   const hojeLisboa=()=>new Intl.DateTimeFormat("en-CA",{timeZone:"Europe/Lisbon"}).format(new Date());
   const store={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+  const DIA=["domingo","segunda","terça","quarta","quinta","sexta","sábado"];
+  const quando=iso=>{const d=new Date(iso.length<=16?iso+":00Z":iso);if(isNaN(d))return"";const l=new Date(d.toLocaleString("en-US",{timeZone:"Europe/Lisbon"}));return `${DIA[l.getDay()]} às ${String(l.getHours()).padStart(2,"0")}:${String(l.getMinutes()).padStart(2,"0")}`};
   function seta(v){return v<-0.0005?`<span class="pv-dn">▼ desce ${cent(v)}</span>`:v>0.0005?`<span class="pv-up">▲ sobe ${cent(v)}</span>`:`<span class="pv-eq">= sem alteração</span>`}
   const P={
     data:null, fuelType:null,
@@ -28,7 +30,7 @@
       box.innerHTML=`<div class="pv-txt"><strong>${antes?"Próxima semana":"Esta semana"} (${dm(d.semanaInicio)} a ${dm(d.semanaFim)})</strong>
           <span class="pv-vals">${linha("gasoleo","Gasóleo")}${linha("gasolina","Gasolina")}</span>
           ${conselho?`<span class="pv-cons">${esc(conselho)}</span>`:""}
-          <span class="pv-src">Estimativa do setor, não oficial · <a href="${esc(d.url)}" target="_blank" rel="noopener">fonte ↗</a>${durante?" · a próxima previsão sai na sexta-feira":""}</span></div>
+          <span class="pv-src">Estimativa do setor, não oficial${d.obtido?` · atualizada ${quando(d.obtido)}`:""} · <a href="${esc(d.url)}" target="_blank" rel="noopener">fonte ↗</a>${durante?" · a próxima previsão sai na sexta-feira":""}</span></div>
         <button type="button" class="pv-x" aria-label="Esconder até à próxima previsão">✕</button>`;
       box.hidden=false;
       box.querySelector(".pv-x").onclick=()=>{store.set("prev-fechado",d.semanaInicio+(antes?"a":"d"));box.hidden=true};

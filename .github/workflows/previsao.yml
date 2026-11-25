@@ -1,9 +1,9 @@
 name: Previsão semanal de preços
 on:
   schedule:
-    - cron: "41 14 * * 5"   # sexta 14:41 UTC (a estimativa costuma sair à sexta)
-    - cron: "41 17 * * 5"   # sexta 17:41 UTC (atualizações da tarde)
-    - cron: "13 9 * * 6"    # sábado 09:13 UTC (confirmação)
+    - cron: "17 8-20/2 * * 5"   # sexta, de 2 em 2 horas (08:17 a 20:17 UTC): a estimativa sai e pode ser revista
+    - cron: "17 9,18 * * 6,0"   # sábado e domingo, 2 vezes por dia
+    - cron: "17 7 * * 1"        # segunda de manhã: previsão final da semana que começa
   workflow_dispatch: {}
 permissions:
   contents: write
