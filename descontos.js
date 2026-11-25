@@ -41,10 +41,16 @@
       const rs=this.rules().filter(r=>!r.carregamento&&(r.marcas||[]).map(norm).includes(b)&&(!r.tipos||r.tipos.includes(ft))&&(!r.combustiveis||r.combustiveis.includes(fuel)));
       if(!rs.length)return{price,final:price,efetivo:price,direto:0,saldo:0,regras:[]};
       const cum=rs.filter(r=>r.cumulativo);
-      const best=rs.filter(r=>!r.cumulativo).sort((a,b)=>((b.direto+b.saldo)-(a.direto+a.saldo))||(b.direto-a.direto))[0];
+      /* Melhor = maior total; depois mais desconto na hora; depois os confirmados antes dos "a confirmar" */
+      const conf=r=>r.estado&&r.estado!=="confirmado"?1:0;
+      const nc=rs.filter(r=>!r.cumulativo).sort((a,b)=>((b.direto+b.saldo)-(a.direto+a.saldo))||(b.direto-a.direto)||(conf(a)-conf(b)));
+      const best=nc[0];
+      /* Alternativas com exatamente o mesmo desconto (ex.: cartão Fnac ou cartão Vodafone, com o mesmo plano) */
+      const same=r=>best&&Math.abs((r.direto+r.saldo)-(best.direto+best.saldo))<1e-9&&Math.abs(r.direto-best.direto)<1e-9;
+      const alternativas=nc.slice(1).filter(same);
       const use=[...(best?[best]:[]),...cum];
       const direto=use.reduce((a,r)=>a+(r.direto||0),0), saldo=use.reduce((a,r)=>a+(r.saldo||0),0);
-      return{price,final:price-direto,efetivo:price-direto-saldo,direto,saldo,regras:use};
+      return{price,final:price-direto,efetivo:price-direto-saldo,direto,saldo,regras:use,alternativas};
     },
     /* Carregamentos elétricos: percentagem devolvida em saldo no operador (ex.: Repsol) */
     applyEv(operator,cost){
@@ -67,7 +73,15 @@
         ${r.comoUsar?`<div><b>Como usar:</b> ${esc(r.comoUsar)}</div>`:""}
         ${r.limite?`<div class="dlim">${esc(r.limite)}</div>`:""}
         ${r.nota?`<div class="dlim">${esc(r.nota)}</div>`:""}
-        ${r.fonte?`<div><a href="${esc(r.fonte)}" target="_blank" rel="noopener">Ver a campanha ↗</a>${r.verificado?` · verificado a ${esc(r.verificado)}`:""}</div>`:""}</div>`).join("");
+        ${r.fonte?`<div><a href="${esc(r.fonte)}" target="_blank" rel="noopener">Ver a campanha ↗</a>${r.verificado?` · verificado a ${esc(r.verificado)}`:""}</div>`:""}</div>`).join("")+this.altText(a);
+    },
+    /* "Também pode usar, com o mesmo desconto: Vodafone — cliente" */
+    altText(a){
+      if(!a.alternativas||!a.alternativas.length||!a.regras.length)return"";
+      const main=new Set(a.regras[0].requer||[]);
+      const names=[...new Set(a.alternativas.flatMap(r=>(r.requer||[]).filter(id=>!main.has(id))).map(id=>this.prog(id)?.nome).filter(Boolean))];
+      if(!names.length)return"";
+      return `<div class="dexp"><div><b>Também pode usar, com o mesmo desconto:</b> ${names.map(esc).join(", ")}.</div><div class="dlim">A Repsol só aplica um cartão de parceiro por abastecimento, por isso basta associar um deles.</div></div>`;
     },
     renderButton(){
       const b=document.getElementById("discBtn"); if(!b)return;
