@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="Postos de abastecimento do Porto com preços da DGEG em direto, mapa e ligações ao Google Maps.">
+<style>*,*::before,*::after{box-sizing:border-box}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Postos do Porto</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: mapa esquemático fixo à esquerda, lista ordenada por preço à direita, tabuleiro de selecionados por baixo; empilha em telemóvel */
+:root{
+  --bg:#f3f5f8; --surface:#ffffff; --fg:#14202e; --muted:#5b6878; --line:#d9dfe7;
+  --accent:#1f4fa8; --accent-soft:#e3ebf8; --river:#9cc0e6; --sea:#dbe8f5; --land:#eef1f5;
+  --sel:#e8a317; --good:#1d7a46; --mapfilter:none;
+  --display:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;
+  --body:"Barlow",system-ui,-apple-system,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0f1520; --surface:#172030; --fg:#e7edf5; --muted:#9aa8b9; --line:#2a3647;
+  --accent:#7fa8ec; --accent-soft:#1f2e48; --river:#2f5684; --sea:#16253a; --land:#1a2433; --sel:#f0b43a; --good:#5cc98a; --mapfilter:invert(1) hue-rotate(180deg) brightness(.85) contrast(.9); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1520; --surface:#172030; --fg:#e7edf5; --muted:#9aa8b9; --line:#2a3647;
+  --accent:#7fa8ec; --accent-soft:#1f2e48; --river:#2f5684; --sea:#16253a; --land:#1a2433; --sel:#f0b43a; --good:#5cc98a; --mapfilter:invert(1) hue-rotate(180deg) brightness(.85) contrast(.9); color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:15px;line-height:1.45}
+.wrap{max-width:1240px;margin:0 auto;padding-block:20px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:18px}
+header{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:12px}
+h1{font-family:var(--display);font-size:2.3rem;line-height:1;margin:0;letter-spacing:.01em;text-wrap:balance}
+h1 span{color:var(--accent)}
+.sub{color:var(--muted);margin:4px 0 0;max-width:60ch}
+.note{font-size:.82rem;color:var(--muted);background:var(--accent-soft);border-radius:6px;padding:8px 12px;max-width:52ch;margin:0}
+.note a{color:var(--accent)}
+.controls{display:grid;gap:10px}
+.search{width:100%;box-sizing:border-box;font:inherit;padding:10px 12px;border:1px solid var(--line);border-radius:6px;background:var(--surface);color:var(--fg)}
+.search:focus-visible,button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.chips .lbl{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-right:4px;min-width:84px}
+.chip{font:inherit;font-size:.85rem;border:1px solid var(--line);background:var(--surface);color:var(--fg);border-radius:999px;padding:4px 11px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--surface)}
+.dot{width:9px;height:9px;border-radius:50%;flex:none}
+.main{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:18px;align-items:start}
+@media (max-width:860px){.main{grid-template-columns:1fr}}
+.mapbox{position:sticky;top:12px;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px}
+@media (max-width:860px){.mapbox{position:relative}}
+svg{display:block;width:100%;height:auto;border-radius:4px;touch-action:none;cursor:grab;background:var(--land)}
+svg.drag{cursor:grabbing}
+.tiles{filter:var(--mapfilter)}
+.mapbox{overflow:hidden}
+.zoom{position:absolute;z-index:2;top:18px;right:18px;display:grid;gap:4px}
+.zoom button{width:34px;height:34px;font:600 18px/1 var(--body);border:1px solid var(--line);border-radius:6px;background:var(--surface);color:var(--fg);cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.15)}
+.maplab{font-family:var(--display);font-size:20px;fill:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+.riverlab{font-family:var(--display);font-size:22px;fill:var(--accent);font-style:italic;letter-spacing:.1em}
+.pin{cursor:pointer}
+.pin circle.ring{fill:none;stroke:var(--sel);stroke-width:6;opacity:0}
+.pin.sel circle.ring{opacity:1}
+.pin.dim{opacity:.15}
+.pin:hover circle.core,.pin.hl circle.core{stroke:#14202e;stroke-width:4}
+.cap{display:flex;justify-content:space-between;gap:8px;font-size:.75rem;color:var(--muted);padding:6px 4px 0;flex-wrap:wrap}
+.list{display:grid;gap:8px}
+.count{font-size:.8rem;color:var(--muted)}
+.item{background:var(--surface);border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.item:hover,.item.hl{border-color:var(--accent)}
+.item.on{border-color:var(--sel);box-shadow:inset 3px 0 0 var(--sel)}
+.st{display:grid;grid-template-columns:auto minmax(0,1fr) auto auto;gap:12px;align-items:center;background:transparent;border:0;padding:11px 12px 6px;cursor:pointer;text-align:left;font:inherit;color:inherit;width:100%}
+.gm{display:flex;flex-wrap:wrap;gap:6px 16px;padding:0 12px 10px 82px;font-size:.82rem}
+.gm a{color:var(--accent);font-weight:600;text-decoration:none}
+.gm a:hover{text-decoration:underline}
+@media (max-width:480px){.gm{padding-left:12px}}
+.brand{font-family:var(--display);font-weight:700;font-size:.78rem;color:#fff;border-radius:4px;padding:3px 6px;min-width:56px;text-align:center;letter-spacing:.04em;align-self:start}
+.st h3{margin:0;font-size:1rem;font-weight:600;overflow-wrap:anywhere}
+.st .addr{color:var(--muted);font-size:.84rem;display:block;overflow-wrap:anywhere}
+.tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:5px}
+.tag{font-size:.72rem;border:1px solid var(--line);border-radius:4px;padding:1px 6px;color:var(--muted)}
+.price{font-family:var(--mono);font-weight:500;font-size:1.05rem;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.price small{display:block;font-family:var(--body);font-size:.7rem;color:var(--muted);font-weight:400}
+.price.best{color:var(--good)}
+.price.na{color:var(--muted);font-size:.8rem}
+.check{width:22px;height:22px;border:2px solid var(--line);border-radius:5px;display:grid;place-items:center;font-size:14px;color:transparent}
+.st[aria-pressed="true"] .check{background:var(--sel);border-color:var(--sel);color:#1a1300}
+@media (max-width:480px){.st{grid-template-columns:auto minmax(0,1fr) auto}.st .check{display:none}}
+.empty{color:var(--muted);padding:20px;text-align:center;border:1px dashed var(--line);border-radius:8px}
+.tray{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:14px;display:grid;gap:10px}
+.tray h2{font-family:var(--display);font-size:1.4rem;margin:0}
+.tray ol{margin:0;padding-left:22px;display:grid;gap:4px}
+.tray li{font-size:.92rem}
+.tray li button{font:inherit;font-size:.78rem;background:none;border:none;color:var(--muted);cursor:pointer;text-decoration:underline}
+.actions{display:flex;flex-wrap:wrap;gap:8px}
+.btn{font:inherit;font-weight:600;font-size:.9rem;border-radius:6px;padding:8px 14px;cursor:pointer;border:1px solid var(--accent);background:var(--accent);color:var(--surface);text-decoration:none;display:inline-block}
+.btn.ghost{background:transparent;color:var(--accent)}
+.btn[aria-disabled="true"],.btn:disabled{opacity:.4;pointer-events:none}
+.mono{font-family:var(--mono);font-size:.78rem}
+.toast{font-size:.82rem;color:var(--accent);min-height:1.2em}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Postos do <span>Porto</span></h1>
+      <p class="sub">Os postos de abastecimento do concelho do Porto com os preços comunicados à DGEG. Escolha o combustível, selecione os postos e abra o percurso no Google Maps.</p>
+    </div>
+    <p class="note">Fonte: <a href="https://precoscombustiveis.dgeg.gov.pt/" target="_blank" rel="noopener">DGEG, Preços dos Combustíveis</a>. <span id="srcinfo">Preços guardados a 25/11/2026.</span> Os preços mudam; confirme no posto.</p>
+  </header>
+
+  <section class="controls" aria-label="Filtros">
+    <input id="q" class="search" type="search" placeholder="Procurar por nome, rua ou código postal…" autocomplete="off">
+    <div class="chips" id="fuels"><span class="lbl">Combustível</span></div>
+    <div class="chips" id="brands"><span class="lbl">Marca</span></div>
+  </section>
+
+  <div class="main">
+    <div class="mapbox"><div class="zoom"><button type="button" id="zin" aria-label="Aproximar">+</button><button type="button" id="zout" aria-label="Afastar">−</button><button type="button" id="zreset" aria-label="Ver tudo">⤢</button></div>
+      <svg id="map" viewBox="0 0 1713 1207" role="img" aria-label="Mapa esquemático do Porto com os postos"></svg>
+      <div class="cap"><span>Mapa © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener" style="color:var(--accent)">colaboradores do OpenStreetMap</a> · arraste para mover · <a href="https://www.google.com/maps/search/bombas+de+gasolina/@41.16,-8.62,13z" target="_blank" rel="noopener" style="color:var(--accent)">ver a zona no Google Maps ↗</a></span><span><span style="color:var(--sel)">●</span> selecionado</span></div>
+    </div>
+    <div class="list">
+      <div class="count" id="count"></div>
+      <div id="items" class="list"></div>
+    </div>
+  </div>
+
+  <section class="tray" aria-live="polite">
+    <h2 id="trayTitle">Selecionados</h2>
+    <div id="trayBody"></div>
+    <div class="actions">
+      <a id="route" class="btn" href="#" target="_blank" rel="noopener">Abrir percurso no Google Maps</a>
+      <button id="copy" class="btn ghost" type="button">Copiar lista</button>
+      <button id="clear" class="btn ghost" type="button">Limpar seleção</button>
+    </div>
+    <div class="toast" id="toast"></div>
+  </section>
+</div>
+
+<script>
+let STATIONS=[{"id":67347,"n":"AUCHAN Gondomar II - Campanhã","b":"AUCHAN","a":"Alameda de Cartes nº 429/485 (Mercado Abastecedor)","cp":"4300-008","lat":41.162495,"lon":-8.57551,"p":{"Gasóleo simples":1.919,"Gasóleo especial":1.949,"Gasolina 95 simples":1.719},"d":"2026-11-23 09:20"},{"id":66726,"n":"Rede Energia - Porto","b":"REDE ENERGIA","a":"Rua Serpa Pinto nº 616","cp":"4250-465","lat":41.16625,"lon":-8.6202,"p":{"Gasóleo simples":1.991,"Gasóleo especial":2.041,"Gasolina 95 simples":1.78},"d":"2026-11-23 10:50"},{"id":78734,"n":"PORTO - SÃO DINIS","b":"CEPSA","a":"RUA SÃO DINIS, Nº 296","cp":"4250-427","lat":41.167393,"lon":-8.619685,"p":{"Gasóleo simples":1.999,"Gasóleo especial":2.049,"Gasolina 95 simples":1.788,"Gasolina 95 especial":1.838},"d":"2026-11-23 00:00"},{"id":69154,"n":"Mercado Abastecedor","b":"CEPSA","a":"Rua Chaves Oliveira, nº 139 e 165 da Freguesia de Campanhã","cp":"4000-005","lat":41.16172,"lon":-8.57794,"p":{"Gasóleo simples":2.019,"Gasóleo especial":2.069,"Gasolina 95 simples":1.808,"Gasolina 98 especial":2.02},"d":"2026-11-23 00:00"},{"id":69137,"n":"Porto - Marginal","b":"CEPSA","a":"Av. Paiva Couceiro, 1000 - Marginal - Bonfim - Porto","cp":"4300-385","lat":41.140385,"lon":-8.592044,"p":{"Gasóleo simples":2.039,"Gasóleo especial":2.089,"Gasolina 95 simples":1.828,"Gasolina 95 especial":1.878},"d":"2026-11-23 00:00"},{"id":69114,"n":"FARIA GUIMARÃES","b":"CEPSA","a":"R. Faria Guimarães, nº 1299 - Paranhos","cp":"4200-294","lat":41.1691,"lon":-8.60659,"p":{"Gasóleo simples":2.069,"Gasóleo especial":2.129,"Gasolina 95 simples":1.858,"Gasolina 98 especial":2.129},"d":"2026-11-23 00:00"},{"id":69165,"n":"Porto - Hosp. S. João","b":"MOEVE","a":"ESTRADA EXTERIOR DA CIRCUNVALAÇÃO Nº.7446 E 7448","cp":"4200-162","lat":41.18306,"lon":-8.59851,"p":{"Gasóleo simples":2.069,"Gasóleo especial":2.119,"Gasolina 95 simples":1.858,"Gasolina 95 especial":1.908,"GPL Auto":1.086},"d":"2026-11-23 00:00"},{"id":69168,"n":"PORTO - PQ. CIDADE","b":"MOEVE","a":"E.N. 12, Km 0,710 - Pq. Cidade - Nevogilde","cp":"4100-200","lat":41.171308,"lon":-8.679429,"p":{"Gasóleo simples":2.069,"Gasóleo especial":2.119,"Gasolina 95 simples":1.858,"Gasolina 95 especial":1.908},"d":"2026-11-23 00:00"},{"id":66689,"n":"E.S. JULIO DINIS","b":"REPSOL","a":"Rua Júlio Dinis nº 320-348","cp":"4050-318","lat":41.151825,"lon":-8.625536,"p":{"Gasóleo simples":2.114,"Gasóleo especial":2.184,"Gasolina 95 simples":1.914,"Gasolina 95 especial":1.984},"d":"2026-11-25 00:40"},{"id":65563,"n":"Socovira - Sociedade combustiveis Via Rápida, Ldª","b":"GALP","a":"Av. Fernão de Magalhães, 3363","cp":"4300-000","lat":41.178441,"lon":-8.582751,"p":{"Gasóleo simples":2.119,"Gasóleo especial":2.169,"Gasolina 95 simples":1.929,"Gasolina 95 especial":1.979},"d":"2026-11-24 08:40"},{"id":65564,"n":"Socovira - Sociedade combustiveis Via Rápida, Ldª","b":"GALP","a":"Av. Fernão de Magalhães, 3352","cp":"4300-000","lat":41.178215,"lon":-8.582491,"p":{"Gasóleo simples":2.119,"Gasóleo especial":2.169,"Gasolina 95 simples":1.929,"Gasolina 95 especial":1.979},"d":"2026-11-24 08:40"},{"id":65566,"n":"F OLIVEIRA MARTINS E COMPANHIA LDA","b":"GALP","a":"Av. Fernão de Magalhães, 390","cp":"4300-189","lat":41.15333,"lon":-8.59621,"p":{"Gasóleo simples":2.119,"Gasolina 95 simples":1.929},"d":"2026-11-24 09:45"},{"id":67057,"n":"TFGEST ESTÁDIO","b":"GALP","a":"Av. Fernão de Magalhães nº 1854 / 74","cp":"4350-158","lat":41.16499,"lon":-8.58885,"p":{"Gasóleo simples":2.119,"Gasóleo especial":2.169,"Gasolina 95 simples":1.929,"Gasolina 95 especial":1.979,"Gasolina 98 especial":2.159},"d":"2026-11-24 10:15"},{"id":80080,"n":"BP CIRCUNVALAÇÃO","b":"BP","a":"Estrada da Circunvalação, 12033","cp":"4250-155","lat":41.18235,"lon":-8.64635,"p":{"Gasóleo simples":2.129,"Gasóleo especial":2.299,"Gasolina 95 simples":1.929,"Gasolina 98 especial":2.179},"d":"2026-11-24 00:35"},{"id":74125,"n":"Galp Amial","b":"GALP","a":"Estrada Interior da Circunvalação 8718","cp":"4200-180","lat":41.1833,"lon":-8.61228,"p":{"Gasóleo simples":2.136,"Gasóleo especial":2.186,"Gasolina 95 simples":1.934,"Gasolina 95 especial":1.984},"d":"2026-11-23 07:50"},{"id":95346,"n":"BP 5 de Outubro","b":"BP","a":"Rua 5 de Outubro, 574","cp":"4100-173","lat":41.16313,"lon":-8.632981,"p":{"Gasóleo simples":2.139,"Gasóleo especial":2.299,"Gasolina 95 simples":1.939,"Gasolina 98 especial":2.179},"d":"2026-11-24 00:00"},{"id":93014,"n":"BP Fluvial","b":"BP","a":"Rua Diogo Botelho, 671","cp":"4150-262","lat":41.15165,"lon":-8.6553,"p":{"Gasóleo simples":2.139,"Gasóleo especial":2.299,"Gasolina 95 simples":1.939,"Gasolina 98 especial":2.179},"d":"2026-11-24 00:00"},{"id":93447,"n":"BP São Roque da Lameira - Porto","b":"BP","a":"Rua de são roque da Lameira","cp":"4300-000","lat":41.15838,"lon":-8.583513,"p":{"Gasóleo simples":2.139,"Gasóleo especial":2.299,"Gasolina 95 simples":1.939,"Gasolina 98 especial":2.179},"d":"2026-11-24 00:00"},{"id":66014,"n":"BP Combatentes - Porto","b":"BP","a":"Av. Combatentes da Grande Guerra nº 627","cp":"4200-190","lat":41.165233,"lon":-8.598091,"p":{"Gasóleo simples":2.139,"Gasóleo especial":2.299,"Gasolina 95 simples":1.939,"Gasolina 98 especial":2.179},"d":"2026-11-24 00:05"},{"id":68067,"n":"BP SALGUEIROS","b":"BP","a":"Rua Particular de Monsanto, 162-192","cp":"4250-360","lat":41.17346,"lon":-8.61664,"p":{"Gasóleo simples":2.139,"Gasóleo especial":2.299,"Gasolina 95 simples":1.939,"Gasolina 98 especial":2.179,"GPL Auto":1.129},"d":"2026-11-24 00:35"},{"id":65572,"n":"GALP Freixo","b":"GALP","a":"Estrada Exterior da Circunvalação, 82-130","cp":"4460-280","lat":41.14561,"lon":-8.57826,"p":{"Gasóleo simples":2.139,"Gasóleo especial":2.189,"Gasolina 95 simples":1.909,"Gasolina 95 especial":1.959,"Gasolina 98 especial":2.139},"d":"2026-11-24 17:40"},{"id":66984,"n":"GALP A.S. Universidade Católica Porto","b":"GALP","a":"Rua Diogo Botelho, 2049","cp":"4150-268","lat":41.15317,"lon":-8.6707,"p":{"Gasóleo simples":2.139,"Gasóleo especial":2.199,"Gasolina 95 simples":1.929,"Gasolina 95 especial":1.989,"Gasolina 98 especial":2.159},"d":"2026-11-24 18:20"},{"id":65573,"n":"GALP Boavista","b":"GALP","a":"Avª da Boavista 4663 - 4685","cp":"4100-141","lat":41.165855,"lon":-8.678236,"p":{"Gasóleo simples":2.142,"Gasóleo especial":2.202,"Gasolina 95 simples":1.946,"Gasolina 95 especial":2.006},"d":"2026-11-24 17:55"},{"id":91838,"n":"F. Oliveira Martins","b":"GALP","a":"R. Gólgota nº 390 e 428","cp":"4150-000","lat":41.151433,"lon":-8.634284,"p":{"Gasóleo simples":2.144,"Gasóleo especial":2.204,"Gasolina 95 simples":1.944,"Gasolina 95 especial":2.004},"d":"2026-11-24 09:45"},{"id":65567,"n":"Petroazul - Combustiveis e Serviços, Lda","b":"GALP","a":"Av. Fernão de Magalhães nº 2322","cp":"4350-172","lat":41.169189,"lon":-8.586909,"p":{"Gasóleo simples":2.145,"Gasóleo especial":2.195,"Gasolina 95 simples":1.929,"Gasolina 95 especial":1.979,"Gasolina 98 especial":2.159},"d":"2026-11-16 10:45"},{"id":68644,"n":"GALP Porto - Francos","b":"GALP","a":"Rotunda do Bessa","cp":"4100-012","lat":41.164307,"lon":-8.639143,"p":{"Gasóleo simples":2.146,"Gasóleo especial":2.206,"Gasolina 95 simples":1.946,"Gasolina 95 especial":2.006,"Gasolina 98 especial":2.176,"GPL Auto":1.124},"d":"2026-11-24 18:00"},{"id":66685,"n":"E.S. ANTAS I","b":"REPSOL","a":"Av. Fernão de Magalhães nº 1626","cp":"4300-000","lat":41.16328,"lon":-8.5899,"p":{"Gasóleo simples":2.149,"Gasóleo especial":2.209,"Gasolina 95 simples":1.959,"Gasolina 95 especial":2.019,"Gasolina 98 especial":2.169},"d":"2026-11-16 14:35"},{"id":66686,"n":"E.S. ANTAS II","b":"REPSOL","a":"Rua Santo António Antas nº 36","cp":"4350-156","lat":41.1645,"lon":-8.589458,"p":{"Gasóleo simples":2.149,"Gasóleo especial":2.209,"Gasolina 95 simples":1.959,"Gasolina 95 especial":2.109,"Gasolina 98 especial":2.169},"d":"2026-11-16 14:35"},{"id":65570,"n":"P21 -SHELL Porto - Constituição","b":"SHELL","a":"Rua da Constituição n.º 2314","cp":"4250-168","lat":41.164627,"lon":-8.625592,"p":{"Gasóleo simples":2.149,"Gasóleo especial":2.229,"Gasolina 95 simples":1.944},"d":"2026-11-25 00:30"},{"id":66712,"n":"E.S. CONDE COVILHA","b":"REPSOL","a":"Rua Conde da Covilhã nº 1256 - 1270","cp":"4100-187","lat":41.17358,"lon":-8.65439,"p":{"Gasóleo simples":2.174,"Gasóleo especial":2.244,"Gasolina 95 simples":1.974,"Gasolina 95 especial":2.044,"Gasolina 98 especial":2.194},"d":"2026-11-23 10:10"},{"id":66693,"n":"E.S. MONTE DOS BURGOS","b":"REPSOL","a":"Rua Monte Burgos nº 316","cp":"4200-309","lat":41.17256,"lon":-8.62611,"p":{"Gasóleo simples":2.174,"Gasóleo especial":2.244,"Gasolina 95 simples":1.974,"Gasolina 95 especial":2.044,"Gasolina 98 especial":2.194},"d":"2026-11-23 18:25"},{"id":66717,"n":"ES MAKRO GAIA - Gespost - Gestão e Administração de Postos de Abastecimento Unipessoal LDA","b":"REPSOL","a":"R Senhor de Matosinhos Nº  809","cp":"4400-303","lat":41.12016,"lon":-8.627181,"p":{"Gasóleo simples":2.174,"Gasóleo especial":2.244,"Gasolina 95 simples":1.974,"Gasolina 95 especial":2.044,"Gasolina 98 especial":2.194},"d":"2026-11-24 08:10"},{"id":66688,"n":"ES  CONSTITUICAO - Gespost - Gestão e Administração de Postos de Abastecimento Unipessoal LDA","b":"REPSOL","a":"Rua da Constituição nº 2570","cp":"4000-000","lat":41.165108,"lon":-8.628078,"p":{"Gasóleo simples":2.174,"Gasóleo especial":2.244,"Gasolina 95 simples":1.974,"Gasolina 95 especial":2.044,"Gasolina 98 especial":2.194,"GPL Auto":1.189},"d":"2026-11-24 08:20"},{"id":67982,"n":"BP S. JOÃO DE BRITO","b":"BP","a":"Largo S. João de Brito","cp":"4100-200","lat":41.16171,"lon":-8.65066,"p":{"Gasóleo simples":2.179,"Gasóleo especial":2.299,"Gasolina 95 simples":1.979,"Gasolina 98 especial":2.179},"d":"2026-11-25 00:00"},{"id":94754,"n":"REPSOL Lordelo do Ouro","b":"REPSOL","a":"Av. Marechal Gomes da Costa, 99","cp":"4150-357","lat":41.16147,"lon":-8.65623,"p":{"Gasóleo simples":2.199,"Gasóleo especial":2.269,"Gasolina 95 simples":1.999,"Gasolina 95 especial":2.079,"Gasolina 98 especial":2.229,"GPL Auto":1.169},"d":"2026-11-16 14:45"},{"id":69103,"n":"P12 - PRIO Porto - Estrada Circunvalação","b":"PRIO","a":"Estrada Interior da Circunvalação n.º 10783 e 10853","cp":"4250-252","lat":41.180435,"lon":-8.635366,"p":{"Gasóleo especial":2.009,"Gasolina 95 simples":1.899,"Gasolina 95 especial":1.794,"GPL Auto":1.029},"d":"2026-11-25 00:30"},{"id":76102,"n":"PRIO Porto - Zona Industrial","b":"PRIO","a":"Rua Engenheiro Ferreira Dias, Freguesia de Ramalde, 1104,1150","cp":"4100-247","lat":41.17751,"lon":-8.648651,"p":{"Gasóleo especial":2.009,"Gasolina 95 simples":1.899,"Gasolina 95 especial":1.794,"GPL Auto":1.029},"d":"2026-11-25 00:30"},{"id":93277,"n":"PRIO Fábrica do Cobre","b":"PRIO","a":"Loteamento Fábrica do Cobre, Lote 1 - Rua Linhas de Torres","cp":"4350","lat":41.169384,"lon":-8.57232,"p":{"Gasóleo especial":2.009,"Gasolina 95 simples":1.899,"Gasolina 95 especial":1.794,"GPL Auto":1.029},"d":"2026-11-25 00:30"}];
+const FUELS=["Gasóleo simples","Gasóleo especial","Gasolina 95 simples","Gasolina 95 especial","Gasolina 98 especial","GPL Auto"];
+const BRAND_COLORS={"GALP":"#e2591d","BP":"#0b8a3a","REPSOL":"#c99a00","PRIO":"#2f6db5","CEPSA":"#b8202e","MOEVE":"#00857c","SHELL":"#d8a400","AUCHAN":"#d6001c","REDE ENERGIA":"#6a4fb3"};
+const OTHER="#6f7b8a";
+const colorOf=b=>BRAND_COLORS[b]||OTHER;
+const nice=b=>b.length<=4?b:b.charAt(0)+b.slice(1).toLowerCase();
+
+const Z=2**14, TX=lon=>(lon+180)/360*Z, TY=lat=>{const r=lat*Math.PI/180;return (1-Math.log(Math.tan(r)+1/Math.cos(r))/Math.PI)/2*Z};
+const W0=TX(-8.695), N0=TY(41.192), MW=1713, MH=1207;
+const X=lon=>(TX(lon)-W0)*256, Y=lat=>(TY(lat)-N0)*256;
+let vb={x:0,y:0,w:MW,h:MH}, moved=false;
+const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+const ids=new Set(STATIONS.map(s=>s.id));
+let selected=store.get("postos-sel-dgeg",[]).filter(id=>ids.has(id));
+let fuel=store.get("postos-fuel","Gasóleo simples"); if(!FUELS.includes(fuel))fuel=FUELS[0];
+const activeBrands=new Set();
+const $=id=>document.getElementById(id);
+const eur=v=>v.toFixed(3).replace(".",",")+" €";
+
+FUELS.forEach(f=>{
+  const b=document.createElement("button");b.type="button";b.className="chip";b.textContent=f;
+  b.setAttribute("aria-pressed",f===fuel);
+  b.onclick=()=>{fuel=f;store.set("postos-fuel",f);document.querySelectorAll("#fuels .chip").forEach(c=>c.setAttribute("aria-pressed",c===b));render()};
+  $("fuels").appendChild(b);
+});
+function buildBrands(){
+document.querySelectorAll("#brands .chip").forEach(c=>c.remove());
+const brandCounts={};STATIONS.forEach(s=>brandCounts[s.b]=(brandCounts[s.b]||0)+1);
+for(const br of [...activeBrands]) if(!brandCounts[br]) activeBrands.delete(br);
+Object.keys(brandCounts).sort((a,b)=>brandCounts[b]-brandCounts[a]).forEach(br=>{
+  const b=document.createElement("button");b.type="button";b.className="chip";b.setAttribute("aria-pressed","false");
+  b.innerHTML=`<span class="dot" style="background:${colorOf(br)}"></span>${nice(br)} <span style="opacity:.6">${brandCounts[br]}</span>`;
+  b.setAttribute("aria-pressed",activeBrands.has(br));
+  b.onclick=()=>{activeBrands.has(br)?activeBrands.delete(br):activeBrands.add(br);b.setAttribute("aria-pressed",activeBrands.has(br));render()};
+  $("brands").appendChild(b);
+});
+}
+buildBrands();
+
+function drawBase(){
+  return `<image class="tiles" href="map.jpg" x="0" y="0" width="${MW}" height="${MH}" preserveAspectRatio="none"/><g id="pins"></g>`;
+}
+$("map").innerHTML=drawBase();
+const svgEl=$("map");
+function setVB(n){
+  n.w=Math.min(MW,Math.max(MW/8,n.w)); n.h=n.w*MH/MW;
+  n.x=Math.min(MW-n.w,Math.max(0,n.x)); n.y=Math.min(MH-n.h,Math.max(0,n.y));
+  vb=n; svgEl.setAttribute("viewBox",`${n.x} ${n.y} ${n.w} ${n.h}`); drawPins();
+}
+function zoomAt(f,cx,cy){
+  if(cx==null){cx=vb.x+vb.w/2;cy=vb.y+vb.h/2}
+  const w=vb.w/f,h=vb.h/f; setVB({x:cx-(cx-vb.x)/f,y:cy-(cy-vb.y)/f,w,h});
+}
+function toMap(e){const r=svgEl.getBoundingClientRect();return [vb.x+(e.clientX-r.left)/r.width*vb.w, vb.y+(e.clientY-r.top)/r.height*vb.h]}
+$("zin").onclick=()=>zoomAt(1.6); $("zout").onclick=()=>zoomAt(1/1.6); $("zreset").onclick=()=>setVB({x:0,y:0,w:MW,h:MH});
+svgEl.addEventListener("wheel",e=>{e.preventDefault();const [mx,my]=toMap(e);zoomAt(e.deltaY<0?1.25:0.8,mx,my)},{passive:false});
+let start=null;
+svgEl.addEventListener("pointerdown",e=>{start={cx:e.clientX,cy:e.clientY,x:vb.x,y:vb.y};moved=false});
+window.addEventListener("pointermove",e=>{
+  if(!start)return; const dx=e.clientX-start.cx, dy=e.clientY-start.cy;
+  if(!moved&&Math.hypot(dx,dy)<5)return;
+  if(!moved){moved=true;svgEl.classList.add("drag")}
+  const r=svgEl.getBoundingClientRect(), k=vb.w/r.width;
+  setVB({x:start.x-dx*k,y:start.y-dy*k,w:vb.w,h:vb.h});
+});
+window.addEventListener("pointerup",()=>{start=null;svgEl.classList.remove("drag");setTimeout(()=>moved=false,0)});
+
+function matches(s){
+  const q=$("q").value.trim().toLowerCase();
+  if(q&&!(s.n+" "+s.a+" "+s.cp+" "+s.b).toLowerCase().includes(q))return false;
+  if(activeBrands.size&&!activeBrands.has(s.b))return false;
+  return fuel in s.p;
+}
+function toggle(id){
+  selected=selected.includes(id)?selected.filter(x=>x!==id):[...selected,id];
+  store.set("postos-sel-dgeg",selected);render();
+}
+function highlight(id,on){document.querySelectorAll(`[data-id="${id}"]`).forEach(el=>el.classList.toggle("hl",on))}
+const gmView=s=>`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${s.b} ${s.a}, ${s.cp} Porto`)}`;
+const gmGo=s=>`https://www.google.com/maps/dir/?api=1&destination=${s.lat},${s.lon}&travelmode=driving`;
+const esc=t=>String(t).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+let lastVis=[];
+function drawPins(){
+  const k=vb.w/MW, s1=Math.max(.45,Math.sqrt(k)*1.0);
+  const order=[...STATIONS].sort((a,b)=>selected.includes(a.id)-selected.includes(b.id));
+  $("pins").innerHTML=order.map(s=>{
+    const sel=selected.includes(s.id), dim=!lastVis.includes(s);
+    return `<g class="pin${sel?" sel":""}${dim?" dim":""}" data-id="${s.id}" transform="translate(${X(s.lon).toFixed(1)} ${Y(s.lat).toFixed(1)}) scale(${s1.toFixed(3)})"><title>${esc(s.n)}${s.p[fuel]?" · "+eur(s.p[fuel]):""}</title>
+      <circle class="ring" r="30"/>
+      <circle class="core" r="18" fill="${colorOf(s.b)}" stroke="#fff" stroke-width="4"/></g>`;
+  }).join("");
+  document.querySelectorAll(".pin").forEach(p=>{
+    const id=+p.dataset.id;p.onclick=()=>{if(!moved)toggle(id)};
+    p.onmouseenter=()=>highlight(id,true);p.onmouseleave=()=>highlight(id,false);
+  });
+}
+function render(){
+  const vis=STATIONS.filter(matches).sort((a,b)=>a.p[fuel]-b.p[fuel]);
+  const best=vis.length?vis[0].p[fuel]:null;
+  $("count").textContent=`${vis.length} postos com ${fuel}, do mais barato para o mais caro`;
+  lastVis=vis; drawPins();
+  $("items").innerHTML=vis.length?vis.map(s=>{
+    const pr=s.p[fuel], diff=pr-best;
+    const on=selected.includes(s.id);
+    return `<div class="item${on?" on":""}" data-id="${s.id}"><button type="button" class="st" data-sel="${s.id}" aria-pressed="${on}">
+      <span class="brand" style="background:${colorOf(s.b)}">${esc(s.b)}</span>
+      <span><h3>${esc(s.n)}</h3><span class="addr">${esc(s.a)} · ${esc(s.cp)}</span>
+        <span class="tags">${Object.keys(s.p).filter(f=>f!==fuel).map(f=>`<span class="tag">${f} ${eur(s.p[f])}</span>`).join("")}</span></span>
+      <span class="price${diff<0.0005?" best":""}">${eur(pr)}<small>${diff<0.0005?"mais barato":"+"+(diff*100).toFixed(1).replace(".",",")+" cênt."}</small></span>
+      <span class="check" aria-hidden="true">✓</span>
+    </button>
+    <div class="gm"><a href="${gmView(s)}" target="_blank" rel="noopener">Ver no Google Maps ↗</a><a href="${gmGo(s)}" target="_blank" rel="noopener">Navegar até aqui ↗</a></div></div>`}).join(""):`<div class="empty">Nenhum posto cumpre estes filtros. Retire uma marca, mude o combustível ou a pesquisa.</div>`;
+  document.querySelectorAll(".st").forEach(el=>{el.onclick=()=>toggle(+el.dataset.sel)});
+  document.querySelectorAll(".item").forEach(el=>{
+    const id=+el.dataset.id;
+    el.onmouseenter=()=>highlight(id,true);el.onmouseleave=()=>highlight(id,false);
+  });
+  renderTray();
+}
+function renderTray(){
+  const sel=selected.map(id=>STATIONS.find(s=>s.id===id));
+  $("trayTitle").textContent=sel.length?`Selecionados (${sel.length})`:"Selecionados";
+  $("trayBody").innerHTML=sel.length?`<ol>${sel.map(s=>`<li><strong>${esc(s.n)}</strong> · ${esc(s.a)} · <span class="mono">${s.p[fuel]?fuel+" "+eur(s.p[fuel]):"sem "+fuel}</span> <a href="${gmView(s)}" target="_blank" rel="noopener" style="color:var(--accent);font-size:.8rem">Google Maps ↗</a> <button type="button" data-rm="${s.id}">remover</button></li>`).join("")}</ol>`
+    :`<p class="count" style="margin:0">Toque num posto na lista ou no mapa para o adicionar. A ordem de seleção é a ordem do percurso.</p>`;
+  document.querySelectorAll("[data-rm]").forEach(b=>b.onclick=()=>toggle(+b.dataset.rm));
+  const r=$("route");
+  if(sel.length){
+    const c=s=>`${s.lat},${s.lon}`, dest=sel[sel.length-1], wp=sel.slice(0,-1).map(c).join("|");
+    r.href=`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(c(dest))}${wp?"&waypoints="+encodeURIComponent(wp):""}&travelmode=driving`;
+    r.removeAttribute("aria-disabled");
+  } else {r.href="#";r.setAttribute("aria-disabled","true")}
+  $("copy").disabled=$("clear").disabled=!sel.length;
+}
+$("q").oninput=render;
+$("clear").onclick=()=>{selected=[];store.set("postos-sel-dgeg",selected);render()};
+$("copy").onclick=()=>{
+  const txt=selected.map((id,i)=>{const s=STATIONS.find(x=>x.id===id);return `${i+1}. ${s.n} (${s.b}), ${s.a}, ${s.cp}${s.p[fuel]?" | "+fuel+" "+eur(s.p[fuel]):""}`}).join("\n");
+  const fail=()=>{$("toast").textContent="Não foi possível copiar. Selecione a lista acima e copie manualmente."};
+  try{navigator.clipboard.writeText(txt).then(()=>{$("toast").textContent="Lista copiada."},fail)}catch(e){fail()}
+};
+render();
+
+/* Preços em direto: a DGEG permite pedidos do navegador. Dentro do Claude o pedido é bloqueado e fica a cópia guardada acima. */
+const API="https://precoscombustiveis.dgeg.gov.pt/api/PrecoComb/PesquisarPostos";
+const FUEL_IDS={2101:"Gasóleo simples",2105:"Gasóleo especial",3201:"Gasolina 95 simples",3205:"Gasolina 95 especial",3405:"Gasolina 98 especial",1120:"GPL Auto"};
+async function loadLive(){
+  $("srcinfo").textContent="A atualizar preços…";
+  try{
+    const all=await Promise.all(Object.entries(FUEL_IDS).map(async([id,name])=>{
+      const r=await fetch(`${API}?idsTiposComb=${id}&idDistrito=13&idsMunicipios=192&qtdPorPagina=500&pagina=1`,{cache:"no-store"});
+      if(!r.ok)throw new Error(r.status);
+      const j=await r.json(); return (j.resultado||[]).map(x=>[name,x]);
+    }));
+    const map=new Map();
+    for(const rows of all)for(const [name,r] of rows){
+      const price=parseFloat(String(r.Preco).replace("€","").replace(",",".").trim());
+      if(!isFinite(price)||!r.Latitude)continue;
+      let s=map.get(r.Id);
+      if(!s){s={id:r.Id,n:String(r.Nome).trim(),b:String(r.Marca).trim(),a:String(r.Morada).trim(),cp:r.CodPostal,lat:+r.Latitude,lon:+r.Longitude,p:{},d:""};map.set(r.Id,s)}
+      s.p[name]=price; if(r.DataAtualizacao>s.d)s.d=r.DataAtualizacao;
+    }
+    if(map.size<5)throw new Error("poucos dados");
+    STATIONS=[...map.values()];
+    const live=new Set(STATIONS.map(s=>s.id)); selected=selected.filter(id=>live.has(id));
+    buildBrands(); render();
+    const now=new Date();
+    $("srcinfo").textContent=`Preços em direto, atualizados às ${now.toLocaleTimeString("pt-PT",{hour:"2-digit",minute:"2-digit"})} de ${now.toLocaleDateString("pt-PT")}.`;
+  }catch(e){
+    $("srcinfo").textContent="Preços guardados a 25/11/2026 (não foi possível ligar à DGEG).";
+  }
+}
+loadLive();
+</script>
+
+</body>
+</html>
