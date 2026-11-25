@@ -69,6 +69,11 @@ textarea{min-height:110px;resize:vertical}
 .kind.fuel{background:#1d1f23}.kind.ev{background:#1d8a4a}
 .state{font-size:.72rem;border-radius:999px;padding:1px 8px;background:var(--accent-soft);color:var(--accent)}
 a{color:var(--accent)}
+.picker{border:1px dashed var(--accent);border-radius:8px;padding:10px;display:grid;gap:8px;background:var(--surface)}
+.picker .grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+@media (max-width:640px){.picker .grid4{grid-template-columns:1fr 1fr}}
+.carinfo{font-size:.85rem;color:var(--muted)}
+.carinfo strong{color:var(--fg)}
 </style>
 </head>
 <body>
@@ -102,7 +107,7 @@ a{color:var(--accent)}
 
     <section class="card">
       <h2>Perfis</h2>
-      <p>Um perfil por carro. O perfil ativo escolhe o combustível ou as fichas, os cartões de desconto e calcula quanto custa atestar ou carregar.</p>
+      <p>Um perfil por carro. O perfil ativo escolhe o combustível ou as fichas, os cartões de desconto e calcula quanto custa atestar ou carregar. Dados dos elétricos: <a href="https://open-ev-data.github.io" target="_blank" rel="noopener">OpenEV Data</a> (<a href="https://cdla.dev/permissive-2-0/" target="_blank" rel="noopener">CDLA-Permissive-2.0</a>).</p>
       <div id="profiles" class="list"></div>
       <div class="row"><button type="button" class="btn ghost" id="addFuel">+ Carro a combustível</button><button type="button" class="btn ghost" id="addHyb">+ Híbrido plug-in</button><button type="button" class="btn ghost" id="addEv">+ Carro elétrico</button></div>
       <p class="muted" style="margin:0">Híbrido sem ficha (que não se liga à corrente)? Escolha "Carro a combustível".</p>
@@ -179,6 +184,8 @@ function profileCard(p,active){
   const num=(k,l,min,max,step,ph)=>`<label class="f">${l}<input type="number" min="${min}" max="${max}" step="${step}" data-k="${k}" value="${p[k]??""}" placeholder="${ph}"></label>`;
   return `<div class="prof${active?" active":""}" data-id="${esc(p.id)}">
     <header><strong>${ICON[p.tipo]||""} ${esc(p.nome)}</strong><span class="pill">${TIPO[p.tipo]||""}</span>${active?`<span class="pill on">Perfil ativo</span>`:`<button type="button" class="btn ghost" data-act="use">Usar este perfil</button>`}</header>
+    <div class="carinfo">${p.carro?`Carro: <strong>${esc(p.carro.rotulo)}</strong> · dados do catálogo${p.carro.fonte?` (<a href="${esc(p.carro.fonte)}" target="_blank" rel="noopener">fonte</a>)`:""}. Pode corrigir os valores abaixo.`:"Escolha o seu carro para preencher os dados automaticamente."} <button type="button" class="btn ghost" data-act="pick" style="padding:4px 10px;font-size:.85rem">${p.carro?"Mudar de carro":"Escolher o meu carro"}</button></div>
+    <div class="picker" data-picker hidden></div>
     <div class="grid2">
       <label class="f">Nome do perfil<input type="text" data-k="nome" value="${esc(p.nome)}" maxlength="40"></label>
       ${fuel?`<label class="f">Combustível<select data-k="combustivel">${FUELS.filter(([v])=>p.tipo!=="hibrido"||v!==1120).map(([v,l])=>`<option value="${v}" ${p.combustivel==v?"selected":""}>${l}</option>`).join("")}</select></label>`:""}
@@ -199,6 +206,7 @@ function renderProfiles(){
     el.querySelectorAll("[data-k]").forEach(inp=>inp.onchange=()=>{const k=inp.dataset.k;let v=inp.value;if(inp.type==="number"||k==="combustivel"||k==="potenciaMin")v=v===""?null:Number(String(v).replace(",","."));p[k]=v;A.setProfiles(d.perfis)});
     el.querySelectorAll("[data-conn]").forEach(c=>c.onchange=()=>{p.fichas=[...el.querySelectorAll("[data-conn]:checked")].map(x=>x.dataset.conn);A.setProfiles(d.perfis)});
     el.querySelector('[data-act="use"]')?.addEventListener("click",()=>{A.switchProfile(id)});
+    el.querySelector('[data-act="pick"]').onclick=()=>openPicker(el.querySelector("[data-picker]"),p,d);
     el.querySelector('[data-act="del"]').onclick=()=>{if(d.perfis.length<=1){$("dataErr").textContent="Precisa de ter pelo menos um perfil.";return}const left=d.perfis.filter(x=>x.id!==id);A.setProfiles(left,d.perfilAtivo===id?left[0].id:d.perfilAtivo)};
   });
 }
@@ -206,6 +214,53 @@ const newId=()=>Math.random().toString(36).slice(2,9);
 $("addFuel").onclick=()=>{const p={id:newId(),nome:"Carro a combustível",tipo:"combustivel",combustivel:2101,deposito:null,consumo:null,descontos:{programas:[],condicoes:[]}};A.setProfiles([...A.data.perfis,p])};
 $("addHyb").onclick=()=>{const p={id:newId(),nome:"Híbrido plug-in",tipo:"hibrido",combustivel:3201,deposito:null,consumo:null,descontos:{programas:[],condicoes:[]},fichas:["Mennekes"],potenciaMin:0,bateria:null,consumoEletrico:null};A.setProfiles([...A.data.perfis,p])};
 $("addEv").onclick=()=>{const p={id:newId(),nome:"Carro elétrico",tipo:"eletrico",fichas:["Mennekes","CCS"],potenciaMin:0,bateria:null,consumo:null};A.setProfiles([...A.data.perfis,p])};
+
+/* ---------- Catálogo de carros (OpenEV Data para elétricos + versões acrescentadas à mão) ---------- */
+let CARS=null;
+async function cars(){if(!CARS){try{CARS=await fetch("data/carros.json").then(r=>r.json())}catch(e){CARS={versoes:[]}}}return CARS}
+async function openPicker(box,p,d){
+  if(!box.hidden){box.hidden=true;return}
+  box.hidden=false; box.innerHTML=`<span class="muted">A carregar o catálogo…</span>`;
+  const all=(await cars()).versoes.filter(v=>v.tipo===p.tipo);
+  const tipoTxt={combustivel:"carros a combustível",hibrido:"híbridos plug-in",eletrico:"elétricos"}[p.tipo];
+  const ask=()=>`<p class="muted" style="margin:0">Não encontra o seu carro? <a href="#ideas" data-ask>Peça para o acrescentarmos</a> (indique marca, modelo, ano e versão).</p>`;
+  if(!all.length){box.innerHTML=`<p style="margin:0">Ainda não temos ${tipoTxt} no catálogo. Estamos a acrescentá-los aos poucos, cada um verificado na ficha técnica.</p>${ask()}`;bindAsk(box,p);return}
+  const uniq=a=>[...new Set(a)].sort((x,y)=>String(x).localeCompare(String(y),"pt",{numeric:true}));
+  const opts=(a,ph)=>`<option value="">${ph}</option>`+a.map(x=>`<option value="${esc(x)}">${esc(x)}</option>`).join("");
+  box.innerHTML=`<div class="grid4">
+    <label class="f">Marca<select data-s="marca">${opts(uniq(all.map(v=>v.marca)),"Escolher…")}</select></label>
+    <label class="f">Modelo<select data-s="modelo" disabled></select></label>
+    <label class="f">Ano<select data-s="ano" disabled></select></label>
+    <label class="f">Versão<select data-s="versao" disabled></select></label></div>
+    <div data-prev class="carinfo"></div>
+    <div class="row"><button type="button" class="btn" data-use disabled>Usar estes dados</button><button type="button" class="btn ghost" data-cancel>Cancelar</button></div>${ask()}`;
+  const s=k=>box.querySelector(`[data-s="${k}"]`);
+  const sel=()=>all.filter(v=>(!s("marca").value||v.marca===s("marca").value)&&(!s("modelo").value||v.modelo===s("modelo").value)&&(!s("ano").value||String(v.ano)===s("ano").value));
+  let chosen=null;
+  const fill=(k,list,ph)=>{s(k).innerHTML=opts(list,ph);s(k).disabled=!list.length;if(list.length===1){s(k).value=String(list[0]);s(k).onchange()}};
+  const preview=()=>{chosen=all.find(v=>v.id===s("versao").value)||null;box.querySelector("[data-use]").disabled=!chosen;
+    box.querySelector("[data-prev]").innerHTML=chosen?[chosen.deposito?`Depósito ${chosen.deposito} L`:"",chosen.bateria?`Bateria ${String(chosen.bateria).replace(".",",")} kWh ${chosen.bateriaTipo||""}`:"",chosen.fichas?.length?`Fichas: ${chosen.fichas.map(f=>f==="Mennekes"?"Tipo 2":f).join(", ")}`:"",chosen.acKw?`AC até ${String(chosen.acKw).replace(".",",")} kW`:"",chosen.dcKw?`DC até ${chosen.dcKw} kW`:"",chosen.consumoEletrico?`≈ ${String(chosen.consumoEletrico).replace(".",",")} kWh/100 km`:""].filter(Boolean).join(" · ")+(chosen.nota?`<br>${esc(chosen.nota)}`:""):""};
+  s("marca").onchange=()=>{s("ano").innerHTML="";s("ano").disabled=true;s("versao").innerHTML="";s("versao").disabled=true;fill("modelo",uniq(sel().map(v=>v.modelo)),"Escolher…");preview()};
+  s("modelo").onchange=()=>{s("versao").innerHTML="";s("versao").disabled=true;fill("ano",uniq(sel().map(v=>v.ano)),"Escolher…");preview()};
+  s("ano").onchange=()=>{const vs=sel();s("versao").innerHTML=`<option value="">Escolher…</option>`+vs.map(v=>`<option value="${v.id}">${esc(v.versao)}</option>`).join("");s("versao").disabled=!vs.length;if(vs.length===1){s("versao").value=vs[0].id}preview()};
+  s("versao").onchange=preview;
+  box.querySelector("[data-cancel]").onclick=()=>{box.hidden=true};
+  box.querySelector("[data-use]").onclick=()=>{
+    const c=chosen; if(!c)return;
+    const defaults=["O meu carro","O meu elétrico","Carro a combustível","Carro elétrico","Híbrido plug-in"];
+    if(defaults.includes(p.nome))p.nome=`${c.marca} ${c.modelo}`.slice(0,40);
+    if(c.deposito!=null)p.deposito=c.deposito;
+    if(c.combustivel!=null)p.combustivel=c.combustivel;
+    if(c.consumo!=null)p.consumo=c.consumo;
+    if(c.bateria!=null)p.bateria=c.bateria;
+    if(c.fichas&&c.fichas.length&&p.tipo!=="combustivel")p.fichas=[...c.fichas];
+    if(c.consumoEletrico!=null){if(p.tipo==="hibrido")p.consumoEletrico=c.consumoEletrico;else p.consumo=c.consumoEletrico}
+    p.carro={id:c.id,rotulo:`${c.marca} ${c.modelo} ${c.ano} · ${c.versao}`,fonte:(c.fontes||[])[0]||null};
+    A.setProfiles(d.perfis);
+  };
+  bindAsk(box,p);
+}
+function bindAsk(box,p){const a=box.querySelector("[data-ask]");if(a)a.onclick=e=>{e.preventDefault();$("reqText").value=`Acrescentar ao catálogo de carros (${({combustivel:"combustível",hibrido:"híbrido plug-in",eletrico:"elétrico"})[p.tipo]}): marca, modelo, ano e versão = `;$("reqText").oninput();document.getElementById("ideas").scrollIntoView({behavior:"smooth"});$("reqText").focus()}}
 
 /* ---------- Favoritos, locais, alertas ---------- */
 function renderFavs(){

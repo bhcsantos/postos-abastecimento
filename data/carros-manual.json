@@ -1,0 +1,18 @@
+{
+  "nota": "Versões de carros a combustível e híbridos plug-in, acrescentadas à mão. Cada valor tem de vir de uma fonte (ficha técnica do fabricante ou base técnica reconhecida).",
+  "versoes": [
+    {
+      "marca": "BMW", "modelo": "Série 5 (G30) 530e", "ano": 2021, "versao": "530e Berlina (PHEV, 292 cv)",
+      "tipo": "hibrido", "combustivel": 3201, "deposito": 46,
+      "bateria": 12.0, "bateriaTipo": "bruta", "fichas": ["Mennekes"], "acKw": 3.7, "dcKw": null,
+      "consumo": null, "consumoEletrico": null,
+      "fontes": [
+        "https://paultan.org/research/bmw/5-series/g30-lci/530e-m-sport-2021/",
+        "https://auto-data.net/en/bmw-5-series-sedan-g30-lci-facelift-2020-530e-292hp-steptronic-40124",
+        "https://www.press.bmwgroup.com/global/article/attachment/T0317776EN/461553"
+      ],
+      "verificado": "2026-11-25",
+      "nota": "Bateria de 12,0 kWh brutos; a capacidade útil não é publicada nas fontes consultadas. Carregamento AC a 3,7 kW (Tipo 2)."
+    }
+  ]
+}
