@@ -104,7 +104,8 @@ a{color:var(--accent)}
       <h2>Perfis</h2>
       <p>Um perfil por carro. O perfil ativo escolhe o combustível ou as fichas, os cartões de desconto e calcula quanto custa atestar ou carregar.</p>
       <div id="profiles" class="list"></div>
-      <div class="row"><button type="button" class="btn ghost" id="addFuel">+ Carro a combustível</button><button type="button" class="btn ghost" id="addEv">+ Carro elétrico</button></div>
+      <div class="row"><button type="button" class="btn ghost" id="addFuel">+ Carro a combustível</button><button type="button" class="btn ghost" id="addHyb">+ Híbrido plug-in</button><button type="button" class="btn ghost" id="addEv">+ Carro elétrico</button></div>
+      <p class="muted" style="margin:0">Híbrido sem ficha (que não se liga à corrente)? Escolha "Carro a combustível".</p>
     </section>
 
     <section class="card">
@@ -171,21 +172,22 @@ $("forgotBtn").onclick=async()=>{const em=$("fEmail").value.trim();if(!em){setMs
   try{await A.reset(em);setMsg("authMsg",`Se existir uma conta com ${em}, vai receber um email para escolher uma palavra-passe nova.`,true)}catch(e){setMsg("authMsg",A.msg(e))}};
 
 /* ---------- Perfis ---------- */
+const ICON={combustivel:"⛽",eletrico:"⚡",hibrido:"⛽⚡"};
+const TIPO={combustivel:"Combustível",eletrico:"Elétrico",hibrido:"Híbrido plug-in"};
 function profileCard(p,active){
-  const isEv=p.tipo==="eletrico";
+  const fuel=p.tipo==="combustivel"||p.tipo==="hibrido", ev=p.tipo==="eletrico"||p.tipo==="hibrido";
+  const num=(k,l,min,max,step,ph)=>`<label class="f">${l}<input type="number" min="${min}" max="${max}" step="${step}" data-k="${k}" value="${p[k]??""}" placeholder="${ph}"></label>`;
   return `<div class="prof${active?" active":""}" data-id="${esc(p.id)}">
-    <header><strong>${isEv?"⚡":"⛽"} ${esc(p.nome)}</strong>${active?`<span class="pill on">Perfil ativo</span>`:`<button type="button" class="btn ghost" data-act="use">Usar este perfil</button>`}</header>
+    <header><strong>${ICON[p.tipo]||""} ${esc(p.nome)}</strong><span class="pill">${TIPO[p.tipo]||""}</span>${active?`<span class="pill on">Perfil ativo</span>`:`<button type="button" class="btn ghost" data-act="use">Usar este perfil</button>`}</header>
     <div class="grid2">
       <label class="f">Nome do perfil<input type="text" data-k="nome" value="${esc(p.nome)}" maxlength="40"></label>
-      ${isEv?`<label class="f">Potência mínima<select data-k="potenciaMin">${[[0,"Qualquer"],[11,"≥ 11 kW"],[22,"≥ 22 kW"],[50,"≥ 50 kW"],[150,"≥ 150 kW"]].map(([v,l])=>`<option value="${v}" ${(p.potenciaMin||0)==v?"selected":""}>${l}</option>`).join("")}</select></label>`
-        :`<label class="f">Combustível<select data-k="combustivel">${FUELS.map(([v,l])=>`<option value="${v}" ${p.combustivel==v?"selected":""}>${l}</option>`).join("")}</select></label>`}
-      ${isEv?`<label class="f">Bateria (kWh)<input type="number" min="5" max="200" step="1" data-k="bateria" value="${p.bateria??""}" placeholder="ex.: 60"></label>
-        <label class="f">Consumo (kWh/100 km)<input type="number" min="5" max="40" step="0.1" data-k="consumo" value="${p.consumo??""}" placeholder="ex.: 16"></label>`
-      :`<label class="f">Depósito (litros)<input type="number" min="10" max="150" step="1" data-k="deposito" value="${p.deposito??""}" placeholder="ex.: 50"></label>
-        <label class="f">Consumo (L/100 km)<input type="number" min="2" max="30" step="0.1" data-k="consumo" value="${p.consumo??""}" placeholder="ex.: 6,5"></label>`}
+      ${fuel?`<label class="f">Combustível<select data-k="combustivel">${FUELS.filter(([v])=>p.tipo!=="hibrido"||v!==1120).map(([v,l])=>`<option value="${v}" ${p.combustivel==v?"selected":""}>${l}</option>`).join("")}</select></label>`:""}
+      ${fuel?num("deposito","Depósito (litros)",10,150,1,"ex.: 45")+num("consumo","Consumo a combustível (L/100 km)",1,30,0.1,p.tipo==="hibrido"?"ex.: 5,5":"ex.: 6,5"):""}
+      ${ev?`<label class="f">Potência mínima do carregador<select data-k="potenciaMin">${[[0,"Qualquer"],[11,"≥ 11 kW"],[22,"≥ 22 kW"],[50,"≥ 50 kW"],[150,"≥ 150 kW"]].map(([v,l])=>`<option value="${v}" ${(p.potenciaMin||0)==v?"selected":""}>${l}</option>`).join("")}</select></label>`:""}
+      ${ev?num("bateria","Bateria (kWh)",3,200,0.1,p.tipo==="hibrido"?"ex.: 13":"ex.: 60")+num(p.tipo==="hibrido"?"consumoEletrico":"consumo","Consumo elétrico (kWh/100 km)",5,40,0.1,"ex.: 17"):""}
     </div>
-    ${isEv?`<div><div class="muted" style="margin-bottom:4px">Fichas do carro</div><div class="chk">${CONNS.map(([v,l])=>`<label><input type="checkbox" data-conn="${v}" ${(p.fichas||[]).includes(v)?"checked":""}>${l}</label>`).join("")}</div></div>`
-      :`<div class="muted">Cartões de desconto: ${(p.descontos?.programas||[]).length?`${p.descontos.programas.length} escolhido(s)`:"nenhum"} — escolha-os com o botão "Os meus cartões de desconto" na página dos combustíveis, com este perfil ativo.</div>`}
+    ${ev?`<div><div class="muted" style="margin-bottom:4px">Fichas do carro${p.tipo==="hibrido"?" (a maioria dos híbridos plug-in só tem Tipo 2)":""}</div><div class="chk">${CONNS.map(([v,l])=>`<label><input type="checkbox" data-conn="${v}" ${(p.fichas||[]).includes(v)?"checked":""}>${l}</label>`).join("")}</div></div>`:""}
+    ${fuel?`<div class="muted">Cartões de desconto: ${(p.descontos?.programas||[]).length?`${p.descontos.programas.length} escolhido(s)`:"nenhum"} — escolha-os com o botão "Os meus cartões de desconto" na página dos combustíveis, com este perfil ativo.</div>`:""}
     <div class="row"><button type="button" class="btn ghost" data-act="del">Apagar perfil</button></div>
   </div>`;
 }
@@ -202,6 +204,7 @@ function renderProfiles(){
 }
 const newId=()=>Math.random().toString(36).slice(2,9);
 $("addFuel").onclick=()=>{const p={id:newId(),nome:"Carro a combustível",tipo:"combustivel",combustivel:2101,deposito:null,consumo:null,descontos:{programas:[],condicoes:[]}};A.setProfiles([...A.data.perfis,p])};
+$("addHyb").onclick=()=>{const p={id:newId(),nome:"Híbrido plug-in",tipo:"hibrido",combustivel:3201,deposito:null,consumo:null,descontos:{programas:[],condicoes:[]},fichas:["Mennekes"],potenciaMin:0,bateria:null,consumoEletrico:null};A.setProfiles([...A.data.perfis,p])};
 $("addEv").onclick=()=>{const p={id:newId(),nome:"Carro elétrico",tipo:"eletrico",fichas:["Mennekes","CCS"],potenciaMin:0,bateria:null,consumo:null};A.setProfiles([...A.data.perfis,p])};
 
 /* ---------- Favoritos, locais, alertas ---------- */

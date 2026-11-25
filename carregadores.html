@@ -543,7 +543,7 @@ $("zme").onclick=()=>{
 let evProfileApplied=null;
 window.onProfile=p=>{
   Route.places=window.Account?.data?.locais||{};Route.render();
-  if(p&&p.tipo==="eletrico"){
+  if(p&&(p.tipo==="eletrico"||p.tipo==="hibrido")){
     EST_KWH=p.bateria?Math.max(5,Math.round(p.bateria*0.6)):20;
     const key=JSON.stringify([p.id,p.fichas,p.potenciaMin]);
     if(key!==evProfileApplied){evProfileApplied=key;fConn.clear();(p.fichas||[]).forEach(c=>fConn.add(c));fPow=p.potenciaMin||0;if(stations.length)changed();return}

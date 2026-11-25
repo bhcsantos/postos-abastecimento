@@ -92,7 +92,7 @@ const A = {
   switchProfile(id) { this.save({ perfilAtivo: id }, true); this.emit() },
   applyProfile() {
     const p = this.profile();
-    if (p && p.tipo === "combustivel" && window.Discounts && p.descontos) {
+    if (p && (p.tipo === "combustivel" || p.tipo === "hibrido") && window.Discounts && p.descontos) {
       const cur = JSON.stringify(Discounts.prefs), nw = JSON.stringify({ programas: p.descontos.programas || [], condicoes: p.descontos.condicoes || [] });
       if (cur !== nw) Discounts.setPrefs(p.descontos);
     }
@@ -164,7 +164,7 @@ const A = {
     if (!u) { box.innerHTML = `<a class="acctbtn" href="conta.html?voltar=${encodeURIComponent(location.pathname.split("/").pop() + location.search)}">Entrar</a>`; return }
     const ini = (u.displayName || u.email || "?").trim().charAt(0).toUpperCase();
     const perfis = this.data?.perfis || [];
-    box.innerHTML = `${perfis.length > 1 ? `<label class="acctprof"><span class="sr">Perfil</span><select id="acctProf">${perfis.map(x => `<option value="${esc(x.id)}" ${p && x.id === p.id ? "selected" : ""}>${x.tipo === "eletrico" ? "⚡ " : "⛽ "}${esc(x.nome)}</option>`).join("")}</select></label>` : ""}
+    box.innerHTML = `${perfis.length > 1 ? `<label class="acctprof"><span class="sr">Perfil</span><select id="acctProf">${perfis.map(x => `<option value="${esc(x.id)}" ${p && x.id === p.id ? "selected" : ""}>${x.tipo === "eletrico" ? "⚡ " : x.tipo === "hibrido" ? "⛽⚡ " : "⛽ "}${esc(x.nome)}</option>`).join("")}</select></label>` : ""}
       <a class="acctbtn me" href="conta.html" title="A minha conta"><span class="av">${esc(ini)}</span><span class="nm">${esc((u.displayName || u.email || "").split(" ")[0])}</span></a>`;
     const sel = document.getElementById("acctProf"); if (sel) sel.onchange = () => this.switchProfile(sel.value);
   }
@@ -190,7 +190,7 @@ A.ready = new Promise(res => onAuthStateChanged(auth, async u => { await A.loadU
 const hook = () => {
   if (window.Discounts && !Discounts._acct) {
     Discounts._acct = true; const orig = Discounts.save.bind(Discounts);
-    Discounts.save = () => { orig(); const p = A.profile(); if (A.user && p && p.tipo === "combustivel") { p.descontos = { ...Discounts.prefs }; A.save({ perfis: A.data.perfis }) } };
+    Discounts.save = () => { orig(); const p = A.profile(); if (A.user && p && (p.tipo === "combustivel" || p.tipo === "hibrido")) { p.descontos = { ...Discounts.prefs }; A.save({ perfis: A.data.perfis }) } };
   }
   if (window.Route && !Route._acct) {
     Route._acct = true; const orig = Route.save.bind(Route);
