@@ -576,6 +576,37 @@
     "cartao continente"
    ],
    "fonte": "https://www.galp.com/pt/energias/pt/combina"
+  },
+  {
+   "id": "continente-cupao",
+   "nome": "Cartão Continente — cupão de combustível (compras de 30 € ou mais)",
+   "grupo": "Galp",
+   "marca": "GALP",
+   "exclusivo": "continente-cupao",
+   "pesquisa": [
+    "continente",
+    "cartao continente",
+    "cupao",
+    "galp",
+    "modelo"
+   ],
+   "fonte": "https://cartaocontinente.pt/ParceiroDetalhe.aspx?InsigniaId=2"
+  },
+  {
+   "id": "continente-cupao-luz",
+   "nome": "Cartão Continente + eletricidade Galp — cupão de combustível (compras de 30 € ou mais)",
+   "grupo": "Galp",
+   "marca": "GALP",
+   "exclusivo": "continente-cupao",
+   "pesquisa": [
+    "continente",
+    "cartao continente",
+    "cupao",
+    "galp",
+    "eletricidade",
+    "luz"
+   ],
+   "fonte": "https://cartaocontinente.pt/ParceiroDetalhe.aspx?InsigniaId=2"
   }
  ],
  "descontos": [
@@ -4799,6 +4830,58 @@
    ],
    "verificado": "2026-11-25",
    "estado": "confirmado"
+  },
+  {
+   "id": "continente-cupao",
+   "titulo": "Cupão Cartão Continente",
+   "marcas": [
+    "GALP"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "continente-cupao"
+   ],
+   "exclui": [],
+   "direto": 0,
+   "saldo": 0.1,
+   "saldoOnde": "saldo Cartão Continente",
+   "cumulativo": false,
+   "condicoes": "Cupão de 10 cênt./litro recebido em compras de 30 € ou mais nas lojas Continente de Portugal continental com o Cartão Continente. Usado num posto Galp aderente, o desconto acumula em saldo no Cartão Continente.",
+   "comoUsar": "Faça compras de 30 € ou mais no Continente com o Cartão Continente; depois abasteça num posto Galp aderente e apresente o cupão (ou o Cartão Continente com o cupão ativo).",
+   "limite": "Só quando tem um cupão ativo (depende das compras no Continente). O saldo pode pagar abastecimentos na Galp até 50 €, exceto gasóleo agrícola e de aquecimento. Não confirmado se acumula com o Plano COMBINA; aqui conta-se o melhor dos dois.",
+   "fonte": "https://cartaocontinente.pt/ParceiroDetalhe.aspx?InsigniaId=2",
+   "origem": "Página do Cartão Continente (cópia em PDF enviada pelo dono do site, 25/11/2026)",
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "continente-cupao-luz",
+   "titulo": "Cupão Cartão Continente (cliente de eletricidade Galp)",
+   "marcas": [
+    "GALP"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "continente-cupao-luz"
+   ],
+   "exclui": [],
+   "direto": 0,
+   "saldo": 0.14,
+   "saldoOnde": "saldo Cartão Continente",
+   "cumulativo": false,
+   "condicoes": "Cupão de 14 cênt./litro (cliente de eletricidade Galp) recebido em compras de 30 € ou mais nas lojas Continente de Portugal continental com o Cartão Continente. Usado num posto Galp aderente, o desconto acumula em saldo no Cartão Continente.",
+   "comoUsar": "Faça compras de 30 € ou mais no Continente com o Cartão Continente; depois abasteça num posto Galp aderente e apresente o cupão (ou o Cartão Continente com o cupão ativo).",
+   "limite": "Só quando tem um cupão ativo (depende das compras no Continente). O saldo pode pagar abastecimentos na Galp até 50 €, exceto gasóleo agrícola e de aquecimento. Não confirmado se acumula com o Plano COMBINA; aqui conta-se o melhor dos dois.",
+   "fonte": "https://cartaocontinente.pt/ParceiroDetalhe.aspx?InsigniaId=2",
+   "origem": "Página do Cartão Continente (cópia em PDF enviada pelo dono do site, 25/11/2026)",
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
   }
  ],
  "fontesGerais": [
@@ -4821,6 +4904,10 @@
   {
    "marca": "Galp (COMBINA)",
    "url": "https://www.galp.com/pt/energias/pt/combina"
+  },
+  {
+   "marca": "Cartão Continente (Galp)",
+   "url": "https://cartaocontinente.pt/ParceiroDetalhe.aspx?InsigniaId=2"
   }
  ]
 }
