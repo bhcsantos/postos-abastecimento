@@ -48,6 +48,9 @@ svg.drag{cursor:grabbing}
 .tiles{filter:var(--mapfilter)}
 .mapbox{overflow:hidden}
 .zoom{position:absolute;z-index:2;top:18px;right:18px;display:grid;gap:4px}
+.zoom button#zme.on{color:#1a73e8;border-color:#1a73e8}
+.locmsg{font-size:.8rem;color:var(--muted);padding:4px 4px 0;min-height:1em}
+.dist{color:var(--accent);font-weight:600}
 .zoom button{width:34px;height:34px;font:600 18px/1 var(--body);border:1px solid var(--line);border-radius:6px;background:var(--surface);color:var(--fg);cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,.15)}
 .maplab{font-family:var(--display);font-size:20px;fill:var(--muted);letter-spacing:.06em;text-transform:uppercase}
 .riverlab{font-family:var(--display);font-size:22px;fill:var(--accent);font-style:italic;letter-spacing:.1em}
@@ -111,11 +114,13 @@ svg.drag{cursor:grabbing}
   </section>
 
   <div class="main">
-    <div class="mapbox"><div class="zoom"><button type="button" id="zin" aria-label="Aproximar">+</button><button type="button" id="zout" aria-label="Afastar">−</button><button type="button" id="zreset" aria-label="Ver tudo">⤢</button></div>
+    <div class="mapbox"><div class="zoom"><button type="button" id="zin" aria-label="Aproximar">+</button><button type="button" id="zout" aria-label="Afastar">−</button><button type="button" id="zreset" aria-label="Ver tudo">⤢</button><button type="button" id="zme" aria-label="A minha localização" title="A minha localização"><svg viewBox="0 0 24 24" width="18" height="18" style="display:inline;width:18px;height:18px;cursor:inherit;background:none;vertical-align:middle" aria-hidden="true"><circle cx="12" cy="12" r="4" fill="currentColor"/><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 1v4M12 19v4M1 12h4M19 12h4" stroke="currentColor" stroke-width="2"/></svg></button></div>
       <svg id="map" viewBox="0 0 1713 1207" role="img" aria-label="Mapa esquemático do Porto com os postos"></svg>
       <div class="cap"><span>Mapa © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener" style="color:var(--accent)">colaboradores do OpenStreetMap</a> · arraste para mover · <a href="https://www.google.com/maps/search/bombas+de+gasolina/@41.16,-8.62,13z" target="_blank" rel="noopener" style="color:var(--accent)">ver a zona no Google Maps ↗</a></span><span><span style="color:var(--sel)">●</span> selecionado</span></div>
+      <div class="locmsg" id="locmsg" aria-live="polite"></div>
     </div>
     <div class="list">
+      <div class="chips" id="sortrow" hidden><span class="lbl">Ordenar</span><button type="button" class="chip" id="sortPrice" aria-pressed="true">Mais barato</button><button type="button" class="chip" id="sortDist" aria-pressed="false">Mais perto</button></div>
       <div class="count" id="count"></div>
       <div id="items" class="list"></div>
     </div>
@@ -174,7 +179,7 @@ Object.keys(brandCounts).sort((a,b)=>brandCounts[b]-brandCounts[a]).forEach(br=>
 buildBrands();
 
 function drawBase(){
-  return `<image class="tiles" href="map.jpg" x="0" y="0" width="${MW}" height="${MH}" preserveAspectRatio="none"/><g id="pins"></g>`;
+  return `<image class="tiles" href="map.jpg" x="0" y="0" width="${MW}" height="${MH}" preserveAspectRatio="none"/><g id="pins"></g><g id="me"></g>`;
 }
 $("map").innerHTML=drawBase();
 const svgEl=$("map");
@@ -230,18 +235,58 @@ function drawPins(){
     const id=+p.dataset.id;p.onclick=()=>{if(!moved)toggle(id)};
     p.onmouseenter=()=>highlight(id,true);p.onmouseleave=()=>highlight(id,false);
   });
+  drawMe();
 }
+/* Localização do utilizador */
+let me=null, watchId=null, sortBy="price", centered=false;
+const inMap=(lat,lon)=>{const x=X(lon),y=Y(lat);return x>=0&&x<=MW&&y>=0&&y<=MH};
+function distKm(a,b){const R=6371,r=Math.PI/180,dLat=(b.lat-a.lat)*r,dLon=(b.lon-a.lon)*r;
+  const h=Math.sin(dLat/2)**2+Math.cos(a.lat*r)*Math.cos(b.lat*r)*Math.sin(dLon/2)**2;return 2*R*Math.asin(Math.sqrt(h))}
+const km=d=>d<1?Math.round(d*1000/10)*10+" m":d.toFixed(1).replace(".",",")+" km";
+function drawMe(){
+  const g=$("me"); if(!g)return;
+  if(!me||!inMap(me.lat,me.lon)){g.innerHTML="";return}
+  const k=vb.w/MW, s1=Math.max(.45,Math.sqrt(k));
+  const mpp=156543.03*Math.cos(me.lat*Math.PI/180)/16384; // metros por píxel no zoom 14
+  const acc=Math.min(me.acc/mpp,400);
+  g.innerHTML=`<circle cx="${X(me.lon)}" cy="${Y(me.lat)}" r="${acc}" fill="#1a73e8" fill-opacity=".12" stroke="#1a73e8" stroke-opacity=".4" stroke-width="${2*s1}"/>
+    <g transform="translate(${X(me.lon)} ${Y(me.lat)}) scale(${s1})"><title>Está aqui (precisão ±${Math.round(me.acc)} m)</title><circle r="20" fill="#fff"/><circle r="14" fill="#1a73e8"/></g>`;
+}
+function onPos(pos){
+  me={lat:pos.coords.latitude,lon:pos.coords.longitude,acc:pos.coords.accuracy};
+  $("zme").classList.add("on"); $("sortrow").hidden=false;
+  if(!inMap(me.lat,me.lon)) $("locmsg").textContent="A sua localização fica fora da área do mapa. As distâncias aos postos continuam a aparecer na lista.";
+  else { $("locmsg").textContent=`Localização ativa (precisão ±${Math.round(me.acc)} m).`;
+    if(!centered){centered=true;const w=MW/3;setVB({x:X(me.lon)-w/2,y:Y(me.lat)-w*MH/MW/2,w,h:w*MH/MW})} }
+  render();
+}
+function onPosErr(e){
+  $("zme").classList.remove("on");
+  $("locmsg").textContent=e.code===1?"Sem autorização para usar a localização. Permita o acesso à localização nas definições do navegador e tente de novo."
+    :"Não foi possível obter a localização. Verifique se o GPS ou a localização do dispositivo está ligado e tente de novo.";
+  if(watchId!=null){navigator.geolocation.clearWatch(watchId);watchId=null}
+}
+$("zme").onclick=()=>{
+  if(!("geolocation" in navigator)){$("locmsg").textContent="Este navegador não permite obter a localização.";return}
+  if(me&&inMap(me.lat,me.lon)){const w=Math.min(vb.w,MW/3);setVB({x:X(me.lon)-w/2,y:Y(me.lat)-w*MH/MW/2,w,h:w*MH/MW})}
+  if(watchId!=null)return;
+  $("locmsg").textContent="A obter a sua localização…";
+  watchId=navigator.geolocation.watchPosition(onPos,onPosErr,{enableHighAccuracy:true,maximumAge:30000,timeout:20000});
+};
+function setSort(s){sortBy=s;$("sortPrice").setAttribute("aria-pressed",s==="price");$("sortDist").setAttribute("aria-pressed",s==="dist");render()}
+$("sortPrice").onclick=()=>setSort("price"); $("sortDist").onclick=()=>setSort("dist");
 function render(){
   const vis=STATIONS.filter(matches).sort((a,b)=>a.p[fuel]-b.p[fuel]);
   const best=vis.length?vis[0].p[fuel]:null;
-  $("count").textContent=`${vis.length} postos com ${fuel}, do mais barato para o mais caro`;
+  if(me&&sortBy==="dist") vis.sort((a,b)=>distKm(me,a)-distKm(me,b));
+  $("count").textContent=`${vis.length} postos com ${fuel}, ${me&&sortBy==="dist"?"do mais perto para o mais longe":"do mais barato para o mais caro"}`;
   lastVis=vis; drawPins();
   $("items").innerHTML=vis.length?vis.map(s=>{
     const pr=s.p[fuel], diff=pr-best;
     const on=selected.includes(s.id);
     return `<div class="item${on?" on":""}" data-id="${s.id}"><button type="button" class="st" data-sel="${s.id}" aria-pressed="${on}">
       <span class="brand" style="background:${colorOf(s.b)}">${esc(s.b)}</span>
-      <span><h3>${esc(s.n)}</h3><span class="addr">${esc(s.a)} · ${esc(s.cp)}</span>
+      <span><h3>${esc(s.n)}</h3><span class="addr">${me?`<span class="dist">${km(distKm(me,s))}</span> · `:""}${esc(s.a)} · ${esc(s.cp)}</span>
         <span class="tags">${Object.keys(s.p).filter(f=>f!==fuel).map(f=>`<span class="tag">${f} ${eur(s.p[f])}</span>`).join("")}</span></span>
       <span class="price${diff<0.0005?" best":""}">${eur(pr)}<small>${diff<0.0005?"mais barato":"+"+(diff*100).toFixed(1).replace(".",",")+" cênt."}</small></span>
       <span class="check" aria-hidden="true">✓</span>
