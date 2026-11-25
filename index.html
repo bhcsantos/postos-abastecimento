@@ -114,6 +114,8 @@ h1 span{color:var(--accent)}
       <select id="scope" class="scope" aria-label="Zona"></select>
       <input id="q" class="search" type="search" placeholder="Procurar por nome, rua, localidade ou código postal…" autocomplete="off">
     </div>
+    <div class="chips" id="concs" hidden><span class="lbl">Concelho</span></div>
+    <div class="chips" id="locs" hidden><span class="lbl">Localidade</span></div>
     <div class="chips" id="fuels"><span class="lbl">Combustível</span></div>
     <div class="chips" id="brands"><span class="lbl">Marca</span></div>
   </section>
@@ -154,7 +156,11 @@ const API="https://precoscombustiveis.dgeg.gov.pt/api/PrecoComb/PesquisarPostos"
 const FUELS=[[2101,"Gasóleo simples"],[2105,"Gasóleo especial"],[3201,"Gasolina 95 simples"],[3205,"Gasolina 95 especial"],[3405,"Gasolina 98 especial"],[1120,"GPL Auto"]];
 const FUEL_NAME=Object.fromEntries(FUELS);
 const DISTRITOS=[[1,"Aveiro"],[2,"Beja"],[3,"Braga"],[4,"Bragança"],[5,"Castelo Branco"],[6,"Coimbra"],[7,"Évora"],[8,"Faro"],[9,"Guarda"],[10,"Leiria"],[11,"Lisboa"],[12,"Portalegre"],[13,"Porto"],[14,"Santarém"],[15,"Setúbal"],[16,"Viana do Castelo"],[17,"Vila Real"],[18,"Viseu"]];
-const SCOPES=[["c192","Concelho do Porto","Postos do <span>Porto</span>"],...DISTRITOS.map(([id,n])=>["d"+id,"Distrito de "+n,"Postos do distrito de <span>"+n+"</span>"]),["pt","Portugal continental","Postos de <span>Portugal</span>"]];
+const DPREP={Guarda:"da",Porto:"do"};
+const SCOPES=[...DISTRITOS.map(([id,n])=>{const pr=DPREP[n]||"de";return ["d"+id,"Distrito "+pr+" "+n,"Postos do distrito "+pr+" <span>"+n+"</span>"]}),["pt","Portugal continental","Postos de <span>Portugal</span>"]];
+/* Preposição dos concelhos que não usam "de" */
+const CPREP={"Porto":"do","Maia":"da","Trofa":"da","Póvoa de Varzim":"da","Póvoa de Lanhoso":"da","Lousã":"da","Nazaré":"da","Figueira da Foz":"da","Amadora":"da","Guarda":"da","Golegã":"da","Mealhada":"da","Batalha":"da","Moita":"da","Marinha Grande":"da","Murtosa":"da","Sertã":"da","Chamusca":"da","Azambuja":"da","Lourinhã":"da","Mêda":"da","Covilhã":"da","Anadia":"da","Mealhada":"da","Entroncamento":"do","Cartaxo":"do","Barreiro":"do","Seixal":"do","Montijo":"do","Bombarral":"do","Cadaval":"do","Crato":"do","Fundão":"do","Sabugal":"do","Redondo":"do","Alandroal":"do","Gavião":"do","Sardoal":"do","Alvito":"do","Peso da Régua":"do","Marco de Canaveses":"do","Bombarral":"do","Cartaxo":"do","Barreiro":"do","Seixal":"do"};
+const norm=s=>String(s||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim();
 const BRAND_COLORS={"GALP":"#e2591d","BP":"#0b8a3a","REPSOL":"#c99a00","PRIO":"#2f6db5","CEPSA":"#b8202e","MOEVE":"#00857c","SHELL":"#d8a400","AUCHAN":"#d6001c","REDE ENERGIA":"#6a4fb3","INTERMARCHÉ":"#c4161c","ALVES BANDEIRA":"#1b3f8b","FREITAS":"#7a3e9d","PINGO DOCE":"#4c8c2b","OZ Energia":"#0098c7","Genérico":"#6f7b8a"};
 const PALETTE=["#8a5a2b","#2b7a8a","#8a2b6e","#5a8a2b","#3d4f9e","#9e6a3d","#3d9e7f","#9e3d4f"];
 function colorOf(b){if(BRAND_COLORS[b])return BRAND_COLORS[b];let h=0;for(const c of b)h=(h*31+c.charCodeAt(0))|0;return PALETTE[Math.abs(h)%PALETTE.length]}
@@ -166,7 +172,11 @@ const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v)
 const gmView=s=>`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${s.b} ${s.a}, ${s.cp} ${s.loc||""}`)}`;
 const gmGo=s=>`https://www.google.com/maps/dir/?api=1&destination=${s.lat},${s.lon}&travelmode=driving`;
 
-let scope=store.get("pp-scope","c192"); if(!SCOPES.some(x=>x[0]===scope))scope="c192";
+let scope=store.get("pp-scope","d13");
+let activeConc=new Set(store.get("pp-conc",["Porto"])), activeLoc=new Set();
+if(scope==="c192"){scope="d13";activeConc=new Set(["Porto"])}
+if(!SCOPES.some(x=>x[0]===scope))scope="d13";
+if(scope==="pt")activeConc.clear();
 let fuelId=store.get("pp-fuel",2101); if(!FUEL_NAME[fuelId])fuelId=2101;
 let selected=store.get("pp-sel",[]); // objetos {id,n,b,a,cp,loc,lat,lon,price,fuel}
 let data=[], activeBrands=new Set(), shown=50, sortBy="price", me=null, watchId=null;
@@ -175,7 +185,7 @@ const cache=new Map();
 /* Zona e combustível */
 $("scope").innerHTML=SCOPES.map(([v,l])=>`<option value="${v}">${l}</option>`).join("");
 $("scope").value=scope;
-$("scope").onchange=()=>{scope=$("scope").value;store.set("pp-scope",scope);activeBrands.clear();load(true)};
+$("scope").onchange=()=>{scope=$("scope").value;store.set("pp-scope",scope);activeBrands.clear();activeConc.clear();activeLoc.clear();store.set("pp-conc",[]);load(true)};
 FUELS.forEach(([id,name])=>{
   const b=document.createElement("button");b.type="button";b.className="chip";b.textContent=name;b.dataset.f=id;
   b.setAttribute("aria-pressed",id===fuelId);
@@ -205,10 +215,10 @@ map.on("moveend",()=>{shown=50;renderList()});
 async function fetchScope(sc,fid){
   const key=sc+"|"+fid; if(cache.has(key))return cache.get(key);
   let q=`idsTiposComb=${fid}&qtdPorPagina=5000&pagina=1`;
-  if(sc==="c192")q+="&idDistrito=13&idsMunicipios=192"; else if(sc[0]==="d")q+="&idDistrito="+sc.slice(1);
+  if(sc[0]==="d")q+="&idDistrito="+sc.slice(1);
   const r=await fetch(`${API}?${q}`,{cache:"no-store"}); if(!r.ok)throw new Error(r.status);
   const j=await r.json();
-  const rows=(j.resultado||[]).map(x=>({id:x.Id,n:String(x.Nome).trim(),b:String(x.Marca||"").trim()||"Sem marca",a:String(x.Morada||"").trim(),cp:x.CodPostal,loc:[x.Localidade,x.Municipio].filter(Boolean).join(", "),lat:+x.Latitude,lon:+x.Longitude,price:parseFloat(String(x.Preco).replace("€","").replace(",",".").trim()),d:x.DataAtualizacao}))
+  const rows=(j.resultado||[]).map(x=>({id:x.Id,n:String(x.Nome).trim(),b:String(x.Marca||"").trim()||"Sem marca",a:String(x.Morada||"").trim(),cp:x.CodPostal,loc:[x.Localidade,x.Municipio].filter(Boolean).join(", "),mun:String(x.Municipio||"").trim(),locn:String(x.Localidade||"").trim(),lat:+x.Latitude,lon:+x.Longitude,price:parseFloat(String(x.Preco).replace("€","").replace(",",".").trim()),d:x.DataAtualizacao}))
     .filter(s=>isFinite(s.price)&&s.lat&&s.lon);
   cache.set(key,rows); return rows;
 }
@@ -220,24 +230,64 @@ async function load(fit){
     const t=new Date();
     $("srcinfo").textContent=`Preços em direto, atualizados às ${t.toLocaleTimeString("pt-PT",{hour:"2-digit",minute:"2-digit"})} de ${t.toLocaleDateString("pt-PT")}.`;
   }catch(e){
-    if(scope==="c192"){
-      data=SNAP.filter(s=>s.p[name]!=null).map(s=>({id:s.id,n:s.n,b:s.b,a:s.a,cp:s.cp,loc:"Porto",lat:s.lat,lon:s.lon,price:s.p[name],d:s.d}));
-      $("srcinfo").textContent=`Preços guardados a ${SNAP_DATE} (não foi possível ligar à DGEG).`;
+    if(scope==="d13"){
+      data=SNAP.filter(s=>s.p[name]!=null).map(s=>({id:s.id,n:s.n,b:s.b,a:s.a,cp:s.cp,loc:"Porto",mun:"Porto",locn:"Porto",lat:s.lat,lon:s.lon,price:s.p[name],d:s.d}));
+      $("srcinfo").textContent=`Preços guardados a ${SNAP_DATE}, só do concelho do Porto (não foi possível ligar à DGEG).`;
     }else{
       data=[];$("srcinfo").textContent="Não foi possível ligar à DGEG. Tente de novo dentro de momentos.";
     }
   }
   $("loading").hidden=true;
-  $("h1").innerHTML=SCOPES.find(x=>x[0]===scope)[2];
-  buildBrands();
-  if(fit&&data.length){map.fitBounds(L.latLngBounds(data.map(s=>[s.lat,s.lon])),{padding:[20,20]})}
+  const muns=new Set(data.map(s=>s.mun));
+  for(const c of [...activeConc]) if(!muns.has(c)) activeConc.delete(c);
+  buildAreas(); updateTitle(); buildBrands();
+  if(fit)fitArea();
   shown=50; drawPins(); renderList();
+}
+/* Concelhos e localidades */
+const inArea=s=>(!activeConc.size||activeConc.has(s.mun))&&(!activeLoc.size||activeLoc.has(norm(s.locn)));
+function fitArea(){const a=data.filter(inArea);if(a.length)map.fitBounds(L.latLngBounds(a.map(s=>[s.lat,s.lon])),{padding:[24,24],maxZoom:15})}
+function updateTitle(){
+  let h=SCOPES.find(x=>x[0]===scope)[2];
+  const cs=[...activeConc].sort((a,b)=>a.localeCompare(b,"pt"));
+  if(cs.length===1)h=`Postos ${CPREP[cs[0]]||"de"} <span>${esc(cs[0])}</span>`;
+  else if(cs.length>1&&cs.length<=3)h=`Postos: <span>${cs.map(esc).join(", ")}</span>`;
+  else if(cs.length>3)h=`Postos em <span>${cs.length} concelhos</span>`;
+  $("h1").innerHTML=h;
+}
+function areaChanged(){store.set("pp-conc",[...activeConc]);buildAreas();updateTitle();buildBrands();fitArea();shown=50;drawPins();renderList()}
+function chipBtn(label,count,on,fn){
+  const b=document.createElement("button");b.type="button";b.className="chip";b.setAttribute("aria-pressed",on);
+  b.innerHTML=esc(label)+(count!=null?` <span style="opacity:.6">${count}</span>`:"");b.onclick=fn;return b;
+}
+function buildAreas(){
+  const cbox=$("concs"), lbox=$("locs");
+  cbox.querySelectorAll(".chip").forEach(c=>c.remove()); lbox.querySelectorAll(".chip").forEach(c=>c.remove());
+  if(scope==="pt"){cbox.hidden=lbox.hidden=true;return}
+  const cc={};data.forEach(s=>{if(s.mun)cc[s.mun]=(cc[s.mun]||0)+1});
+  cbox.hidden=!Object.keys(cc).length;
+  cbox.appendChild(chipBtn("Todos",data.length,!activeConc.size,()=>{activeConc.clear();activeLoc.clear();areaChanged()}));
+  Object.keys(cc).sort((a,b)=>a.localeCompare(b,"pt")).forEach(m=>cbox.appendChild(chipBtn(m,cc[m],activeConc.has(m),()=>{
+    activeConc.has(m)?activeConc.delete(m):activeConc.add(m); activeLoc.clear(); areaChanged();
+  })));
+  if(!activeConc.size){lbox.hidden=true;return}
+  const groups={};
+  data.filter(s=>activeConc.has(s.mun)&&s.locn).forEach(s=>{const k=norm(s.locn);(groups[k]=groups[k]||{n:0,names:{}});groups[k].n++;groups[k].names[s.locn]=(groups[k].names[s.locn]||0)+1});
+  const keys=Object.keys(groups);
+  for(const k of [...activeLoc]) if(!groups[k]) activeLoc.delete(k);
+  lbox.hidden=keys.length<2;
+  if(lbox.hidden)return;
+  lbox.appendChild(chipBtn("Todas",null,!activeLoc.size,()=>{activeLoc.clear();areaChanged()}));
+  keys.sort((a,b)=>groups[b].n-groups[a].n||a.localeCompare(b)).slice(0,40).forEach(k=>{
+    const g=groups[k], name=Object.entries(g.names).sort((a,b)=>b[1]-a[1])[0][0];
+    lbox.appendChild(chipBtn(name,g.n,activeLoc.has(k),()=>{activeLoc.has(k)?activeLoc.delete(k):activeLoc.add(k);areaChanged()}));
+  });
 }
 
 /* Marcas */
 function buildBrands(){
   document.querySelectorAll("#brands .chip").forEach(c=>c.remove());
-  const counts={};data.forEach(s=>counts[s.b]=(counts[s.b]||0)+1);
+  const counts={};data.filter(inArea).forEach(s=>counts[s.b]=(counts[s.b]||0)+1);
   for(const br of [...activeBrands]) if(!counts[br]) activeBrands.delete(br);
   Object.keys(counts).sort((a,b)=>counts[b]-counts[a]).slice(0,14).forEach(br=>{
     const b=document.createElement("button");b.type="button";b.className="chip";
@@ -252,7 +302,7 @@ function matches(s){
   const q=$("q").value.trim().toLowerCase();
   if(q&&!(s.n+" "+s.a+" "+s.cp+" "+s.loc+" "+s.b).toLowerCase().includes(q))return false;
   if(activeBrands.size&&!activeBrands.has(s.b))return false;
-  return true;
+  return inArea(s);
 }
 const isSel=id=>selected.some(x=>x.id===id);
 function drawPins(){
