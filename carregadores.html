@@ -57,6 +57,8 @@ h1 span{color:var(--accent)}
 .chip{font:inherit;font-size:.85rem;border:1px solid var(--line);background:var(--surface);color:var(--fg);border-radius:999px;padding:4px 11px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
 .chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--surface)}
 .chip small{opacity:.65}
+.ddconn{display:flex;align-items:center;gap:10px}.ddconn svg{width:30px;height:30px;flex:none;color:var(--fg)}.ddconn>span{display:grid;line-height:1.2}.ddconn small{font-size:.72rem;color:var(--muted)}
+.dd-v .ddconn svg{width:20px;height:20px}.dd-v .ddconn small{display:none}
 .chip.conn{padding:6px 14px 6px 8px;border-radius:10px;gap:10px;text-align:left}
 .chip.conn svg{width:40px;height:40px;flex:none;color:var(--fg)}
 .chip.conn[aria-pressed="true"] svg{color:var(--surface)}
@@ -182,11 +184,7 @@ h1 span{color:var(--accent)}
       <button type="button" class="discbtn" id="discBtn" aria-pressed="false"></button>
       <input id="q" class="search" type="search" placeholder="Procurar por morada, operador ou código do posto (ex.: Galp, PRT-00123)…" autocomplete="off">
     </div>
-    <div class="chips" id="concs" hidden><span class="lbl">Concelho</span></div>
-    <div class="chips" id="fConn"><span class="lbl">Ficha</span></div>
-    <div class="chips" id="fPow"><span class="lbl">Potência</span></div>
-    <div class="chips" id="fState"><span class="lbl">Estado</span></div>
-    <div class="chips" id="fOp"><span class="lbl">Operador</span></div>
+    <div class="filters" id="filters"></div>
   </section>
 
   <div class="main">
@@ -222,6 +220,7 @@ h1 span{color:var(--accent)}
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/leaflet.markercluster.js"></script>
+<script src="dropdown.js"></script>
 <script src="descontos.js"></script>
 <script src="route.js"></script>
 <script type="module" src="account.js"></script>
@@ -359,19 +358,22 @@ new LocCtl().addTo(map);
 map.on("moveend",()=>{shown=40;renderList()});
 
 /* Filtros */
-function chip(box,label,on,fn,extra=""){const b=document.createElement("button");b.type="button";b.className="chip";b.setAttribute("aria-pressed",on);b.innerHTML=label+extra;b.onclick=fn;box.appendChild(b);return b}
+const setTo=(set,vals)=>{set.clear();vals.forEach(v=>set.add(v))};
+const ddConc=Dropdown.create($("filters"),{label:"Concelho",allLabel:"Todos",onChange:v=>{setTo(activeConc,v);areaChanged()}});
+const ddConn=Dropdown.create($("filters"),{label:"Ficha",allLabel:"Todas",search:false,onChange:v=>{setTo(fConn,v);changed()}});
+const ddPow=Dropdown.create($("filters"),{label:"Potência mínima",allLabel:"Todas",multi:false,search:false,highlight:true,onChange:v=>{fPow=+v;changed()}});
+const ddState=Dropdown.create($("filters"),{label:"Estado",multi:false,search:false,highlight:true,onChange:v=>{fFree=v==="free";changed()}});
+const ddOp=Dropdown.create($("filters"),{label:"Operador",allLabel:"Todos",onChange:v=>{setTo(fOps,v);changed()}});
 function buildFilters(){
-  for(const id of ["fConn","fPow","fState","fOp"]) $(id).querySelectorAll(".chip").forEach(c=>c.remove());
   const cc={};stations.filter(inArea).forEach(s=>s.sockets.forEach(k=>{if(k.connector)cc[k.connector]=(cc[k.connector]||0)+1}));
-  Object.keys(cc).sort((a,b)=>cc[b]-cc[a]).forEach(c=>{
-    const b=chip($("fConn"),`${connIcon(c)}<span class="t"><strong>${esc(CONN_LABEL[c]||c)} <small>${cc[c].toLocaleString("pt-PT")}</small></strong><span>${esc(CONN_HINT[c]||"")}</span></span>`,fConn.has(c),()=>{fConn.has(c)?fConn.delete(c):fConn.add(c);changed()});
-    b.classList.add("conn"); b.title=`${CONN_LABEL[c]||c}: ${CONN_HINT[c]||""}`;
-  });
-  POWERS.forEach(([v,l])=>chip($("fPow"),l,fPow===v,()=>{fPow=v;changed()}));
-  chip($("fState"),"Todos",!fFree,()=>{fFree=false;changed()});
-  chip($("fState"),`<i style="display:inline-block;width:9px;height:9px;border-radius:50%;background:${STATE_COLOR.available}"></i>Só com tomada livre agora`,fFree,()=>{fFree=true;changed()});
+  ddConn.setOptions(Object.keys(cc).sort((a,b)=>cc[b]-cc[a]).map(c=>({value:c,label:CONN_LABEL[c]||c,count:cc[c],selected:fConn.has(c),
+    html:`<span class="ddconn">${connIcon(c)}<span><strong>${esc(CONN_LABEL[c]||c)}</strong><small>${esc(CONN_HINT[c]||"")}</small></span></span>`})));
+  ddPow.setOptions(POWERS.map(([v,l])=>({value:v,label:l,selected:fPow===v,isDefault:v===0})));
+  const dotFree=`<i style="display:inline-block;width:9px;height:9px;border-radius:50%;background:${STATE_COLOR.available}"></i>`;
+  ddState.setOptions([{value:"all",label:"Todos",selected:!fFree,isDefault:true},{value:"free",label:"Só com tomada livre agora",html:dotFree+"Só com tomada livre agora",selected:fFree}]);
   const oc={};stations.filter(inArea).forEach(s=>{if(s.operator)oc[s.operator]=(oc[s.operator]||0)+1});
-  Object.keys(oc).sort((a,b)=>oc[b]-oc[a]).slice(0,16).forEach(o=>chip($("fOp"),esc(o),fOps.has(o),()=>{fOps.has(o)?fOps.delete(o):fOps.add(o);changed()},` <small>${oc[o]}</small>`));
+  for(const o of [...fOps]) if(!oc[o]) fOps.delete(o);
+  ddOp.setOptions(Object.keys(oc).sort((a,b)=>oc[b]-oc[a]).map(o=>({value:o,label:o,count:oc[o],selected:fOps.has(o)})));
 }
 function changed(){saveF();buildFilters();shown=40;draw()}
 function updateTitle(){
@@ -383,13 +385,11 @@ function updateTitle(){
   $("h1").innerHTML=h;
 }
 function buildAreas(){
-  const box=$("concs"); box.querySelectorAll(".chip").forEach(c=>c.remove());
-  if(scope==="pt"){box.hidden=true;return}
+  if(scope==="pt"){ddConc.setHidden(true);return}
   const cc={};stations.filter(s=>s.dist===scope).forEach(s=>cc[s.conc]=(cc[s.conc]||0)+1);
   for(const c of [...activeConc]) if(!cc[c]) activeConc.delete(c);
-  box.hidden=false;
-  chip(box,`Todos <small>${Object.values(cc).reduce((a,b)=>a+b,0)}</small>`,!activeConc.size,()=>{activeConc.clear();areaChanged()});
-  Object.keys(cc).sort((a,b)=>a.localeCompare(b,"pt")).forEach(c=>chip(box,`${esc(c)} <small>${cc[c]}</small>`,activeConc.has(c),()=>{activeConc.has(c)?activeConc.delete(c):activeConc.add(c);areaChanged()}));
+  ddConc.setHidden(false);
+  ddConc.setOptions(Object.keys(cc).sort((a,b)=>a.localeCompare(b,"pt")).map(c=>({value:c,label:c,count:cc[c],selected:activeConc.has(c)})));
 }
 function fitArea(){const a=stations.filter(inArea);if(!a.length)return;if(scope==="pt"&&!activeConc.size){map.setView([39.6,-8.0],7);return}map.fitBounds(L.latLngBounds(a.map(s=>[s.lat,s.lng])),{padding:[24,24],maxZoom:15})}
 function areaChanged(){store.set("ev-scope",scope);store.set("ev-conc",[...activeConc]);buildAreas();updateTitle();buildFilters();fitArea();shown=40;draw()}

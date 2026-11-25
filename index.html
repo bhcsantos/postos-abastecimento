@@ -202,10 +202,7 @@ dialog.dlg::backdrop{background:rgba(10,16,26,.55)}
       <input id="q" class="search" type="search" placeholder="Procurar por nome, rua, localidade ou código postal…" autocomplete="off">
       <button type="button" class="discbtn" id="discBtn" aria-pressed="false"></button>
     </div>
-    <div class="chips" id="concs" hidden><span class="lbl">Concelho</span></div>
-    <div class="chips" id="locs" hidden><span class="lbl">Localidade</span></div>
-    <div class="chips" id="fuels"><span class="lbl">Combustível</span></div>
-    <div class="chips" id="brands"><span class="lbl">Marca</span></div>
+    <div class="filters" id="filters"></div>
   </section>
 
   <div class="main">
@@ -241,6 +238,7 @@ dialog.dlg::backdrop{background:rgba(10,16,26,.55)}
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/leaflet.markercluster.js"></script>
+<script src="dropdown.js"></script>
 <script src="previsao.js"></script>
 <script src="descontos.js"></script>
 <script src="route.js"></script>
@@ -303,12 +301,16 @@ const cache=new Map();
 $("scope").innerHTML=SCOPES.map(([v,l])=>`<option value="${v}">${l}</option>`).join("");
 $("scope").value=scope;
 $("scope").onchange=()=>{scope=$("scope").value;store.set("pp-scope",scope);activeBrands.clear();activeConc.clear();activeLoc.clear();store.set("pp-conc",[]);load(true)};
-FUELS.forEach(([id,name])=>{
-  const b=document.createElement("button");b.type="button";b.className="chip fuel";b.innerHTML=fuelBadge(name,24)+esc(name);b.dataset.f=id;b.style.setProperty("--fc",fuelColor(name));
-  b.setAttribute("aria-pressed",id===fuelId);
-  b.onclick=()=>{fuelId=id;store.set("pp-fuel",id);window.Previsao&&Previsao.setFuel([2101,2105].includes(+id)?"gasoleo":[3201,3205,3405].includes(+id)?"gasolina":null);document.querySelectorAll("#fuels .chip").forEach(c=>c.setAttribute("aria-pressed",+c.dataset.f===id));load(false)};
-  $("fuels").appendChild(b);
-});
+const ddFuel=Dropdown.create($("filters"),{label:"Combustível",multi:false,search:false,onChange:id=>setFuel(+id)});
+const ddConc=Dropdown.create($("filters"),{label:"Concelho",allLabel:"Todos",onChange:v=>{activeConc=new Set(v);activeLoc.clear();areaChanged()}});
+const ddLoc=Dropdown.create($("filters"),{label:"Localidade",allLabel:"Todas",onChange:v=>{activeLoc=new Set(v);areaChanged()}});
+const ddBrand=Dropdown.create($("filters"),{label:"Marca",allLabel:"Todas",onChange:v=>{activeBrands=new Set(v);drawPins();renderList()}});
+function buildFuels(){ddFuel.setOptions(FUELS.map(([id,name])=>({value:id,label:name,html:fuelBadge(name,22)+esc(name),selected:id===fuelId})))}
+function setFuel(id){
+  if(!FUEL_NAME[id])return;
+  fuelId=id;store.set("pp-fuel",id);window.Previsao&&Previsao.setFuel([2101,2105].includes(+id)?"gasoleo":[3201,3205,3405].includes(+id)?"gasolina":null);buildFuels();load(false);
+}
+buildFuels();
 
 /* Mapa */
 const map=L.map("map",{preferCanvas:true,zoomSnap:.5}).setView([39.6,-8.0],7);
@@ -373,46 +375,25 @@ function updateTitle(){
   $("h1").innerHTML=h;
 }
 function areaChanged(){store.set("pp-conc",[...activeConc]);buildAreas();updateTitle();buildBrands();fitArea();shown=50;drawPins();renderList()}
-function chipBtn(label,count,on,fn){
-  const b=document.createElement("button");b.type="button";b.className="chip";b.setAttribute("aria-pressed",on);
-  b.innerHTML=esc(label)+(count!=null?` <span style="opacity:.6">${count}</span>`:"");b.onclick=fn;return b;
-}
 function buildAreas(){
-  const cbox=$("concs"), lbox=$("locs");
-  cbox.querySelectorAll(".chip").forEach(c=>c.remove()); lbox.querySelectorAll(".chip").forEach(c=>c.remove());
-  if(scope==="pt"){cbox.hidden=lbox.hidden=true;return}
+  if(scope==="pt"){ddConc.setHidden(true);ddLoc.setHidden(true);return}
   const cc={};data.forEach(s=>{if(s.mun)cc[s.mun]=(cc[s.mun]||0)+1});
-  cbox.hidden=!Object.keys(cc).length;
-  cbox.appendChild(chipBtn("Todos",data.length,!activeConc.size,()=>{activeConc.clear();activeLoc.clear();areaChanged()}));
-  Object.keys(cc).sort((a,b)=>a.localeCompare(b,"pt")).forEach(m=>cbox.appendChild(chipBtn(m,cc[m],activeConc.has(m),()=>{
-    activeConc.has(m)?activeConc.delete(m):activeConc.add(m); activeLoc.clear(); areaChanged();
-  })));
-  if(!activeConc.size){lbox.hidden=true;return}
+  ddConc.setHidden(!Object.keys(cc).length);
+  ddConc.setOptions(Object.keys(cc).sort((a,b)=>a.localeCompare(b,"pt")).map(m=>({value:m,label:m,count:cc[m],selected:activeConc.has(m)})));
+  if(!activeConc.size){ddLoc.setHidden(true);return}
   const groups={};
   data.filter(s=>activeConc.has(s.mun)&&s.locn).forEach(s=>{const k=norm(s.locn);(groups[k]=groups[k]||{n:0,names:{}});groups[k].n++;groups[k].names[s.locn]=(groups[k].names[s.locn]||0)+1});
   const keys=Object.keys(groups);
   for(const k of [...activeLoc]) if(!groups[k]) activeLoc.delete(k);
-  lbox.hidden=keys.length<2;
-  if(lbox.hidden)return;
-  lbox.appendChild(chipBtn("Todas",null,!activeLoc.size,()=>{activeLoc.clear();areaChanged()}));
-  keys.sort((a,b)=>groups[b].n-groups[a].n||a.localeCompare(b)).slice(0,40).forEach(k=>{
-    const g=groups[k], name=Object.entries(g.names).sort((a,b)=>b[1]-a[1])[0][0];
-    lbox.appendChild(chipBtn(name,g.n,activeLoc.has(k),()=>{activeLoc.has(k)?activeLoc.delete(k):activeLoc.add(k);areaChanged()}));
-  });
+  ddLoc.setHidden(keys.length<2);
+  ddLoc.setOptions(keys.map(k=>{const g=groups[k];return{value:k,label:Object.entries(g.names).sort((a,b)=>b[1]-a[1])[0][0],count:g.n,selected:activeLoc.has(k)}}).sort((a,b)=>a.label.localeCompare(b.label,"pt")));
 }
 
 /* Marcas */
 function buildBrands(){
-  document.querySelectorAll("#brands .chip").forEach(c=>c.remove());
   const counts={};data.filter(inArea).forEach(s=>counts[s.b]=(counts[s.b]||0)+1);
   for(const br of [...activeBrands]) if(!counts[br]) activeBrands.delete(br);
-  Object.keys(counts).sort((a,b)=>counts[b]-counts[a]).slice(0,14).forEach(br=>{
-    const b=document.createElement("button");b.type="button";b.className="chip";
-    b.innerHTML=`<span class="dot" style="background:${colorOf(br)}"></span>${esc(nice(br))} <span style="opacity:.6">${counts[br]}</span>`;
-    b.setAttribute("aria-pressed",activeBrands.has(br));
-    b.onclick=()=>{activeBrands.has(br)?activeBrands.delete(br):activeBrands.add(br);b.setAttribute("aria-pressed",activeBrands.has(br));drawPins();renderList()};
-    $("brands").appendChild(b);
-  });
+  ddBrand.setOptions(Object.keys(counts).sort((a,b)=>counts[b]-counts[a]).map(br=>({value:br,label:nice(br),html:`<span class="dot" style="background:${colorOf(br)}"></span>${esc(nice(br))}`,count:counts[br],selected:activeBrands.has(br)})));
 }
 
 function matches(s){
@@ -509,7 +490,7 @@ let curProfile=null;
 /* Perfil ativo da conta: escolhe o combustível e mostra o custo de atestar */
 window.onProfile=p=>{
   curProfile=p&&(p.tipo==="combustivel"||p.tipo==="hibrido")?p:null;
-  if(curProfile&&curProfile.combustivel&&curProfile.combustivel!==fuelId){document.querySelector(`#fuels .chip[data-f="${curProfile.combustivel}"]`)?.click();return}
+  if(curProfile&&curProfile.combustivel&&curProfile.combustivel!==fuelId){setFuel(+curProfile.combustivel);return}
   Route.places=window.Account?.data?.locais||{};Route.render();
   if(data.length)renderList();
 };

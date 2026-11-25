@@ -7,7 +7,7 @@ Site para encontrar e comparar postos de abastecimento em Portugal continental, 
 ## O que faz
 
 - **Preços em direto.** Sempre que a página abre, o navegador pede os preços à [DGEG — Preços dos Combustíveis](https://precoscombustiveis.dgeg.gov.pt/). Não há servidor nem base de dados próprios.
-- **Zonas.** Portugal continental (a zona inicial), qualquer um dos 18 distritos e, dentro de cada distrito, filtros por concelho e por localidade (por exemplo: distrito do Porto → Gondomar → Rio Tinto).
+- **Zonas.** Portugal continental (a zona inicial), qualquer um dos 18 distritos e, dentro de cada distrito, filtros por concelho e por localidade (por exemplo: distrito do Porto → Gondomar → Rio Tinto). Os filtros são caixas de seleção onde se podem marcar várias opções (vários concelhos, várias marcas, várias fichas…).
 - **Combustíveis.** Gasóleo simples e especial, gasolina 95 simples e especial, gasolina 98 especial e GPL Auto.
 - **Mapa interativo** com os postos agrupados: cada bolinha mostra quantos postos tem e vai-se dividindo à medida que se aproxima o mapa.
 - **Lista da zona visível**, ordenada do mais barato para o mais caro ou, com a localização ligada, do mais perto para o mais longe.
@@ -27,6 +27,7 @@ Site para encontrar e comparar postos de abastecimento em Portugal continental, 
 | `index.html` | Página principal: mapa, filtros, lista e seleção. Inclui uma cópia dos preços do concelho do Porto (25/11/2026), usada só quando a DGEG não responde. |
 | `posto.html` | Ficha de um posto, aberta como `posto.html?id=<número do posto na DGEG>`. |
 | `carregadores.html` | Carregadores elétricos da MOBI.E, com estado em direto e preços do operador. |
+| `dropdown.js` | Caixas de filtro (combustível, concelho, localidade, marca, ficha, potência, estado, operador), com escolha múltipla e pesquisa nas listas grandes. |
 | `route.js` | O percurso partilhado pelas três páginas (guardado no navegador). |
 | `worker/mobie-proxy.js` | Código do intermediário (Cloudflare Worker) que corre em `https://mobie-proxy.bhcsantos.workers.dev`. Está no repositório para consulta; não corre no GitHub Pages. |
 | `descontos.js`, `data/descontos.json` | Cartões de desconto: o utilizador acrescenta o que tem (pesquisa por nome), o site aplica a melhor combinação em cada posto e explica o que é preciso. Regras com fonte, validade e estado. Repsol: planos My Repsol e 35 cartões de parceiro, a partir de repsol.pt/particulares/beneficios e /parceiros. |
