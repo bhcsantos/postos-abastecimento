@@ -112,6 +112,21 @@ h1 span{color:var(--accent)}
 .check:hover{border-color:var(--sel)}
 .item.on .check{background:var(--sel);border-color:var(--sel);color:#1a1300}
 .tray{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:14px;display:grid;gap:10px}
+.routeinfo{margin:0;font-size:.88rem;color:var(--muted)}
+.routeinfo strong{color:var(--fg)}
+.routewarn{margin:0;font-size:.85rem;color:#b3261e}
+.tray .stops{list-style:none;margin:0;padding:0;display:grid;gap:6px;counter-reset:stop}
+.stops li{display:grid;grid-template-columns:auto auto minmax(0,1fr) auto;gap:10px;align-items:center;border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:var(--bg);counter-increment:stop}
+.stops li::before{content:counter(stop);font-family:var(--display);font-weight:700;font-size:1.2rem;color:var(--accent);min-width:1.2em;text-align:center}
+.stopicon{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;color:#fff}
+.stopicon.k-fuel{background:#1d1f23}.stopicon.k-ev{background:#1d8a4a}
+.stoptxt{min-width:0;overflow-wrap:anywhere;font-size:.92rem;line-height:1.35}
+.stopsub{color:var(--muted);font-size:.82rem}
+.stopbtns{display:flex;gap:4px}
+.stopbtns button{width:32px;height:32px;border:1px solid var(--line);border-radius:6px;background:var(--surface);color:var(--fg);font:600 15px/1 var(--body);cursor:pointer}
+.stopbtns button:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
+.stopbtns button:disabled{opacity:.35;cursor:default}
+@media (max-width:520px){.stops li{grid-template-columns:auto minmax(0,1fr) auto}.stopicon{display:none}}
 .tray h2{font-family:var(--display);font-size:1.4rem;margin:0}
 .traydesc{margin:0;color:var(--muted);font-size:.88rem;max-width:70ch}
 .tray ol{margin:0;padding-left:22px;display:grid;gap:4px}
@@ -178,6 +193,7 @@ h1 span{color:var(--accent)}
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/leaflet.markercluster.js"></script>
+<script src="route.js"></script>
 <script>
 const PROXY="https://mobie-proxy.bhcsantos.workers.dev";
 /* Concelhos: distrito ou região e centro aproximado (média das coordenadas dos postos de combustível da DGEG; ilhas a partir dos carregadores) */
@@ -229,8 +245,7 @@ let stations=[], live={}, liveAt=null;
 const f=store.get("ev-f",{conn:[],pow:0,free:false,ops:[]});
 const fConn=new Set(f.conn), fOps=new Set(f.ops); let fPow=f.pow, fFree=f.free;
 let sortBy="pow", shown=40, me=null, watchId=null, openId=null;
-let selected=store.get("ev-sel",[]); // {id,name,address,conc,operator,lat,lng}
-const isSel=id=>selected.some(x=>x.id===id);
+const isSel=id=>Route.has("ev",id);
 let scope=store.get("ev-scope","pt"); if(!SCOPES.some(x=>x[0]===scope))scope="pt";
 const activeConc=new Set(scope==="pt"?[]:store.get("ev-conc",[]));
 const inArea=s=>(scope==="pt"||s.dist===scope)&&(!activeConc.size||activeConc.has(s.conc));
@@ -388,36 +403,12 @@ async function loadDetail(s){
 /* Seleção e percurso */
 function toggleSel(s,fromMap){
   if(!s)return;
-  if(isSel(s.id))selected=selected.filter(x=>x.id!==s.id);
-  else selected=[...selected,{id:s.id,name:s.name,address:s.address,conc:s.conc,operator:s.operator,lat:s.lat,lng:s.lng}];
-  store.set("ev-sel",selected);
-  if(fromMap&&isSel(s.id))openId=s.id;
-  draw();
+  const socks=s.sockets, maxKw=Math.max(...socks.map(k=>k.kw||0));
+  if(fromMap&&!isSel(s.id))openId=s.id;
+  Route.toggle({k:"ev",id:s.id,t:s.address||s.name,b:s.operator||"",sub:[s.conc,s.name].filter(Boolean).join(" · "),lat:s.lat,lng:s.lng,info:`até ${kw(maxKw)}`});
   if(fromMap&&isSel(s.id))document.querySelector(`[data-sid="${CSS.escape(s.id)}"]`)?.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"nearest"});
 }
-function renderTray(){
-  $("trayTitle").textContent=selected.length?`O meu percurso (${selected.length} ${selected.length===1?"paragem":"paragens"})`:"O meu percurso";
-  $("selbar").hidden=!selected.length; $("selcount").textContent=`${selected.length} ${selected.length===1?"posto selecionado":"postos selecionados"}`;
-  $("trayBody").innerHTML=selected.length?`<ol>${selected.map(s=>{
-      const live=stations.find(x=>x.id===s.id), socks=live?live.sockets:[], free=socks.filter(k=>sockState(k)==="available").length;
-      return `<li><strong>${esc(s.address||s.name)}</strong> · ${esc(s.conc||"")} · ${esc(s.operator||"")}${live?` · <span class="mono" style="font-family:var(--mono);font-size:.8rem">${free} de ${socks.length} livres</span>`:""} <a href="https://www.google.com/maps/search/?api=1&query=${s.lat},${s.lng}" target="_blank" rel="noopener">Google Maps ↗</a> <button type="button" data-rm="${esc(s.id)}">remover</button></li>`}).join("")}</ol>`
-    :`<p class="count" style="margin:0">Ainda não selecionou nenhum posto. Toque num posto no mapa ou na caixa ✓ da lista.</p>`;
-  document.querySelectorAll("[data-rm]").forEach(b=>b.onclick=()=>{selected=selected.filter(x=>x.id!==b.dataset.rm);store.set("ev-sel",selected);draw()});
-  const r=$("route");
-  if(selected.length){
-    const c=s=>`${s.lat},${s.lng}`, dest=selected[selected.length-1], wp=selected.slice(0,-1).map(c).join("|");
-    r.href=`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(c(dest))}${wp?"&waypoints="+encodeURIComponent(wp):""}&travelmode=driving`;
-    r.removeAttribute("aria-disabled");
-  }else{r.href="#";r.setAttribute("aria-disabled","true")}
-  $("copy").disabled=$("clear").disabled=!selected.length;
-}
-$("clearTop").onclick=()=>$("clear").click();
-$("clear").onclick=()=>{selected=[];store.set("ev-sel",selected);draw()};
-$("copy").onclick=()=>{
-  const txt=selected.map((s,i)=>`${i+1}. ${s.address||s.name}, ${s.conc||""} (${s.operator||""}) | ${s.name} | ${s.lat}, ${s.lng}`).join("\n");
-  const fail=()=>{$("toast").textContent="Não foi possível copiar. Selecione a lista acima e copie manualmente."};
-  try{navigator.clipboard.writeText(txt).then(()=>{$("toast").textContent="Lista copiada."},fail)}catch(e){fail()}
-};
+function renderTray(){Route.render()}
 
 /* Dados */
 async function loadStations(){
@@ -445,6 +436,7 @@ async function start(){
   $("loading").hidden=true;
   buildAreas(); updateTitle(); buildFilters(); if(scope!=="pt")fitArea(); draw();
   setInterval(async()=>{await loadStatus();draw()},60000);
+  Route.render();
 }
 
 /* Ordenação e localização */
@@ -454,6 +446,7 @@ $("q").oninput=()=>{shown=40;draw()};
 let centered=false;
 function onPos(p){
   me={lat:p.coords.latitude,lon:p.coords.longitude,acc:p.coords.accuracy};
+  Route.me={lat:me.lat,lng:me.lon};
   $("zme").classList.add("on");$("sortDist").hidden=false;
   $("locmsg").textContent=`Localização ativa (precisão ±${Math.round(me.acc)} m).`;
   meLayer.clearLayers();
@@ -473,6 +466,9 @@ $("zme").onclick=()=>{
   $("locmsg").textContent="A obter a sua localização…";
   watchId=navigator.geolocation.watchPosition(onPos,onPosErr,{enableHighAccuracy:true,maximumAge:30000,timeout:20000});
 };
+Route.liveInfo=stop=>{if(stop.k!=="ev")return null;const s=stations.find(x=>x.id===stop.id);if(!s)return null;const f=s.sockets.filter(k=>sockState(k)==="available").length;return `${f} de ${s.sockets.length} tomadas livres`};
+Route.onchange=()=>draw();
+Route.bind();
 start();
 </script>
 </body>

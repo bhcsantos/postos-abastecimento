@@ -72,6 +72,7 @@ dt{color:var(--muted)} dd{margin:0;font-weight:500}
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="route.js"></script>
 <script>
 const API="https://precoscombustiveis.dgeg.gov.pt/api/PrecoComb";
 const FUEL_ID={"Gasóleo simples":2101,"Gasóleo especial":2105,"Gasóleo colorido":2150,"Biodiesel B15":2115,"Gasolina simples 95":3201,"Gasolina especial 95":3205,"Gasolina 98":3400,"Gasolina especial 98":3405,"GPL Auto":1120,"GNC (gás natural comprimido) - €/kg":1143,"GNC (gás natural comprimido) - €/m3":1141,"GNL (gás natural liquefeito) - €/kg":1142};
@@ -191,10 +192,10 @@ async function main(){
   }
 
   /* Adicionar à seleção da página principal */
-  const stationObj={id,n:p.Nome,b:p.Marca,a:m.Morada,cp:m.CodPostal,loc:[m.Localidade,m.Municipio].filter(Boolean).join(", "),lat,lon,
-    price:fuels[0]?fuels[0].price:0,fuel:fuels[0]?fuels[0].name:""};
-  const updSel=()=>{const on=store.get("pp-sel",[]).some(x=>x.id===id);$("selbtn").textContent=on?"✓ Na seleção (remover)":"Adicionar à seleção";$("selbtn").classList.toggle("on",on)};
-  $("selbtn").onclick=()=>{let s=store.get("pp-sel",[]);s=s.some(x=>x.id===id)?s.filter(x=>x.id!==id):[...s,stationObj];store.set("pp-sel",s);updSel()};
+  const stop={k:"fuel",id,t:p.Nome,b:p.Marca,sub:[m.Morada,m.CodPostal,m.Localidade,m.Municipio].filter(Boolean).join(", "),lat,lng:lon,
+    info:fuels[0]?`${fuels[0].name} ${eur(fuels[0].price)}`:""};
+  const updSel=()=>{const on=Route.has("fuel",id);$("selbtn").textContent=on?"✓ No meu percurso (remover)":"Adicionar ao meu percurso";$("selbtn").classList.toggle("on",on)};
+  $("selbtn").onclick=()=>{Route.toggle(stop);updSel()};
   updSel();
 
   /* Comparação com o concelho */

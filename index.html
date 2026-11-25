@@ -104,6 +104,21 @@ h1 span{color:var(--accent)}
 .more{font:inherit;font-weight:600;border:1px dashed var(--line);background:transparent;color:var(--accent);border-radius:8px;padding:10px;cursor:pointer}
 .empty{color:var(--muted);padding:20px;text-align:center;border:1px dashed var(--line);border-radius:8px}
 .tray{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:14px;display:grid;gap:10px}
+.routeinfo{margin:0;font-size:.88rem;color:var(--muted)}
+.routeinfo strong{color:var(--fg)}
+.routewarn{margin:0;font-size:.85rem;color:#b3261e}
+.tray .stops{list-style:none;margin:0;padding:0;display:grid;gap:6px;counter-reset:stop}
+.stops li{display:grid;grid-template-columns:auto auto minmax(0,1fr) auto;gap:10px;align-items:center;border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:var(--bg);counter-increment:stop}
+.stops li::before{content:counter(stop);font-family:var(--display);font-weight:700;font-size:1.2rem;color:var(--accent);min-width:1.2em;text-align:center}
+.stopicon{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;color:#fff}
+.stopicon.k-fuel{background:#1d1f23}.stopicon.k-ev{background:#1d8a4a}
+.stoptxt{min-width:0;overflow-wrap:anywhere;font-size:.92rem;line-height:1.35}
+.stopsub{color:var(--muted);font-size:.82rem}
+.stopbtns{display:flex;gap:4px}
+.stopbtns button{width:32px;height:32px;border:1px solid var(--line);border-radius:6px;background:var(--surface);color:var(--fg);font:600 15px/1 var(--body);cursor:pointer}
+.stopbtns button:hover:not(:disabled){border-color:var(--accent);color:var(--accent)}
+.stopbtns button:disabled{opacity:.35;cursor:default}
+@media (max-width:520px){.stops li{grid-template-columns:auto minmax(0,1fr) auto}.stopicon{display:none}}
 .tray h2{font-family:var(--display);font-size:1.4rem;margin:0}
 .traydesc{margin:0;color:var(--muted);font-size:.88rem;max-width:70ch}
 .tray ol{margin:0;padding-left:22px;display:grid;gap:4px}
@@ -171,6 +186,7 @@ h1 span{color:var(--accent)}
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/leaflet.markercluster.js"></script>
+<script src="route.js"></script>
 <script>
 /* Cópia de reserva (concelho do Porto) para quando a DGEG não responde */
 const SNAP=[{"id":67347,"n":"AUCHAN Gondomar II - Campanhã","b":"AUCHAN","a":"Alameda de Cartes nº 429/485 (Mercado Abastecedor)","cp":"4300-008","lat":41.162495,"lon":-8.57551,"p":{"Gasóleo simples":1.919,"Gasóleo especial":1.949,"Gasolina 95 simples":1.719},"d":"2026-11-23 09:20"},{"id":66726,"n":"Rede Energia - Porto","b":"REDE ENERGIA","a":"Rua Serpa Pinto nº 616","cp":"4250-465","lat":41.16625,"lon":-8.6202,"p":{"Gasóleo simples":1.991,"Gasóleo especial":2.041,"Gasolina 95 simples":1.78},"d":"2026-11-23 10:50"},{"id":78734,"n":"PORTO - SÃO DINIS","b":"CEPSA","a":"RUA SÃO DINIS, Nº 296","cp":"4250-427","lat":41.167393,"lon":-8.619685,"p":{"Gasóleo simples":1.999,"Gasóleo especial":2.049,"Gasolina 95 simples":1.788,"Gasolina 95 especial":1.838},"d":"2026-11-23 00:00"},{"id":69154,"n":"Mercado Abastecedor","b":"CEPSA","a":"Rua Chaves Oliveira, nº 139 e 165 da Freguesia de Campanhã","cp":"4000-005","lat":41.16172,"lon":-8.57794,"p":{"Gasóleo simples":2.019,"Gasóleo especial":2.069,"Gasolina 95 simples":1.808,"Gasolina 98 especial":2.02},"d":"2026-11-23 00:00"},{"id":69137,"n":"Porto - Marginal","b":"CEPSA","a":"Av. Paiva Couceiro, 1000 - Marginal - Bonfim - Porto","cp":"4300-385","lat":41.140385,"lon":-8.592044,"p":{"Gasóleo simples":2.039,"Gasóleo especial":2.089,"Gasolina 95 simples":1.828,"Gasolina 95 especial":1.878},"d":"2026-11-23 00:00"},{"id":69114,"n":"FARIA GUIMARÃES","b":"CEPSA","a":"R. Faria Guimarães, nº 1299 - Paranhos","cp":"4200-294","lat":41.1691,"lon":-8.60659,"p":{"Gasóleo simples":2.069,"Gasóleo especial":2.129,"Gasolina 95 simples":1.858,"Gasolina 98 especial":2.129},"d":"2026-11-23 00:00"},{"id":69165,"n":"Porto - Hosp. S. João","b":"MOEVE","a":"ESTRADA EXTERIOR DA CIRCUNVALAÇÃO Nº.7446 E 7448","cp":"4200-162","lat":41.18306,"lon":-8.59851,"p":{"Gasóleo simples":2.069,"Gasóleo especial":2.119,"Gasolina 95 simples":1.858,"Gasolina 95 especial":1.908,"GPL Auto":1.086},"d":"2026-11-23 00:00"},{"id":69168,"n":"PORTO - PQ. CIDADE","b":"MOEVE","a":"E.N. 12, Km 0,710 - Pq. Cidade - Nevogilde","cp":"4100-200","lat":41.171308,"lon":-8.679429,"p":{"Gasóleo simples":2.069,"Gasóleo especial":2.119,"Gasolina 95 simples":1.858,"Gasolina 95 especial":1.908},"d":"2026-11-23 00:00"},{"id":66689,"n":"E.S. JULIO DINIS","b":"REPSOL","a":"Rua Júlio Dinis nº 320-348","cp":"4050-318","lat":41.151825,"lon":-8.625536,"p":{"Gasóleo simples":2.114,"Gasóleo especial":2.184,"Gasolina 95 simples":1.914,"Gasolina 95 especial":1.984},"d":"2026-11-25 00:40"},{"id":65563,"n":"Socovira - Sociedade combustiveis Via Rápida, Ldª","b":"GALP","a":"Av. Fernão de Magalhães, 3363","cp":"4300-000","lat":41.178441,"lon":-8.582751,"p":{"Gasóleo simples":2.119,"Gasóleo especial":2.169,"Gasolina 95 simples":1.929,"Gasolina 95 especial":1.979},"d":"2026-11-24 08:40"},{"id":65564,"n":"Socovira - Sociedade combustiveis Via Rápida, Ldª","b":"GALP","a":"Av. Fernão de Magalhães, 3352","cp":"4300-000","lat":41.178215,"lon":-8.582491,"p":{"Gasóleo simples":2.119,"Gasóleo especial":2.169,"Gasolina 95 simples":1.929,"Gasolina 95 especial":1.979},"d":"2026-11-24 08:40"},{"id":65566,"n":"F OLIVEIRA MARTINS E COMPANHIA LDA","b":"GALP","a":"Av. Fernão de Magalhães, 390","cp":"4300-189","lat":41.15333,"lon":-8.59621,"p":{"Gasóleo simples":2.119,"Gasolina 95 simples":1.929},"d":"2026-11-24 09:45"},{"id":67057,"n":"TFGEST ESTÁDIO","b":"GALP","a":"Av. Fernão de Magalhães nº 1854 / 74","cp":"4350-158","lat":41.16499,"lon":-8.58885,"p":{"Gasóleo simples":2.119,"Gasóleo especial":2.169,"Gasolina 95 simples":1.929,"Gasolina 95 especial":1.979,"Gasolina 98 especial":2.159},"d":"2026-11-24 10:15"},{"id":80080,"n":"BP CIRCUNVALAÇÃO","b":"BP","a":"Estrada da Circunvalação, 12033","cp":"4250-155","lat":41.18235,"lon":-8.64635,"p":{"Gasóleo simples":2.129,"Gasóleo especial":2.299,"Gasolina 95 simples":1.929,"Gasolina 98 especial":2.179},"d":"2026-11-24 00:35"},{"id":74125,"n":"Galp Amial","b":"GALP","a":"Estrada Interior da Circunvalação 8718","cp":"4200-180","lat":41.1833,"lon":-8.61228,"p":{"Gasóleo simples":2.136,"Gasóleo especial":2.186,"Gasolina 95 simples":1.934,"Gasolina 95 especial":1.984},"d":"2026-11-23 07:50"},{"id":95346,"n":"BP 5 de Outubro","b":"BP","a":"Rua 5 de Outubro, 574","cp":"4100-173","lat":41.16313,"lon":-8.632981,"p":{"Gasóleo simples":2.139,"Gasóleo especial":2.299,"Gasolina 95 simples":1.939,"Gasolina 98 especial":2.179},"d":"2026-11-24 00:00"},{"id":93014,"n":"BP Fluvial","b":"BP","a":"Rua Diogo Botelho, 671","cp":"4150-262","lat":41.15165,"lon":-8.6553,"p":{"Gasóleo simples":2.139,"Gasóleo especial":2.299,"Gasolina 95 simples":1.939,"Gasolina 98 especial":2.179},"d":"2026-11-24 00:00"},{"id":93447,"n":"BP São Roque da Lameira - Porto","b":"BP","a":"Rua de são roque da Lameira","cp":"4300-000","lat":41.15838,"lon":-8.583513,"p":{"Gasóleo simples":2.139,"Gasóleo especial":2.299,"Gasolina 95 simples":1.939,"Gasolina 98 especial":2.179},"d":"2026-11-24 00:00"},{"id":66014,"n":"BP Combatentes - Porto","b":"BP","a":"Av. Combatentes da Grande Guerra nº 627","cp":"4200-190","lat":41.165233,"lon":-8.598091,"p":{"Gasóleo simples":2.139,"Gasóleo especial":2.299,"Gasolina 95 simples":1.939,"Gasolina 98 especial":2.179},"d":"2026-11-24 00:05"},{"id":68067,"n":"BP SALGUEIROS","b":"BP","a":"Rua Particular de Monsanto, 162-192","cp":"4250-360","lat":41.17346,"lon":-8.61664,"p":{"Gasóleo simples":2.139,"Gasóleo especial":2.299,"Gasolina 95 simples":1.939,"Gasolina 98 especial":2.179,"GPL Auto":1.129},"d":"2026-11-24 00:35"},{"id":65572,"n":"GALP Freixo","b":"GALP","a":"Estrada Exterior da Circunvalação, 82-130","cp":"4460-280","lat":41.14561,"lon":-8.57826,"p":{"Gasóleo simples":2.139,"Gasóleo especial":2.189,"Gasolina 95 simples":1.909,"Gasolina 95 especial":1.959,"Gasolina 98 especial":2.139},"d":"2026-11-24 17:40"},{"id":66984,"n":"GALP A.S. Universidade Católica Porto","b":"GALP","a":"Rua Diogo Botelho, 2049","cp":"4150-268","lat":41.15317,"lon":-8.6707,"p":{"Gasóleo simples":2.139,"Gasóleo especial":2.199,"Gasolina 95 simples":1.929,"Gasolina 95 especial":1.989,"Gasolina 98 especial":2.159},"d":"2026-11-24 18:20"},{"id":65573,"n":"GALP Boavista","b":"GALP","a":"Avª da Boavista 4663 - 4685","cp":"4100-141","lat":41.165855,"lon":-8.678236,"p":{"Gasóleo simples":2.142,"Gasóleo especial":2.202,"Gasolina 95 simples":1.946,"Gasolina 95 especial":2.006},"d":"2026-11-24 17:55"},{"id":91838,"n":"F. Oliveira Martins","b":"GALP","a":"R. Gólgota nº 390 e 428","cp":"4150-000","lat":41.151433,"lon":-8.634284,"p":{"Gasóleo simples":2.144,"Gasóleo especial":2.204,"Gasolina 95 simples":1.944,"Gasolina 95 especial":2.004},"d":"2026-11-24 09:45"},{"id":65567,"n":"Petroazul - Combustiveis e Serviços, Lda","b":"GALP","a":"Av. Fernão de Magalhães nº 2322","cp":"4350-172","lat":41.169189,"lon":-8.586909,"p":{"Gasóleo simples":2.145,"Gasóleo especial":2.195,"Gasolina 95 simples":1.929,"Gasolina 95 especial":1.979,"Gasolina 98 especial":2.159},"d":"2026-11-16 10:45"},{"id":68644,"n":"GALP Porto - Francos","b":"GALP","a":"Rotunda do Bessa","cp":"4100-012","lat":41.164307,"lon":-8.639143,"p":{"Gasóleo simples":2.146,"Gasóleo especial":2.206,"Gasolina 95 simples":1.946,"Gasolina 95 especial":2.006,"Gasolina 98 especial":2.176,"GPL Auto":1.124},"d":"2026-11-24 18:00"},{"id":66685,"n":"E.S. ANTAS I","b":"REPSOL","a":"Av. Fernão de Magalhães nº 1626","cp":"4300-000","lat":41.16328,"lon":-8.5899,"p":{"Gasóleo simples":2.149,"Gasóleo especial":2.209,"Gasolina 95 simples":1.959,"Gasolina 95 especial":2.019,"Gasolina 98 especial":2.169},"d":"2026-11-16 14:35"},{"id":66686,"n":"E.S. ANTAS II","b":"REPSOL","a":"Rua Santo António Antas nº 36","cp":"4350-156","lat":41.1645,"lon":-8.589458,"p":{"Gasóleo simples":2.149,"Gasóleo especial":2.209,"Gasolina 95 simples":1.959,"Gasolina 95 especial":2.109,"Gasolina 98 especial":2.169},"d":"2026-11-16 14:35"},{"id":65570,"n":"P21 -SHELL Porto - Constituição","b":"SHELL","a":"Rua da Constituição n.º 2314","cp":"4250-168","lat":41.164627,"lon":-8.625592,"p":{"Gasóleo simples":2.149,"Gasóleo especial":2.229,"Gasolina 95 simples":1.944},"d":"2026-11-25 00:30"},{"id":66712,"n":"E.S. CONDE COVILHA","b":"REPSOL","a":"Rua Conde da Covilhã nº 1256 - 1270","cp":"4100-187","lat":41.17358,"lon":-8.65439,"p":{"Gasóleo simples":2.174,"Gasóleo especial":2.244,"Gasolina 95 simples":1.974,"Gasolina 95 especial":2.044,"Gasolina 98 especial":2.194},"d":"2026-11-23 10:10"},{"id":66693,"n":"E.S. MONTE DOS BURGOS","b":"REPSOL","a":"Rua Monte Burgos nº 316","cp":"4200-309","lat":41.17256,"lon":-8.62611,"p":{"Gasóleo simples":2.174,"Gasóleo especial":2.244,"Gasolina 95 simples":1.974,"Gasolina 95 especial":2.044,"Gasolina 98 especial":2.194},"d":"2026-11-23 18:25"},{"id":66717,"n":"ES MAKRO GAIA - Gespost - Gestão e Administração de Postos de Abastecimento Unipessoal LDA","b":"REPSOL","a":"R Senhor de Matosinhos Nº  809","cp":"4400-303","lat":41.12016,"lon":-8.627181,"p":{"Gasóleo simples":2.174,"Gasóleo especial":2.244,"Gasolina 95 simples":1.974,"Gasolina 95 especial":2.044,"Gasolina 98 especial":2.194},"d":"2026-11-24 08:10"},{"id":66688,"n":"ES  CONSTITUICAO - Gespost - Gestão e Administração de Postos de Abastecimento Unipessoal LDA","b":"REPSOL","a":"Rua da Constituição nº 2570","cp":"4000-000","lat":41.165108,"lon":-8.628078,"p":{"Gasóleo simples":2.174,"Gasóleo especial":2.244,"Gasolina 95 simples":1.974,"Gasolina 95 especial":2.044,"Gasolina 98 especial":2.194,"GPL Auto":1.189},"d":"2026-11-24 08:20"},{"id":67982,"n":"BP S. JOÃO DE BRITO","b":"BP","a":"Largo S. João de Brito","cp":"4100-200","lat":41.16171,"lon":-8.65066,"p":{"Gasóleo simples":2.179,"Gasóleo especial":2.299,"Gasolina 95 simples":1.979,"Gasolina 98 especial":2.179},"d":"2026-11-25 00:00"},{"id":94754,"n":"REPSOL Lordelo do Ouro","b":"REPSOL","a":"Av. Marechal Gomes da Costa, 99","cp":"4150-357","lat":41.16147,"lon":-8.65623,"p":{"Gasóleo simples":2.199,"Gasóleo especial":2.269,"Gasolina 95 simples":1.999,"Gasolina 95 especial":2.079,"Gasolina 98 especial":2.229,"GPL Auto":1.169},"d":"2026-11-16 14:45"},{"id":69103,"n":"P12 - PRIO Porto - Estrada Circunvalação","b":"PRIO","a":"Estrada Interior da Circunvalação n.º 10783 e 10853","cp":"4250-252","lat":41.180435,"lon":-8.635366,"p":{"Gasóleo especial":2.009,"Gasolina 95 simples":1.899,"Gasolina 95 especial":1.794,"GPL Auto":1.029},"d":"2026-11-25 00:30"},{"id":76102,"n":"PRIO Porto - Zona Industrial","b":"PRIO","a":"Rua Engenheiro Ferreira Dias, Freguesia de Ramalde, 1104,1150","cp":"4100-247","lat":41.17751,"lon":-8.648651,"p":{"Gasóleo especial":2.009,"Gasolina 95 simples":1.899,"Gasolina 95 especial":1.794,"GPL Auto":1.029},"d":"2026-11-25 00:30"},{"id":93277,"n":"PRIO Fábrica do Cobre","b":"PRIO","a":"Loteamento Fábrica do Cobre, Lote 1 - Rua Linhas de Torres","cp":"4350","lat":41.169384,"lon":-8.57232,"p":{"Gasóleo especial":2.009,"Gasolina 95 simples":1.899,"Gasolina 95 especial":1.794,"GPL Auto":1.029},"d":"2026-11-25 00:30"}];
@@ -222,7 +238,6 @@ if(scope==="c192"){scope="d13";activeConc=new Set(["Porto"])}
 if(!SCOPES.some(x=>x[0]===scope))scope="pt";
 if(scope==="pt")activeConc.clear();
 let fuelId=store.get("pp-fuel",2101); if(!FUEL_NAME[fuelId])fuelId=2101;
-let selected=store.get("pp-sel",[]); // objetos {id,n,b,a,cp,loc,lat,lon,price,fuel}
 let data=[], activeBrands=new Set(), shown=50, sortBy="price", me=null, watchId=null;
 const cache=new Map();
 
@@ -348,7 +363,7 @@ function matches(s){
   if(activeBrands.size&&!activeBrands.has(s.b))return false;
   return inArea(s);
 }
-const isSel=id=>selected.some(x=>x.id===id);
+const isSel=id=>Route.has("fuel",id);
 function drawPins(){
   pinLayer.clearLayers(); selLayer.clearLayers();
   const mk=(s,sel)=>L.circleMarker([s.lat,s.lon],{radius:sel?9:7,color:sel?"#e8a317":"#ffffff",weight:sel?4:1.5,fillColor:colorOf(s.b),fillOpacity:1,price:s.price})
@@ -386,33 +401,10 @@ function renderList(){
   renderTray();
 }
 function toggle(s,fromMap){
-  if(isSel(s.id))selected=selected.filter(x=>x.id!==s.id);
-  else selected=[...selected,{id:s.id,n:s.n,b:s.b,a:s.a,cp:s.cp,loc:s.loc,lat:s.lat,lon:s.lon,price:s.price,fuel:FUEL_NAME[fuelId]}];
-  store.set("pp-sel",selected);drawPins();renderList();
+  Route.toggle({k:"fuel",id:s.id,t:s.n,b:s.b,sub:[s.a,s.cp,s.loc].filter(Boolean).join(", "),lat:s.lat,lng:s.lon,info:`${FUEL_NAME[fuelId]} ${eur(s.price)}`});
   if(fromMap&&isSel(s.id))document.querySelector(`.st[data-id="${s.id}"]`)?.closest(".item")?.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"nearest"});
 }
-function renderTray(){
-  $("trayTitle").textContent=selected.length?`O meu percurso (${selected.length} ${selected.length===1?"paragem":"paragens"})`:"O meu percurso";
-  $("selbar").hidden=!selected.length; $("selcount").textContent=`${selected.length} ${selected.length===1?"posto selecionado":"postos selecionados"}`;
-  $("trayBody").innerHTML=selected.length?`<ol>${selected.map(s=>`<li><strong>${esc(s.n)}</strong> · ${esc(s.a)}${s.loc?", "+esc(s.loc):""} · <span class="mono">${esc(s.fuel)} ${eur(s.price)}</span> <a href="${gmView(s)}" target="_blank" rel="noopener">Google Maps ↗</a> <button type="button" data-rm="${s.id}">remover</button></li>`).join("")}</ol>`
-    :`<p class="count" style="margin:0">Ainda não selecionou nenhum posto. Toque num posto no mapa ou na caixa ✓ da lista.</p>`;
-  document.querySelectorAll("[data-rm]").forEach(b=>b.onclick=()=>{selected=selected.filter(x=>x.id!==+b.dataset.rm);store.set("pp-sel",selected);drawPins();renderList()});
-  const r=$("route");
-  if(selected.length){
-    const c=s=>`${s.lat},${s.lon}`, dest=selected[selected.length-1], wp=selected.slice(0,-1).map(c).join("|");
-    r.href=`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(c(dest))}${wp?"&waypoints="+encodeURIComponent(wp):""}&travelmode=driving`;
-    r.removeAttribute("aria-disabled");
-  }else{r.href="#";r.setAttribute("aria-disabled","true")}
-  $("copy").disabled=$("clear").disabled=!selected.length;
-}
-$("q").oninput=()=>{shown=50;drawPins();renderList()};
-$("clearTop").onclick=()=>$("clear").click();
-$("clear").onclick=()=>{selected=[];store.set("pp-sel",selected);drawPins();renderList()};
-$("copy").onclick=()=>{
-  const txt=selected.map((s,i)=>`${i+1}. ${s.n} (${s.b}), ${s.a}, ${s.cp}${s.loc?" "+s.loc:""} | ${s.fuel} ${eur(s.price)}`).join("\n");
-  const fail=()=>{$("toast").textContent="Não foi possível copiar. Selecione a lista acima e copie manualmente."};
-  try{navigator.clipboard.writeText(txt).then(()=>{$("toast").textContent="Lista copiada."},fail)}catch(e){fail()}
-};
+function renderTray(){Route.render()}
 
 /* Localização */
 let centered=false;
@@ -423,6 +415,7 @@ function drawMe(){
 }
 function onPos(p){
   me={lat:p.coords.latitude,lon:p.coords.longitude,acc:p.coords.accuracy};
+  Route.me={lat:me.lat,lng:me.lon};
   $("zme").classList.add("on");$("sortrow").hidden=false;
   $("locmsg").textContent=`Localização ativa (precisão ±${Math.round(me.acc)} m).`;
   drawMe();
@@ -445,7 +438,8 @@ $("zme").onclick=()=>{
 function setSort(s){sortBy=s;$("sortPrice").setAttribute("aria-pressed",s==="price");$("sortDist").setAttribute("aria-pressed",s==="dist");renderList()}
 $("sortPrice").onclick=()=>setSort("price");$("sortDist").onclick=()=>setSort("dist");
 
-renderTray();
+Route.onchange=()=>{drawPins();renderList()};
+Route.bind();
 load(true);
 </script>
 </body>
