@@ -16,6 +16,7 @@ Site para encontrar e comparar postos de abastecimento em Portugal continental, 
 - **Carregadores elétricos** (`carregadores.html`): os postos da rede MOBI.E, com filtros por tipo de ficha (Tipo 2, CCS, CHAdeMO), potência mínima, operador e "só com tomada livre agora". O estado de cada tomada (livre, ocupada, fora de serviço) atualiza-se sozinho a cada minuto. Mostra também o preço do operador do posto (com contrato e avulso) e uma estimativa do custo de 20 kWh, para ordenar do mais barato.
 - **Cartões de desconto** ("Os meus cartões de desconto"): o utilizador marca os programas que tem (ex.: Vodafone) e a lista mostra o preço na bomba, o preço com desconto direto e o custo efetivo com o saldo em app. As regras estão em `data/descontos.json`, com fonte, validade e estado ("a confirmar" ou "confirmado").
 - **Evolução do preço** na ficha de cada posto: gráfico do posto contra a mediana do distrito e a nacional.
+- **Contas** (opcionais): login com Google ou email e palavra-passe; perfis por carro (combustível ou fichas, depósito ou bateria, consumo, cartões de desconto), favoritos, casa e trabalho como partida do percurso, alertas de preço e pedidos de funcionalidades.
 - **Instalar como app** (PWA): o site pode ser adicionado ao ecrã inicial do telemóvel.
 - **O meu percurso.** Junte postos de combustível e carregadores no mesmo percurso, mude a ordem das paragens, veja a distância a partir da sua localização e abra o percurso no Google Maps (até 10 paragens) ou copie a lista.
 
@@ -31,6 +32,8 @@ Site para encontrar e comparar postos de abastecimento em Portugal continental, 
 | `descontos.js`, `data/descontos.json` | Cartões de desconto: lógica e regras (fonte, validade, estado). |
 | `scripts/historico.py`, `.github/workflows/historico.yml` | Recolha diária dos preços da DGEG (GitHub Actions, 09:17 UTC) para `data/historico/`. |
 | `manifest.webmanifest`, `sw.js`, `icons/` | Instalação como app (PWA). |
+| `account.js`, `conta.html`, `admin.html`, `privacidade.html` | Contas (Firebase): login Google ou email, perfis, favoritos, casa/trabalho, alertas, pedidos de funcionalidades, exportar/apagar dados; administração dos pedidos; política de privacidade. |
+| `firestore.rules` | Regras de acesso à base de dados. Publicar à mão em Firebase → Firestore Database → Regras. |
 | `.nojekyll` | Faz o GitHub Pages publicar os ficheiros tal como estão. |
 
 Não há passo de compilação: são páginas HTML com JavaScript, publicadas pelo GitHub Pages a partir do ramo `main`. Qualquer alteração enviada para `main` fica online em 1 a 2 minutos.

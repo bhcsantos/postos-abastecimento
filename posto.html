@@ -101,11 +101,13 @@ dt{color:var(--muted)} dd{margin:0;font-weight:500}
 <div class="wrap">
   <a class="back" href="./">← Voltar à lista de postos</a>
   <div id="content"><p class="skel">A carregar a ficha do posto…</p></div>
+  <footer style="display:flex;flex-wrap:wrap;gap:8px 20px;justify-content:center;padding-top:8px;border-top:1px solid var(--line);font-size:.88rem"><a href="conta.html#ideas" style="color:var(--accent);font-weight:600;text-decoration:none">Pedir uma funcionalidade</a><a href="conta.html" style="color:var(--accent);font-weight:600;text-decoration:none">A minha conta</a><a href="privacidade.html" style="color:var(--accent);font-weight:600;text-decoration:none">Privacidade</a></footer>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script src="descontos.js"></script>
 <script src="route.js"></script>
+<script type="module" src="account.js"></script>
 <script>
 const API="https://precoscombustiveis.dgeg.gov.pt/api/PrecoComb";
 const FUEL_ID={"Gasóleo simples":2101,"Gasóleo especial":2105,"Gasóleo colorido":2150,"Biodiesel B15":2115,"Gasolina simples 95":3201,"Gasolina especial 95":3205,"Gasolina 98":3400,"Gasolina especial 98":3405,"GPL Auto":1120,"GNC (gás natural comprimido) - €/kg":1143,"GNC (gás natural comprimido) - €/m3":1141,"GNL (gás natural liquefeito) - €/kg":1142};
@@ -181,6 +183,7 @@ async function main(){
       <a class="btn ghost" href="${gmView}" target="_blank" rel="noopener">Ver no Google Maps ↗</a>
       <a class="btn ghost" href="${sv}" target="_blank" rel="noopener">Ver fotos no Street View ↗</a>
       <button type="button" class="btn ghost" id="selbtn"></button>
+      <button type="button" class="btn ghost" id="favbtn">☆ Guardar nos favoritos</button>
     </div>
 
     <section class="card">
@@ -191,6 +194,16 @@ async function main(){
           || `<tr><td colspan="6">Este posto não tem preços publicados.</td></tr>`}</tbody>
       </table></div>
       <p class="note" style="margin:10px 0 0"><button type="button" class="discbtn" id="discBtn" style="margin-bottom:8px"></button><br>A média e a posição comparam com os postos do mesmo concelho que vendem esse combustível (1.º = o mais barato).</p>
+    </section>
+
+    <section class="card">
+      <h2>Avisar-me quando o preço baixar</h2>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:end">
+        <label style="display:grid;gap:4px;font-weight:600;font-size:.9rem">Combustível<select id="alFuel" style="font:inherit;padding:8px;border-radius:6px;border:1px solid var(--line);background:var(--bg);color:var(--fg)">${fuels.map(c=>`<option value="${esc(c.name)}">${esc(c.name)} (agora ${eur(c.price)})</option>`).join("")}</select></label>
+        <label style="display:grid;gap:4px;font-weight:600;font-size:.9rem">Abaixo de (€/litro)<input id="alVal" type="number" step="0.001" min="0.5" max="4" style="font:inherit;padding:8px;border-radius:6px;border:1px solid var(--line);background:var(--bg);color:var(--fg);width:9em"></label>
+        <button type="button" class="btn" id="alBtn">Criar alerta</button>
+      </div>
+      <p class="note" id="alMsg" style="margin:0">Precisa de ter sessão iniciada. Os alertas ficam na sua conta.</p>
     </section>
 
     <section class="card">
@@ -238,6 +251,20 @@ async function main(){
   const updSel=()=>{const on=Route.has("fuel",id);$("selbtn").textContent=on?"✓ No meu percurso (remover)":"Adicionar ao meu percurso";$("selbtn").classList.toggle("on",on)};
   $("selbtn").onclick=()=>{Route.toggle(stop);updSel()};
   updSel();
+
+  /* Favoritos e alertas (precisam de conta) */
+  const favItem={k:"fuel",id,t:p.Nome,sub:[p.Marca,m.Morada,m.Localidade].filter(Boolean).join(" · "),lat,lng:lon};
+  const updFav=()=>{const on=!!window.Account?.isFav("fuel",id);$("favbtn").textContent=on?"★ Nos favoritos (retirar)":"☆ Guardar nos favoritos";$("favbtn").classList.toggle("on",on)};
+  $("favbtn").onclick=()=>{if(!window.Account?.user){location.href="conta.html?voltar="+encodeURIComponent("posto.html?id="+id);return}Account.toggleFav(favItem);updFav()};
+  const setAlVal=()=>{const c=fuels.find(x=>x.name===$("alFuel").value);const ex=(window.Account?.data?.alertas||[]).find(x=>x.posto===id&&x.combustivel===$("alFuel").value);$("alVal").value=ex?ex.limite:(c?(c.price-0.05).toFixed(3):"")};
+  if(fuels.length){$("alFuel").onchange=setAlVal;setAlVal()}
+  $("alBtn").onclick=()=>{
+    if(!window.Account?.user){location.href="conta.html?voltar="+encodeURIComponent("posto.html?id="+id);return}
+    const v=parseFloat(String($("alVal").value).replace(",","."));if(!(v>0)){$("alMsg").textContent="Escreva o preço abaixo do qual quer ser avisado.";return}
+    const name=$("alFuel").value;Account.setAlert({posto:id,nome:p.Nome,combustivel:name,fuelId:HIST_ID[name]||"",limite:+v.toFixed(3)});
+    $("alMsg").textContent=`Alerta guardado: avisamos quando ${name} baixar de ${v.toFixed(3).replace(".",",")} €. Veja e gira os alertas em "A minha conta".`};
+  const acctUpd=()=>{updFav();if(window.Account?.user)$("alMsg").textContent=$("alMsg").textContent.startsWith("Precisa")?"Os alertas ficam na sua conta. Veja e gira-os em \"A minha conta\".":$("alMsg").textContent};
+  window.onProfile=acctUpd; updFav();
 
   /* Histórico (guardado todos os dias pelo GitHub Actions a partir da DGEG) */
   loadHistory(id,p,m,fuels);

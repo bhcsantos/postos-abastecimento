@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#1f4fa8">
+<link rel="icon" href="icons/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<title>A minha conta · Postos de Abastecimento</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: coluna única de cartões — entrar/registar, ou perfis, favoritos, locais, alertas, pedidos e privacidade */
+*,*::before,*::after{box-sizing:border-box}
+:root{
+  --bg:#f3f5f8; --surface:#ffffff; --fg:#14202e; --muted:#5b6878; --line:#d9dfe7;
+  --accent:#1f4fa8; --accent-soft:#e3ebf8; --good:#1d7a46; --bad:#b3261e; --sel:#e8a317;
+  --display:"Barlow Condensed","Arial Narrow",system-ui,sans-serif;
+  --body:"Barlow",system-ui,-apple-system,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root{
+  --bg:#0f1520; --surface:#172030; --fg:#e7edf5; --muted:#9aa8b9; --line:#2a3647;
+  --accent:#7fa8ec; --accent-soft:#1f2e48; --good:#5cc98a; --bad:#f2847b; --sel:#f0b43a; color-scheme:dark}}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--body);font-size:15px;line-height:1.45}
+[hidden]{display:none!important}
+.wrap{max-width:820px;margin:0 auto;padding-block:18px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:16px}
+nav.tabs{display:inline-flex;gap:4px;padding:4px;background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:0 1px 3px rgba(20,32,46,.08);max-width:100%}
+nav.tabs a{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:9px;text-decoration:none;color:var(--fg);font-weight:600;white-space:nowrap}
+nav.tabs a:hover{background:var(--accent-soft)}
+nav.tabs svg{width:20px;height:20px}
+@media (max-width:520px){nav.tabs a{padding:10px 10px;font-size:.92rem}}
+h1{font-family:var(--display);font-size:2.2rem;line-height:1;margin:0}
+h2{font-family:var(--display);font-size:1.4rem;margin:0}
+.sub{color:var(--muted);margin:4px 0 0}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;display:grid;gap:12px;min-width:0}
+.card h2+p{margin:-6px 0 0;color:var(--muted);font-size:.9rem}
+label.f{display:grid;gap:4px;font-weight:600;font-size:.9rem}
+input[type=text],input[type=email],input[type=password],input[type=number],select,textarea{font:inherit;font-weight:400;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--fg);width:100%}
+textarea{min-height:110px;resize:vertical}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media (max-width:560px){.grid2{grid-template-columns:1fr}}
+.btn{font:inherit;font-weight:600;font-size:.92rem;border-radius:8px;padding:9px 16px;cursor:pointer;border:1px solid var(--accent);background:var(--accent);color:var(--surface);text-decoration:none;display:inline-flex;align-items:center;gap:8px;justify-content:center}
+.btn.ghost{background:transparent;color:var(--accent)}
+.btn.danger{background:transparent;color:var(--bad);border-color:var(--bad)}
+.btn.google{background:var(--surface);color:var(--fg);border-color:var(--line);width:100%;padding:11px}
+.btn:disabled{opacity:.5;cursor:default}
+.or{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:.85rem}
+.or::before,.or::after{content:"";flex:1;border-top:1px solid var(--line)}
+.msg{font-size:.88rem;min-height:1.2em}
+.msg.err{color:var(--bad)} .msg.ok{color:var(--good)}
+.prof{border:1px solid var(--line);border-radius:8px;padding:12px;display:grid;gap:10px;background:var(--bg)}
+.prof.active{border-color:var(--accent);box-shadow:inset 3px 0 0 var(--accent)}
+.prof header{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.prof header strong{font-size:1.05rem}
+.pill{font-size:.72rem;border-radius:999px;padding:2px 9px;border:1px solid var(--line);color:var(--muted)}
+.pill.on{background:var(--accent);border-color:var(--accent);color:var(--surface)}
+.chk{display:flex;flex-wrap:wrap;gap:6px 14px}
+.chk label{display:inline-flex;align-items:center;gap:6px;font-weight:400}
+.list{display:grid;gap:6px}
+.li{display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:8px;padding:8px 10px;background:var(--bg);flex-wrap:wrap}
+.li .t{flex:1 1 200px;min-width:0;overflow-wrap:anywhere}
+.li a{color:var(--accent);font-weight:600;text-decoration:none}
+.muted{color:var(--muted);font-size:.86rem}
+.kind{font-size:.72rem;border-radius:4px;padding:1px 6px;color:#fff}
+.kind.fuel{background:#1d1f23}.kind.ev{background:#1d8a4a}
+.state{font-size:.72rem;border-radius:999px;padding:1px 8px;background:var(--accent-soft);color:var(--accent)}
+a{color:var(--accent)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav class="tabs" aria-label="Secções"><a href="./"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 21V5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v16"/><path d="M3 21h12"/><path d="M7 7h4v4H7z"/><path d="M14 10h2a2 2 0 0 1 2 2v4a1.5 1.5 0 0 0 3 0V8l-3-3"/></svg>Combustíveis</a><a href="carregadores.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg>Carregadores elétricos</a></nav>
+
+  <!-- Sem sessão -->
+  <div id="out" hidden>
+    <header style="margin-bottom:12px"><h1>Entrar</h1><p class="sub">Com conta, os seus perfis, cartões de desconto, favoritos e percurso ficam guardados e aparecem em todos os seus dispositivos.</p></header>
+    <section class="card">
+      <button type="button" class="btn google" id="gBtn"><svg width="18" height="18" viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="m6.3 14.7 6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>Entrar com Google</button>
+      <div class="or">ou com email</div>
+      <form id="emailForm" class="card" style="border:0;padding:0" novalidate>
+        <label class="f" id="nameRow" hidden>Nome<input type="text" id="fName" autocomplete="name"></label>
+        <label class="f">Email<input type="email" id="fEmail" autocomplete="email" required></label>
+        <label class="f">Palavra-passe<input type="password" id="fPass" autocomplete="current-password" minlength="6" required></label>
+        <div class="row"><button class="btn" id="submitBtn">Entrar</button><button type="button" class="btn ghost" id="modeBtn">Criar conta nova</button><button type="button" class="btn ghost" id="forgotBtn">Esqueci-me da palavra-passe</button></div>
+        <div class="msg" id="authMsg" role="status"></div>
+      </form>
+      <p class="muted" style="margin:0">Ao criar conta aceita a <a href="privacidade.html">política de privacidade</a>. Só guardamos o que precisa para o site funcionar.</p>
+    </section>
+  </div>
+
+  <!-- Com sessão -->
+  <div id="in" hidden style="display:grid;gap:16px">
+    <header class="row" style="justify-content:space-between">
+      <div><h1>A minha conta</h1><p class="sub" id="who"></p></div>
+      <button type="button" class="btn ghost" id="logoutBtn">Sair</button>
+    </header>
+    <div class="msg err" id="dataErr" role="alert"></div>
+
+    <section class="card">
+      <h2>Perfis</h2>
+      <p>Um perfil por carro. O perfil ativo escolhe o combustível ou as fichas, os cartões de desconto e calcula quanto custa atestar ou carregar.</p>
+      <div id="profiles" class="list"></div>
+      <div class="row"><button type="button" class="btn ghost" id="addFuel">+ Carro a combustível</button><button type="button" class="btn ghost" id="addEv">+ Carro elétrico</button></div>
+    </section>
+
+    <section class="card">
+      <h2>Postos favoritos</h2>
+      <p>Marque um posto com ☆ na lista para o guardar aqui.</p>
+      <div id="favs" class="list"></div>
+    </section>
+
+    <section class="card">
+      <h2>Casa e trabalho</h2>
+      <p>Para usar como ponto de partida do percurso. Defina cada um quando lá estiver, com a localização do telemóvel.</p>
+      <div id="places" class="list"></div>
+      <div class="msg" id="placeMsg" role="status"></div>
+    </section>
+
+    <section class="card">
+      <h2>Alertas de preço</h2>
+      <p>Crie alertas na ficha de cada posto ("Avisar-me quando baixar de…").</p>
+      <div id="alerts" class="list"></div>
+      <label class="chk"><label><input type="checkbox" id="emailAlerts"> Enviar os alertas para o meu email</label></label>
+      <p class="muted" style="margin:0">O envio de alertas por email está a ser preparado. Os alertas que criar ficam guardados e começam a ser enviados assim que o serviço estiver ligado.</p>
+    </section>
+
+    <section class="card" id="ideas">
+      <h2>Pedir uma funcionalidade</h2>
+      <p>Diga-nos o que gostava que o site fizesse, ou o que está mal.</p>
+      <label class="f"><span class="sr">O seu pedido</span><textarea id="reqText" maxlength="2000" placeholder="Por exemplo: gostava de ver os postos com lavagem automática…"></textarea></label>
+      <div class="row"><button type="button" class="btn" id="reqBtn">Enviar pedido</button><span class="muted" id="reqCount">0 / 2000</span></div>
+      <div class="msg" id="reqMsg" role="status"></div>
+      <div id="myReqs" class="list"></div>
+    </section>
+
+    <section class="card">
+      <h2>Os meus dados</h2>
+      <p>Pode descarregar tudo o que guardamos sobre si, ou apagar a conta e os dados de vez.</p>
+      <div class="row"><button type="button" class="btn ghost" id="exportBtn">Descarregar os meus dados</button><button type="button" class="btn danger" id="delBtn">Apagar a minha conta</button><a href="privacidade.html">Política de privacidade</a><a href="admin.html" id="adminLink" hidden>Administração</a></div>
+      <div id="delConfirm" hidden class="prof"><strong>Apagar a conta de vez?</strong><span class="muted">Os perfis, favoritos, alertas e pedidos são apagados e não podem ser recuperados.</span><div class="row"><button type="button" class="btn danger" id="delYes">Sim, apagar tudo</button><button type="button" class="btn ghost" id="delNo">Cancelar</button></div></div>
+      <div class="msg" id="dataMsg" role="status"></div>
+    </section>
+  </div>
+  <p class="muted" id="loading">A carregar…</p>
+</div>
+
+<script type="module">
+import "./account.js";
+const A=window.Account, $=id=>document.getElementById(id);
+const esc=t=>String(t??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const FUELS=[[2101,"Gasóleo simples"],[2105,"Gasóleo especial"],[3201,"Gasolina 95 simples"],[3205,"Gasolina 95 especial"],[3405,"Gasolina 98 especial"],[1120,"GPL Auto"]];
+const CONNS=[["Mennekes","Tipo 2 (Mennekes)"],["CCS","CCS"],["CHAdeMO","CHAdeMO"],["Industrial","Industrial"]];
+const voltar=new URLSearchParams(location.search).get("voltar");
+let signup=false;
+
+/* ---------- Entrar / criar conta ---------- */
+const setMsg=(el,t,ok)=>{$(el).textContent=t;$(el).className="msg "+(ok?"ok":"err")};
+$("gBtn").onclick=async()=>{try{await A.loginGoogle();if(voltar)location.href=voltar}catch(e){setMsg("authMsg",A.msg(e))}};
+$("modeBtn").onclick=()=>{signup=!signup;$("nameRow").hidden=!signup;$("submitBtn").textContent=signup?"Criar conta":"Entrar";$("modeBtn").textContent=signup?"Já tenho conta":"Criar conta nova";$("fPass").autocomplete=signup?"new-password":"current-password";setMsg("authMsg","")};
+$("emailForm").onsubmit=async e=>{e.preventDefault();
+  const em=$("fEmail").value.trim(), pw=$("fPass").value;
+  if(!em||!pw){setMsg("authMsg","Escreva o email e a palavra-passe.");return}
+  $("submitBtn").disabled=true;
+  try{ if(signup){await A.signupEmail($("fName").value.trim(),em,pw);setMsg("authMsg","Conta criada. Enviámos um email para confirmar o endereço.",true)} else await A.loginEmail(em,pw); if(voltar)location.href=voltar }
+  catch(err){setMsg("authMsg",A.msg(err))} finally{$("submitBtn").disabled=false}};
+$("forgotBtn").onclick=async()=>{const em=$("fEmail").value.trim();if(!em){setMsg("authMsg","Escreva primeiro o seu email no campo acima.");return}
+  try{await A.reset(em);setMsg("authMsg",`Se existir uma conta com ${em}, vai receber um email para escolher uma palavra-passe nova.`,true)}catch(e){setMsg("authMsg",A.msg(e))}};
+
+/* ---------- Perfis ---------- */
+function profileCard(p,active){
+  const isEv=p.tipo==="eletrico";
+  return `<div class="prof${active?" active":""}" data-id="${esc(p.id)}">
+    <header><strong>${isEv?"⚡":"⛽"} ${esc(p.nome)}</strong>${active?`<span class="pill on">Perfil ativo</span>`:`<button type="button" class="btn ghost" data-act="use">Usar este perfil</button>`}</header>
+    <div class="grid2">
+      <label class="f">Nome do perfil<input type="text" data-k="nome" value="${esc(p.nome)}" maxlength="40"></label>
+      ${isEv?`<label class="f">Potência mínima<select data-k="potenciaMin">${[[0,"Qualquer"],[11,"≥ 11 kW"],[22,"≥ 22 kW"],[50,"≥ 50 kW"],[150,"≥ 150 kW"]].map(([v,l])=>`<option value="${v}" ${(p.potenciaMin||0)==v?"selected":""}>${l}</option>`).join("")}</select></label>`
+        :`<label class="f">Combustível<select data-k="combustivel">${FUELS.map(([v,l])=>`<option value="${v}" ${p.combustivel==v?"selected":""}>${l}</option>`).join("")}</select></label>`}
+      ${isEv?`<label class="f">Bateria (kWh)<input type="number" min="5" max="200" step="1" data-k="bateria" value="${p.bateria??""}" placeholder="ex.: 60"></label>
+        <label class="f">Consumo (kWh/100 km)<input type="number" min="5" max="40" step="0.1" data-k="consumo" value="${p.consumo??""}" placeholder="ex.: 16"></label>`
+      :`<label class="f">Depósito (litros)<input type="number" min="10" max="150" step="1" data-k="deposito" value="${p.deposito??""}" placeholder="ex.: 50"></label>
+        <label class="f">Consumo (L/100 km)<input type="number" min="2" max="30" step="0.1" data-k="consumo" value="${p.consumo??""}" placeholder="ex.: 6,5"></label>`}
+    </div>
+    ${isEv?`<div><div class="muted" style="margin-bottom:4px">Fichas do carro</div><div class="chk">${CONNS.map(([v,l])=>`<label><input type="checkbox" data-conn="${v}" ${(p.fichas||[]).includes(v)?"checked":""}>${l}</label>`).join("")}</div></div>`
+      :`<div class="muted">Cartões de desconto: ${(p.descontos?.programas||[]).length?`${p.descontos.programas.length} escolhido(s)`:"nenhum"} — escolha-os com o botão "Os meus cartões de desconto" na página dos combustíveis, com este perfil ativo.</div>`}
+    <div class="row"><button type="button" class="btn ghost" data-act="del">Apagar perfil</button></div>
+  </div>`;
+}
+function renderProfiles(){
+  const d=A.data; if(!d)return;
+  $("profiles").innerHTML=(d.perfis||[]).map(p=>profileCard(p,p.id===d.perfilAtivo)).join("")||`<p class="muted">Ainda não tem perfis.</p>`;
+  $("profiles").querySelectorAll(".prof").forEach(el=>{
+    const id=el.dataset.id, p=d.perfis.find(x=>x.id===id);
+    el.querySelectorAll("[data-k]").forEach(inp=>inp.onchange=()=>{const k=inp.dataset.k;let v=inp.value;if(inp.type==="number"||k==="combustivel"||k==="potenciaMin")v=v===""?null:Number(String(v).replace(",","."));p[k]=v;A.setProfiles(d.perfis)});
+    el.querySelectorAll("[data-conn]").forEach(c=>c.onchange=()=>{p.fichas=[...el.querySelectorAll("[data-conn]:checked")].map(x=>x.dataset.conn);A.setProfiles(d.perfis)});
+    el.querySelector('[data-act="use"]')?.addEventListener("click",()=>{A.switchProfile(id)});
+    el.querySelector('[data-act="del"]').onclick=()=>{if(d.perfis.length<=1){$("dataErr").textContent="Precisa de ter pelo menos um perfil.";return}const left=d.perfis.filter(x=>x.id!==id);A.setProfiles(left,d.perfilAtivo===id?left[0].id:d.perfilAtivo)};
+  });
+}
+const newId=()=>Math.random().toString(36).slice(2,9);
+$("addFuel").onclick=()=>{const p={id:newId(),nome:"Carro a combustível",tipo:"combustivel",combustivel:2101,deposito:null,consumo:null,descontos:{programas:[],condicoes:[]}};A.setProfiles([...A.data.perfis,p])};
+$("addEv").onclick=()=>{const p={id:newId(),nome:"Carro elétrico",tipo:"eletrico",fichas:["Mennekes","CCS"],potenciaMin:0,bateria:null,consumo:null};A.setProfiles([...A.data.perfis,p])};
+
+/* ---------- Favoritos, locais, alertas ---------- */
+function renderFavs(){
+  const f=A.data?.favoritos||[];
+  $("favs").innerHTML=f.length?f.map((x,i)=>`<div class="li"><span class="kind ${x.k}">${x.k==="ev"?"Carregador":"Combustível"}</span><span class="t"><strong>${esc(x.t)}</strong><br><span class="muted">${esc(x.sub||"")}</span></span>
+    ${x.k==="fuel"?`<a href="posto.html?id=${esc(x.id)}">Abrir ficha</a>`:`<a href="https://www.google.com/maps/search/?api=1&query=${x.lat},${x.lng}" target="_blank" rel="noopener">Google Maps ↗</a>`}
+    <button type="button" class="btn ghost" data-rmf="${i}">Retirar</button></div>`).join(""):`<p class="muted">Ainda não tem favoritos.</p>`;
+  $("favs").querySelectorAll("[data-rmf]").forEach(b=>b.onclick=()=>{const l=[...f];l.splice(+b.dataset.rmf,1);A.save({favoritos:l},true);A.emit()});
+}
+function renderPlaces(){
+  const L=A.data?.locais||{};
+  $("places").innerHTML=[["casa","Casa"],["trabalho","Trabalho"]].map(([k,n])=>`<div class="li"><span class="t"><strong>${n}</strong><br><span class="muted">${L[k]?`Definida (${L[k].lat.toFixed(4)}, ${L[k].lng.toFixed(4)})`:"Por definir"}</span></span>
+    <button type="button" class="btn ghost" data-setp="${k}">${L[k]?"Atualizar":"Definir"} com a localização atual</button>${L[k]?`<button type="button" class="btn ghost" data-clrp="${k}">Apagar</button>`:""}</div>`).join("");
+  $("places").querySelectorAll("[data-setp]").forEach(b=>b.onclick=()=>{
+    if(!("geolocation" in navigator)){setMsg("placeMsg","Este navegador não permite obter a localização.");return}
+    setMsg("placeMsg","A obter a localização…",true);
+    navigator.geolocation.getCurrentPosition(pos=>{const l={...(A.data.locais||{})};l[b.dataset.setp]={lat:+pos.coords.latitude.toFixed(5),lng:+pos.coords.longitude.toFixed(5)};A.save({locais:l},true);A.emit();setMsg("placeMsg","Guardado.",true)},
+      e=>setMsg("placeMsg",e.code===1?"Sem autorização para usar a localização. Permita-a nas definições do navegador.":"Não foi possível obter a localização."),{enableHighAccuracy:true,timeout:20000});
+  });
+  $("places").querySelectorAll("[data-clrp]").forEach(b=>b.onclick=()=>{const l={...(A.data.locais||{})};delete l[b.dataset.clrp];A.save({locais:l},true);A.emit()});
+}
+function renderAlerts(){
+  const a=A.data?.alertas||[];
+  $("alerts").innerHTML=a.length?a.map((x,i)=>`<div class="li"><span class="t"><strong>${esc(x.nome)}</strong><br><span class="muted">${esc(x.combustivel)} abaixo de ${Number(x.limite).toFixed(3).replace(".",",")} €</span></span><a href="posto.html?id=${esc(x.posto)}">Abrir ficha</a><button type="button" class="btn ghost" data-rma="${i}">Apagar</button></div>`).join(""):`<p class="muted">Ainda não tem alertas.</p>`;
+  $("alerts").querySelectorAll("[data-rma]").forEach(b=>b.onclick=()=>{const l=[...a];l.splice(+b.dataset.rma,1);A.save({alertas:l},true);A.emit()});
+  $("emailAlerts").checked=A.data?.emailAlertas!==false;
+}
+$("emailAlerts").onchange=()=>A.save({emailAlertas:$("emailAlerts").checked},true);
+
+/* ---------- Pedidos ---------- */
+$("reqText").oninput=()=>$("reqCount").textContent=`${$("reqText").value.length} / 2000`;
+$("reqBtn").onclick=async()=>{const t=$("reqText").value.trim();if(t.length<5){setMsg("reqMsg","Escreva um pouco mais (pelo menos 5 caracteres).");return}
+  $("reqBtn").disabled=true;try{await A.sendRequest(t,document.referrer||"");$("reqText").value="";$("reqCount").textContent="0 / 2000";setMsg("reqMsg","Pedido enviado. Obrigado!",true);renderReqs()}catch(e){setMsg("reqMsg",A.msg(e))}finally{$("reqBtn").disabled=false}};
+const EST={novo:"Recebido",analise:"Em análise",feito:"Feito",recusado:"Não vamos fazer"};
+async function renderReqs(){try{const r=await A.myRequests();$("myReqs").innerHTML=r.length?`<div class="muted">Os seus pedidos</div>`+r.map(x=>`<div class="li"><span class="t">${esc(x.texto)}${x.resposta?`<br><span class="muted">Resposta: ${esc(x.resposta)}</span>`:""}</span><span class="state">${EST[x.estado]||esc(x.estado)}</span></div>`).join(""):""}catch(e){}}
+
+/* ---------- Dados ---------- */
+$("exportBtn").onclick=async()=>{try{const d=await A.exportData();const blob=new Blob([JSON.stringify(d,(k,v)=>v&&v.seconds!=null&&v.nanoseconds!=null?new Date(v.seconds*1000).toISOString():v,2)],{type:"application/json"});
+  const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="os-meus-dados-postos.json";a.click();setMsg("dataMsg","Ficheiro descarregado.",true)}catch(e){setMsg("dataMsg",A.msg(e))}};
+$("delBtn").onclick=()=>$("delConfirm").hidden=false; $("delNo").onclick=()=>$("delConfirm").hidden=true;
+$("delYes").onclick=async()=>{try{await A.deleteAccount();setMsg("dataMsg","Conta apagada.",true)}catch(e){setMsg("dataMsg",A.msg(e))}};
+$("logoutBtn").onclick=()=>A.logout();
+
+/* ---------- Estado ---------- */
+A.on(async a=>{
+  if(!a.loaded)return;
+  $("loading").hidden=true;
+  const on=!!a.user; $("in").hidden=!on; $("out").hidden=on;
+  if(!on)return;
+  $("who").textContent=`${a.user.displayName?a.user.displayName+" · ":""}${a.user.email||""}${a.user.emailVerified||a.user.providerData.some(p=>p.providerId==="google.com")?"":" · email por confirmar"}`;
+  $("dataErr").textContent=a.error||"";
+  if(!a.data)return;
+  renderProfiles();renderFavs();renderPlaces();renderAlerts();
+});
+A.ready.then(async()=>{if(A.user){renderReqs();$("adminLink").hidden=!(await A.isAdmin())}});
+if(location.hash==="#ideas")A.ready.then(()=>document.getElementById("ideas")?.scrollIntoView());
+</script>
+<script>if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));</script>
+</body>
+</html>

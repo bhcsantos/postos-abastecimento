@@ -117,6 +117,13 @@ h1 span{color:var(--accent)}
 .check{width:26px;height:26px;border:2px solid var(--line);border-radius:6px;display:grid;place-items:center;font-size:15px;color:transparent;background:var(--surface);cursor:pointer;padding:0;flex:none}
 .check:hover{border-color:var(--sel)}
 .item.on .check{background:var(--sel);border-color:var(--sel);color:#1a1300}
+.foot{display:flex;flex-wrap:wrap;gap:8px 20px;justify-content:center;padding-top:8px;border-top:1px solid var(--line);font-size:.88rem}
+.foot a{color:var(--accent);text-decoration:none;font-weight:600}
+.foot a:hover{text-decoration:underline}
+.favbtn{font:inherit;font-size:.82rem;font-weight:600;background:none;border:0;padding:0;cursor:pointer;color:var(--accent)}
+.favbtn.on{color:#c98a00}
+.fill{display:block;font-size:.8rem;color:var(--muted);margin-top:2px}
+.originsel{font:inherit;font-size:.85rem;padding:4px 8px;border-radius:6px;border:1px solid var(--line);background:var(--surface);color:var(--fg)}
 .tray{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:14px;display:grid;gap:10px}
 .leftcol{position:sticky;top:12px;display:flex;flex-direction:column;gap:12px;max-height:calc(100vh - 24px);overflow-y:auto;overscroll-behavior:contain;min-width:0;scrollbar-width:thin}
 .leftcol .mapbox{position:static;flex:none}
@@ -207,11 +214,13 @@ h1 span{color:var(--accent)}
     </div>
   </div>
 
+  <footer class="foot"><a href="conta.html#ideas">Pedir uma funcionalidade</a><a href="conta.html">A minha conta</a><a href="privacidade.html">Privacidade</a></footer>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/leaflet.markercluster.js"></script>
 <script src="route.js"></script>
+<script type="module" src="account.js"></script>
 <script>
 const PROXY="https://mobie-proxy.bhcsantos.workers.dev";
 /* Concelhos: distrito ou região e centro aproximado (média das coordenadas dos postos de combustível da DGEG; ilhas a partir dos carregadores) */
@@ -280,7 +289,7 @@ function planText(parts,plan){
 }
 /* Custo estimado do operador para carregar 20 kWh: taxa de início + kWh + minutos.
    Tempo com uma potência realista: até 11 kW em corrente alternada (Tipo 2) e até 50 kW em rápida (CCS/CHAdeMO). */
-const EST_KWH=20;
+let EST_KWH=20;
 function socketEstimate(s,k){
   const parts=socketTariff(s,k); if(!parts.length)return null;
   const plan=parts.some(p=>p.plan==="regular")?"regular":"adhoc";
@@ -436,7 +445,7 @@ function renderList(){
         <span class="right"><span class="state s-${st}">${st==="available"?`${free} ${free===1?"livre":"livres"}`:STATE_LABEL[st]}</span><button type="button" class="check" data-sel="${esc(s.id)}" aria-pressed="${isSel(s.id)}" aria-label="${isSel(s.id)?"Retirar da seleção":"Selecionar este posto"}" title="${isSel(s.id)?"Retirar da seleção":"Selecionar"}">✓</button></span></div>
       <div class="sockets">${groupSockets(socks).map(g=>`<span class="sock"><i style="background:${g.free?STATE_COLOR.available:STATE_COLOR.inUse}"></i>${connIcon(g.c)}${g.n}× ${esc(CONN_LABEL[g.c]||g.c||"?")} <b>${kw(g.kw)}</b> · ${g.free} ${g.free===1?"livre":"livres"}</span>`).join("")}</div>
       ${(()=>{const ps=priceSummary(s,socks);return ps?`<div class="pricesum">${esc(ps)}</div>`:""})()}
-      <div class="links"><button type="button" data-open="${esc(s.id)}">${openId===s.id?"Esconder tomadas ▴":"Ver tomadas e preços ▾"}</button>
+      <div class="links"><button type="button" class="favbtn${window.Account?.isFav("ev",s.id)?" on":""}" data-fav="${esc(s.id)}">${window.Account?.isFav("ev",s.id)?"★ Favorito":"☆ Favorito"}</button><button type="button" data-open="${esc(s.id)}">${openId===s.id?"Esconder tomadas ▴":"Ver tomadas e preços ▾"}</button>
         <a href="https://www.google.com/maps/dir/?api=1&destination=${s.lat},${s.lng}&travelmode=driving" target="_blank" rel="noopener">Navegar até aqui ↗</a>
         <a href="https://www.google.com/maps/search/?api=1&query=${s.lat},${s.lng}" target="_blank" rel="noopener">Ver no Google Maps ↗</a></div>
       ${openId===s.id?`<div class="detail" id="det-${esc(s.id)}"><p class="count">A obter o estado mais recente…</p></div>`:""}
@@ -444,6 +453,7 @@ function renderList(){
     :`<div class="empty">${stations.length?"Não há carregadores com estes filtros nesta zona do mapa. Afaste o mapa ou retire um filtro.":"Sem carregadores para mostrar."}</div>`;
   document.querySelectorAll("[data-open]").forEach(b=>b.onclick=()=>{openId=openId===b.dataset.open?null:b.dataset.open;renderList()});
   document.querySelectorAll("[data-sel]").forEach(b=>b.onclick=()=>toggleSel(stations.find(x=>x.id===b.dataset.sel),false));
+  document.querySelectorAll("[data-fav]").forEach(b=>b.onclick=()=>{const s=stations.find(x=>x.id===b.dataset.fav);if(!s)return;if(!window.Account){location.href="conta.html";return}Account.toggleFav({k:"ev",id:s.id,t:s.address||s.name,sub:[s.operator,s.conc,s.name].filter(Boolean).join(" · "),lat:s.lat,lng:s.lng})});
   renderTray();
   if($("more"))$("more").onclick=()=>{shown+=40;renderList()};
   if(openId&&$("det-"+openId))loadDetail(stations.find(x=>x.id===openId));
@@ -528,6 +538,17 @@ $("zme").onclick=()=>{
   if(watchId!=null)return;
   $("locmsg").textContent="A obter a sua localização…";
   watchId=navigator.geolocation.watchPosition(onPos,onPosErr,{enableHighAccuracy:true,maximumAge:30000,timeout:20000});
+};
+/* Perfil ativo da conta: fichas, potência mínima e tamanho do carregamento estimado */
+let evProfileApplied=null;
+window.onProfile=p=>{
+  Route.places=window.Account?.data?.locais||{};Route.render();
+  if(p&&p.tipo==="eletrico"){
+    EST_KWH=p.bateria?Math.max(5,Math.round(p.bateria*0.6)):20;
+    const key=JSON.stringify([p.id,p.fichas,p.potenciaMin]);
+    if(key!==evProfileApplied){evProfileApplied=key;fConn.clear();(p.fichas||[]).forEach(c=>fConn.add(c));fPow=p.potenciaMin||0;if(stations.length)changed();return}
+  }else EST_KWH=20;
+  if(stations.length)renderList();
 };
 Route.liveInfo=stop=>{if(stop.k!=="ev")return null;const s=stations.find(x=>x.id===stop.id);if(!s)return null;const f=s.sockets.filter(k=>sockState(k)==="available").length;return `${f} de ${s.sockets.length} tomadas livres`};
 Route.onchange=()=>{draw();setTimeout(()=>map.invalidateSize(),0)};
