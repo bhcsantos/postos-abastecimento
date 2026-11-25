@@ -84,6 +84,14 @@ dialog.dlg::backdrop{background:rgba(10,16,26,.55)}
 .chip.fuel[aria-pressed="true"]{background:var(--fc);border-color:var(--fc);color:#fff;box-shadow:0 0 0 2px var(--surface),0 0 0 4px var(--accent)}
 .fb{flex:none;display:block}
 .price .pv{display:inline-flex;align-items:center;gap:6px}
+.price.ps{display:grid;gap:2px;justify-items:end}
+.ps-row{display:grid;grid-template-columns:auto auto;gap:8px;align-items:baseline;justify-content:end}
+.ps-l{font-family:var(--body);font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600}
+.ps-pump .ps-v{font-size:.85rem;color:#c0392b;font-weight:600}
+@media (prefers-color-scheme:dark){.ps-pump .ps-v{color:#f2847b}}
+.ps-pay .pv{font-size:1.15rem;font-weight:600;color:var(--fg)}
+.ps-real .ps-v{font-size:.9rem;color:var(--good);font-weight:600}
+.price.ps.best .ps-pay .pv{color:var(--good)}
 .main{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:16px;align-items:start}
 @media (max-width:860px){.main{grid-template-columns:1fr}}
 .mapbox{position:sticky;top:12px;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px}
@@ -441,8 +449,13 @@ function renderList(){
     const dc=D.get(s.id), diff=dc.efetivo-best, on=isSel(s.id), has=dc.regras.length>0;
     return `<div class="item${on?" on":""}"><button type="button" class="st" data-id="${s.id}" aria-pressed="${on}">
       <span class="brand" style="background:${colorOf(s.b)}" title="${esc(s.b)}">${esc(s.b)}</span>
-      <span><h3>${esc(s.n)}</h3><span class="addr">${me?`<span class="dist">${km(distKm(me,s))}</span> · `:""}${esc(s.a)} · ${esc(s.cp)}${s.loc?" · "+esc(s.loc):""}</span>${curProfile&&curProfile.deposito?`<span class="fill">Atestar ${curProfile.deposito} L: <strong>${(dc.final*curProfile.deposito).toFixed(2).replace(".",",")} €</strong>${curProfile.consumo?` · ${(dc.final*curProfile.consumo/100).toFixed(2).replace(".",",")} € por 100 km`:""}</span>`:""}${has?`<span class="disc">${Discounts.describe(dc)}${dc.saldo?` · custo efetivo ${eur(dc.efetivo)}`:""}</span>`:""}</span>
-      <span class="price${diff<0.0005?" best":""}">${has?`<span class="pump">${eur(s.price)} na bomba</span>`:""}<span class="pv">${fuelBadge(FUEL_NAME[fuelId],20)}${eur(dc.final)}</span><small>${diff<0.0005?"mais barato aqui":"+"+(diff*100).toFixed(1).replace(".",",")+" cênt."}</small></span>
+      <span><h3>${esc(s.n)}</h3><span class="addr">${me?`<span class="dist">${km(distKm(me,s))}</span> · `:""}${esc(s.a)} · ${esc(s.cp)}${s.loc?" · "+esc(s.loc):""}</span>${curProfile&&curProfile.deposito?`<span class="fill">Atestar ${curProfile.deposito} L: <strong>${(dc.final*curProfile.deposito).toFixed(2).replace(".",",")} €</strong>${curProfile.consumo?` · ${(dc.final*curProfile.consumo/100).toFixed(2).replace(".",",")} € por 100 km`:""}</span>`:""}${has?`<span class="disc">${Discounts.describe(dc)}</span>`:""}</span>
+      ${has?`<span class="price ps${diff<0.0005?" best":""}">
+        <span class="ps-row ps-pump" title="Preço afixado no posto"><span class="ps-l">Na bomba</span><span class="ps-v">${eur(s.price)}</span></span>
+        <span class="ps-row ps-pay" title="O que paga no momento, já com o desconto imediato"><span class="ps-l">Paga</span><span class="pv">${fuelBadge(FUEL_NAME[fuelId],20)}${eur(dc.final)}</span></span>
+        ${dc.saldo?`<span class="ps-row ps-real" title="Descontando também o saldo que recebe para usar mais tarde"><span class="ps-l">Custo real</span><span class="ps-v">${eur(dc.efetivo)}</span></span>`:""}
+        <small>${diff<0.0005?"o mais barato aqui":"+"+(diff*100).toFixed(1).replace(".",",")+" cênt. que o mais barato"}</small></span>`
+      :`<span class="price${diff<0.0005?" best":""}"><span class="pv">${fuelBadge(FUEL_NAME[fuelId],20)}${eur(dc.final)}</span><small>${diff<0.0005?"o mais barato aqui":"+"+(diff*100).toFixed(1).replace(".",",")+" cênt. que o mais barato"}</small></span>`}
       <span class="check" aria-hidden="true">✓</span></button>
       ${has?`<details class="discd"><summary>Como obter este desconto</summary>${Discounts.explain(dc)}</details>`:""}
       <div class="gm"><a class="enter" href="posto.html?id=${s.id}">Entrar no posto →</a><button type="button" class="favbtn${window.Account?.isFav("fuel",s.id)?" on":""}" data-fav="${s.id}">${window.Account?.isFav("fuel",s.id)?"★ Favorito":"☆ Favorito"}</button><a href="${gmView(s)}" target="_blank" rel="noopener">Ver no Google Maps ↗</a><a href="${gmGo(s)}" target="_blank" rel="noopener">Navegar até aqui ↗</a></div></div>`}).join("")
