@@ -1,0 +1,31 @@
+name: Previsão semanal de preços
+on:
+  schedule:
+    - cron: "41 14 * * 5"   # sexta 14:41 UTC (a estimativa costuma sair à sexta)
+    - cron: "41 17 * * 5"   # sexta 17:41 UTC (atualizações da tarde)
+    - cron: "13 9 * * 6"    # sábado 09:13 UTC (confirmação)
+  workflow_dispatch: {}
+permissions:
+  contents: write
+concurrency:
+  group: dados
+  cancel-in-progress: false
+jobs:
+  previsao:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python scripts/previsao.py
+      - name: Gravar no repositório
+        run: |
+          git config user.name "previsao-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/previsao.json
+          git diff --cached --quiet && exit 0
+          git commit -m "Previsão de preços: $(date -u +%F)"
+          git pull --rebase --autostash
+          git push

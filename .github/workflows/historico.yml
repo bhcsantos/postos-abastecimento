@@ -6,7 +6,7 @@ on:
 permissions:
   contents: write
 concurrency:
-  group: historico
+  group: dados
   cancel-in-progress: false
 jobs:
   guardar:

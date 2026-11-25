@@ -186,6 +186,7 @@ dialog.dlg::backdrop{background:rgba(10,16,26,.55)}
     </div>
     <p class="note">Fonte: <a href="https://precoscombustiveis.dgeg.gov.pt/" target="_blank" rel="noopener">DGEG, Preços dos Combustíveis</a> (Portugal continental). <span id="srcinfo">A carregar preços…</span> Os preços mudam; confirme no posto.</p>
   </header>
+  <div id="prevBanner" class="prevban" hidden role="status"></div>
 
   <section class="controls" aria-label="Filtros">
     <div class="row">
@@ -232,6 +233,7 @@ dialog.dlg::backdrop{background:rgba(10,16,26,.55)}
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/leaflet.markercluster.js"></script>
+<script src="previsao.js"></script>
 <script src="descontos.js"></script>
 <script src="route.js"></script>
 <script type="module" src="account.js"></script>
@@ -296,7 +298,7 @@ $("scope").onchange=()=>{scope=$("scope").value;store.set("pp-scope",scope);acti
 FUELS.forEach(([id,name])=>{
   const b=document.createElement("button");b.type="button";b.className="chip fuel";b.innerHTML=fuelBadge(name,24)+esc(name);b.dataset.f=id;b.style.setProperty("--fc",fuelColor(name));
   b.setAttribute("aria-pressed",id===fuelId);
-  b.onclick=()=>{fuelId=id;store.set("pp-fuel",id);document.querySelectorAll("#fuels .chip").forEach(c=>c.setAttribute("aria-pressed",+c.dataset.f===id));load(false)};
+  b.onclick=()=>{fuelId=id;store.set("pp-fuel",id);window.Previsao&&Previsao.setFuel([2101,2105].includes(+id)?"gasoleo":[3201,3205,3405].includes(+id)?"gasolina":null);document.querySelectorAll("#fuels .chip").forEach(c=>c.setAttribute("aria-pressed",+c.dataset.f===id));load(false)};
   $("fuels").appendChild(b);
 });
 
@@ -499,6 +501,8 @@ window.onProfile=p=>{
   if(data.length)renderList();
 };
 Route.bind();
+const fuelKind=id=>[2101,2105].includes(+id)?"gasoleo":[3201,3205,3405].includes(+id)?"gasolina":null;
+Previsao.fuelType=fuelKind(fuelId);Previsao.load();
 Discounts.renderButton();
 $("discBtn").onclick=()=>Discounts.openPanel();
 Discounts.onchange=()=>renderList();
