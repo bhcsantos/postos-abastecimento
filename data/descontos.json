@@ -1,47 +1,4582 @@
 {
-  "atualizado": "2026-11-25",
-  "programas": [
-    {
-      "id": "vodafone",
-      "nome": "Cliente Vodafone",
-      "grupo": "Operadoras de telecomunicações"
-    }
-  ],
-  "condicoes": [
-    {
-      "id": "repsol-casa",
-      "nome": "Tenho luz ou gás da Repsol em casa"
-    }
-  ],
-  "descontos": [
-    {
-      "id": "repsol-vodafone",
-      "titulo": "Vodafone na Repsol",
-      "marcas": [
-        "REPSOL"
-      ],
-      "tipos": [
-        "gasolina",
-        "gasoleo"
-      ],
-      "requer": [
-        "vodafone"
-      ],
-      "exclui": [
-        "repsol-casa"
-      ],
-      "direto": 0.06,
-      "saldo": 0.04,
-      "saldoOnde": "saldo na app Repsol",
-      "cumulativo": false,
-      "condicoes": "Para clientes Vodafone sem luz nem gás da Repsol em casa: 6 cêntimos por litro de desconto direto e 4 cêntimos por litro em saldo na app Repsol.",
-      "limite": null,
-      "inicio": null,
-      "fim": null,
-      "fonte": null,
-      "verificado": null,
-      "estado": "a confirmar",
-      "origem": "Indicado pelo dono do site; falta a ligação para a campanha."
-    }
-  ]
+ "atualizado": "2026-11-25",
+ "grupos": [
+  "Repsol",
+  "Operadoras de telecomunicações",
+  "Seguros e bancos",
+  "Lojas e supermercados",
+  "Clubes e desporto",
+  "Automóvel",
+  "Ordens profissionais",
+  "Transportes e táxis",
+  "Outros"
+ ],
+ "programas": [
+  {
+   "id": "repsol-motor",
+   "nome": "Repsol — App My Repsol (Plano Motor)",
+   "grupo": "Repsol",
+   "marca": "REPSOL",
+   "exclusivo": "repsol-plano",
+   "pesquisa": [
+    "repsol",
+    "my repsol",
+    "motor",
+    "app",
+    "waylet"
+   ],
+   "fonte": "https://www.repsol.pt/particulares/beneficios/plano-motor/"
+  },
+  {
+   "id": "repsol-luz",
+   "nome": "Repsol — My Repsol + eletricidade Repsol (Plano Motor e Luz)",
+   "grupo": "Repsol",
+   "marca": "REPSOL",
+   "exclusivo": "repsol-plano",
+   "pesquisa": [
+    "repsol",
+    "luz",
+    "eletricidade",
+    "motor"
+   ],
+   "fonte": "https://www.repsol.pt/particulares/beneficios/plano-motor-luz/"
+  },
+  {
+   "id": "repsol-luzgas",
+   "nome": "Repsol — My Repsol + eletricidade e gás Repsol (Plano Motor, Luz e Calor)",
+   "grupo": "Repsol",
+   "marca": "REPSOL",
+   "exclusivo": "repsol-plano",
+   "pesquisa": [
+    "repsol",
+    "luz",
+    "gas",
+    "calor",
+    "eletricidade",
+    "motor"
+   ],
+   "fonte": "https://www.repsol.pt/particulares/beneficios/plano-motor-luz-calor/"
+  },
+  {
+   "id": "p-ageas",
+   "nome": "Ageas — cliente",
+   "grupo": "Seguros e bancos",
+   "parceiroDe": [
+    "REPSOL"
+   ],
+   "pesquisa": [
+    "seguro",
+    "ageas"
+   ],
+   "fonte": "https://www.repsol.pt/particulares/parceiros/banca-e-seguros/ageas/"
+  },
+  {
+   "id": "p-seguro-directo",
+   "nome": "Seguro Directo — cliente",
+   "grupo": "Seguros e bancos",
+   "parceiroDe": [
+    "REPSOL"
+   ],
+   "pesquisa": [
+    "seguro",
+    "directo"
+   ],
+   "fonte": "https://www.repsol.pt/particulares/parceiros/banca-e-seguros/seguro-directo/"
+  },
+  {
+   "id": "p-santander",
+   "nome": "Santander — cliente",
+   "grupo": "Seguros e bancos",
+   "parceiroDe": [
+    "REPSOL"
+   ],
+   "pesquisa": [
+    "banco",
+    "santander"
+   ],
+   "fonte": "https://www.repsol.pt/particulares/parceiros/banca-e-seguros/santander/"
+  },
+  {
+   "id": "p-cgd",
+   "nome": "Caixa Geral de Depósitos — cartão de crédito Caixa Classic",
+   "grupo": "Seguros e bancos",
+   "parceiroDe": [
+    "REPSOL"
+   ],
+   "pesquisa": [
+    "caixa",
+    "cgd",
+    "banco",
+    "cartao credito"
+   ],
+   "fonte": "https://www.repsol.pt/particulares/parceiros/banca-e-seguros/cgd/"
+  },
+  {
+   "id": "p-montepio",
+   "nome": "Montepio — cartão Associação Mutualista",
+   "grupo": "Seguros e bancos",
+   "parceiroDe": [
+    "REPSOL"
+   ],
+   "pesquisa": [
+    "montepio",
+    "banco",
+    "mutualista"
+   ],
+   "fonte": "https://www.repsol.pt/particulares/parceiros/banca-e-seguros/montepio/"
+  },
+  {
+   "id": "p-edenred",
+   "nome": "Edenred — Ticket Car / Ticket Restaurant",
+   "grupo": "Seguros e bancos",
+   "parceiroDe": [
+    "REPSOL"
+   ],
+   "pesquisa": [
+    "edenred",
+    "ticket"
+   ],
+   "fonte": "https://www.repsol.pt/particulares/parceiros/banca-e-seguros/edenred/"
+  },
+  {
+   "id": "p-interpass",
+   "nome": "Interpass",
+   "grupo": "Outros",
+   "parceiroDe": [
+    "REPSOL"
+   ],
+   "pesquisa": [
+    "interpass"
+   ],
+   "fonte": "https://www.repsol.pt/particulares/parceiros/outros-parceiros/interpass/"
+  },
+  {
+   "id": "p-benfica",
+   "nome": "Benfica — sócio",
+   "grupo": "Clubes e desporto",
+   "parceiroDe": [
+    "REPSOL"
+   ],
+   "pesquisa": [
+    "slb",
+    "benfica",
+    "clube"
+   ],
+   "fonte": "https://www.repsol.pt/particulares/parceiros/desporto/benfica/"
+  },
+  {
+   "id": "p-porto",
+   "nome": "FC Porto — sócio",
+   "grupo": "Clubes e desporto",
+   "parceiroDe": [
+    "REPSOL"
+   ],
+   "pesquisa": [
+    "fcp",
+    "porto",
+    "clube"
+   ],
+   "fonte": "https://www.repsol.pt/particulares/parceiros/desporto/porto/"
+  },
+  {
+   "id": "p-sporting",
+   "nome": "Sporting CP — sócio",
+   "grupo": "Clubes e desporto",
+   "parceiroDe": [
+    "REPSOL"
+   ],
+   "pesquisa": [
+    "scp",
+    "sporting",
+    "clube"
+   ],
+   "fonte": "https://www.repsol.pt/particulares/parceiros/desporto/sporting/"
+  },
+  {
+   "id": "p-braga",
+   "nome": "SC Braga — sócio",
+   "grupo": "Clubes e desporto",
+   "parceiroDe": [
+    "REPSOL"
+   ],
+   "pesquisa": [
+    "braga",
+    "clube"
+   ],
+   "fonte": "https://www.repsol.pt/particulares/parceiros/desporto/braga/"
+  },
+  {
+   "id": "p-maritimo",
+   "nome": "CS Marítimo — sócio",
+   "grupo": "Clubes e desporto",
+   "parceiroDe": [
+    "REPSOL"
+   ],
+   "pesquisa": [
+    "maritimo",
+    "clube"
+   ],
+   "fonte": "https://www.repsol.pt/particulares/parceiros/desporto/maritimo/"
+  },
+  {
+   "id": "p-os-belenenses",
+   "nome": "CF Os Belenenses — sócio",
+   "grupo": "Clubes e desporto",
+   "parceiroDe": [
+    "REPSOL"
+   ],
+   "pesquisa": [
+    "belenenses",
+    "clube"
+   ],
+   "fonte": "https://www.repsol.pt/particulares/parceiros/desporto/os-belenenses/"
+  },
+  {
+   "id": "p-cop",
+   "nome": "Comité Olímpico de Portugal — atleta",
+   "grupo": "Clubes e desporto",
+   "parceiroDe": [
+    "REPSOL"
+   ],
+   "pesquisa": [
+    "cop",
+    "olimpico"
+   ],
+   "fonte": "https://www.repsol.pt/particulares/parceiros/desporto/cop/"
+  },
+  {
+   "id": "p-casa-pia",
+   "nome": "Casa Pia AC — sócio",
+   "grupo": "Clubes e desporto",
+   "parceiroDe": [
+    "REPSOL"
+   ],
+   "pesquisa": [
+    "casa pia",
+    "clube"
+   ],
+   "fonte": "https://www.repsol.pt/particulares/parceiros/desporto/casa-pia/"
+  },
+  {
+   "id": "p-betano",
+   "nome": "Betano — cartão",
+   "grupo": "Clubes e desporto",
+   "parceiroDe": [
+    "REPSOL"
+   ],
+   "pesquisa": [
+    "betano"
+   ],
+   "fonte": "https://www.repsol.pt/particulares/parceiros/desporto/Betano/"
+  },
+  {
+   "id": "p-el-corte-ingles",
+   "nome": "El Corte Inglés — conta de cliente",
+   "grupo": "Lojas e supermercados",
+   "parceiroDe": [
+    "REPSOL"
+   ],
+   "pesquisa": [
+    "corte ingles",
+    "eci"
+   ],
+   "fonte": "https://www.repsol.pt/particulares/parceiros/grande-distribuicao/el-corte-ingles/"
+  },
+  {
+   "id": "p-fnac",
+   "nome": "Fnac — cartão de cliente",
+   "grupo": "Lojas e supermercados",
+   "parceiroDe": [
+    "REPSOL"
+   ],
+   "pesquisa": [
+    "fnac"
+   ],
+   "fonte": "https://www.repsol.pt/particulares/parceiros/grande-distribuicao/fnac/"
+  },
+  {
+   "id": "p-lidl",
+   "nome": "Lidl Plus",
+   "grupo": "Lojas e supermercados",
+   "parceiroDe": [
+    "REPSOL"
+   ],
+   "pesquisa": [
+    "lidl",
+    "supermercado"
+   ],
+   "fonte": "https://www.repsol.pt/particulares/parceiros/grande-distribuicao/lidl/"
+  },
+  {
+   "id": "p-staples",
+   "nome": "Staples — cartão de cliente",
+   "grupo": "Lojas e supermercados",
+   "parceiroDe": [
+    "REPSOL"
+   ],
+   "pesquisa": [
+    "staples"
+   ],
+   "fonte": "https://www.repsol.pt/particulares/parceiros/grande-distribuicao/staples/"
+  },
+  {
+   "id": "p-recheio",
+   "nome": "Recheio — cartão de cliente",
+   "grupo": "Lojas e supermercados",
+   "parceiroDe": [
+    "REPSOL"
+   ],
+   "pesquisa": [
+    "recheio",
+    "cash carry"
+   ],
+   "fonte": "https://www.repsol.pt/profissionais/parceiros/grande-distribuicao/recheio/"
+  },
+  {
+   "id": "p-norauto",
+   "nome": "Norauto — cartão de cliente",
+   "grupo": "Automóvel",
+   "parceiroDe": [
+    "REPSOL"
+   ],
+   "pesquisa": [
+    "norauto",
+    "oficina"
+   ],
+   "fonte": "https://www.repsol.pt/particulares/parceiros/mundo-automovel/norauto/"
+  },
+  {
+   "id": "p-my-peugeot",
+   "nome": "Peugeot — cartão de cliente (My Peugeot)",
+   "grupo": "Automóvel",
+   "parceiroDe": [
+    "REPSOL"
+   ],
+   "pesquisa": [
+    "peugeot",
+    "my peugeot"
+   ],
+   "fonte": "https://www.repsol.pt/particulares/parceiros/mundo-automovel/my-peugeot/"
+  },
+  {
+   "id": "p-ordem-contabilistas-certificados",
+   "nome": "Ordem dos Contabilistas Certificados",
+   "grupo": "Ordens profissionais",
+   "parceiroDe": [
+    "REPSOL"
+   ],
+   "pesquisa": [
+    "occ",
+    "contabilistas",
+    "ordem"
+   ],
+   "fonte": "https://www.repsol.pt/profissionais/parceiros/ordens-profissionais/ordem-contabilistas-certificados/"
+  },
+  {
+   "id": "p-ordem-economistas",
+   "nome": "Ordem dos Economistas",
+   "grupo": "Ordens profissionais",
+   "parceiroDe": [
+    "REPSOL"
+   ],
+   "pesquisa": [
+    "economistas",
+    "ordem"
+   ],
+   "fonte": "https://www.repsol.pt/profissionais/parceiros/ordens-profissionais/ordem-economistas/"
+  },
+  {
+   "id": "p-ordem-psicologos",
+   "nome": "Ordem dos Psicólogos",
+   "grupo": "Ordens profissionais",
+   "parceiroDe": [
+    "REPSOL"
+   ],
+   "pesquisa": [
+    "psicologos",
+    "ordem"
+   ],
+   "fonte": "https://www.repsol.pt/profissionais/parceiros/ordens-profissionais/ordem-psicologos/"
+  },
+  {
+   "id": "p-ordem-enfermeiros",
+   "nome": "Ordem dos Enfermeiros",
+   "grupo": "Ordens profissionais",
+   "parceiroDe": [
+    "REPSOL"
+   ],
+   "pesquisa": [
+    "enfermeiros",
+    "ordem"
+   ],
+   "fonte": "https://www.repsol.pt/profissionais/parceiros/ordens-profissionais/ordem-enfermeiros/"
+  },
+  {
+   "id": "p-ordem-medicos-veterinarios",
+   "nome": "Ordem dos Médicos Veterinários",
+   "grupo": "Ordens profissionais",
+   "parceiroDe": [
+    "REPSOL"
+   ],
+   "pesquisa": [
+    "veterinarios",
+    "ordem"
+   ],
+   "fonte": "https://www.repsol.pt/profissionais/parceiros/ordens-profissionais/ordem-medicos-veterinarios/"
+  },
+  {
+   "id": "p-ordem-engenheiros-sul",
+   "nome": "Ordem dos Engenheiros — Região Sul",
+   "grupo": "Ordens profissionais",
+   "parceiroDe": [
+    "REPSOL"
+   ],
+   "pesquisa": [
+    "engenheiros",
+    "ordem"
+   ],
+   "fonte": "https://www.repsol.pt/profissionais/parceiros/ordens-profissionais/ordem-engenheiros-sul/"
+  },
+  {
+   "id": "p-antral",
+   "nome": "ANTRAL — sócio",
+   "grupo": "Transportes e táxis",
+   "parceiroDe": [
+    "REPSOL"
+   ],
+   "pesquisa": [
+    "antral",
+    "taxi"
+   ],
+   "fonte": "https://www.repsol.pt/profissionais/parceiros/setor-transportes/antral/"
+  },
+  {
+   "id": "p-aitram",
+   "nome": "AITRAM — sócio",
+   "grupo": "Transportes e táxis",
+   "parceiroDe": [
+    "REPSOL"
+   ],
+   "pesquisa": [
+    "aitram",
+    "transportes"
+   ],
+   "fonte": "https://www.repsol.pt/profissionais/parceiros/setor-transportes/aitram/"
+  },
+  {
+   "id": "p-federacao-portuguesa-taxi",
+   "nome": "Federação Portuguesa do Táxi",
+   "grupo": "Transportes e táxis",
+   "parceiroDe": [
+    "REPSOL"
+   ],
+   "pesquisa": [
+    "taxi",
+    "federacao"
+   ],
+   "fonte": "https://www.repsol.pt/profissionais/parceiros/setor-transportes/federacao-portuguesa-taxi/"
+  },
+  {
+   "id": "p-taxisram",
+   "nome": "Táxis RAM — sócio",
+   "grupo": "Transportes e táxis",
+   "parceiroDe": [
+    "REPSOL"
+   ],
+   "pesquisa": [
+    "taxi",
+    "ram"
+   ],
+   "fonte": "https://www.repsol.pt/profissionais/parceiros/setor-transportes/taxisRam/"
+  },
+  {
+   "id": "p-vodafone",
+   "nome": "Vodafone — cliente",
+   "grupo": "Operadoras de telecomunicações",
+   "parceiroDe": [
+    "REPSOL"
+   ],
+   "pesquisa": [
+    "vodafone",
+    "telemovel",
+    "operadora"
+   ],
+   "fonte": "https://www.repsol.pt/particulares/parceiros/outros-parceiros/vodafone/"
+  },
+  {
+   "id": "p-associacao-sorriso-solidario",
+   "nome": "Cartão Solidário (Associação Sorriso Solidário)",
+   "grupo": "Outros",
+   "parceiroDe": [
+    "REPSOL"
+   ],
+   "pesquisa": [
+    "solidario",
+    "sorriso"
+   ],
+   "fonte": "https://www.repsol.pt/particulares/parceiros/outros-parceiros/associacao-sorriso-solidario/"
+  }
+ ],
+ "descontos": [
+  {
+   "id": "repsol-motor",
+   "titulo": "My Repsol (Plano Motor)",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "repsol-motor"
+   ],
+   "exclui": [],
+   "direto": 0,
+   "saldo": 0.08,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "8 cênt./litro em saldo My Repsol com o Plano Motor.",
+   "comoUsar": "Identifique-se com a App My Repsol (QR Code) ao pagar.",
+   "limite": "O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/beneficios/",
+   "fontes": [
+    "https://www.repsol.pt/particulares/beneficios/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "repsol-luz",
+   "titulo": "My Repsol (Plano Motor e Luz)",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "repsol-luz"
+   ],
+   "exclui": [],
+   "direto": 0,
+   "saldo": 0.13,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "13 cênt./litro em saldo My Repsol com o Plano Motor e Luz.",
+   "comoUsar": "Identifique-se com a App My Repsol (QR Code) ao pagar.",
+   "limite": "O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/beneficios/",
+   "fontes": [
+    "https://www.repsol.pt/particulares/beneficios/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "repsol-luzgas",
+   "titulo": "My Repsol (Plano Motor, Luz e Calor)",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "repsol-luzgas"
+   ],
+   "exclui": [],
+   "direto": 0,
+   "saldo": 0.18,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "18 cênt./litro em saldo My Repsol com o Plano Motor, Luz e Calor.",
+   "comoUsar": "Identifique-se com a App My Repsol (QR Code) ao pagar.",
+   "limite": "O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/beneficios/",
+   "fontes": [
+    "https://www.repsol.pt/particulares/beneficios/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-ageas-repsol-motor",
+   "titulo": "Ageas + Plano Motor",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-ageas",
+    "repsol-motor"
+   ],
+   "exclui": [],
+   "direto": 0.0,
+   "saldo": 0.1,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "10 cênt./litro no total: 10 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/banca-e-seguros/ageas/",
+   "fontes": [
+    "https://www.repsol.pt/particulares/parceiros/banca-e-seguros/ageas/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado",
+   "nota": "A página do parceiro não separa o desconto imediato do saldo; aqui conta-se tudo como saldo."
+  },
+  {
+   "id": "p-ageas-repsol-luz",
+   "titulo": "Ageas + Plano Motor e Luz",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-ageas",
+    "repsol-luz"
+   ],
+   "exclui": [],
+   "direto": 0.0,
+   "saldo": 0.15,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "15 cênt./litro no total: 15 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/banca-e-seguros/ageas/",
+   "fontes": [
+    "https://www.repsol.pt/particulares/parceiros/banca-e-seguros/ageas/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado",
+   "nota": "A página do parceiro não separa o desconto imediato do saldo; aqui conta-se tudo como saldo."
+  },
+  {
+   "id": "p-ageas-repsol-luzgas",
+   "titulo": "Ageas + Plano Motor, Luz e Calor",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-ageas",
+    "repsol-luzgas"
+   ],
+   "exclui": [],
+   "direto": 0.0,
+   "saldo": 0.2,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "20 cênt./litro no total: 20 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/banca-e-seguros/ageas/",
+   "fontes": [
+    "https://www.repsol.pt/particulares/parceiros/banca-e-seguros/ageas/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado",
+   "nota": "A página do parceiro não separa o desconto imediato do saldo; aqui conta-se tudo como saldo."
+  },
+  {
+   "id": "p-seguro-directo-repsol-motor",
+   "titulo": "Seguro Directo + Plano Motor",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-seguro-directo",
+    "repsol-motor"
+   ],
+   "exclui": [],
+   "direto": 0.0,
+   "saldo": 0.1,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "10 cênt./litro no total: 10 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/banca-e-seguros/seguro-directo/",
+   "fontes": [
+    "https://www.repsol.pt/particulares/parceiros/banca-e-seguros/seguro-directo/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado",
+   "nota": "A página do parceiro não separa o desconto imediato do saldo; aqui conta-se tudo como saldo."
+  },
+  {
+   "id": "p-seguro-directo-repsol-luz",
+   "titulo": "Seguro Directo + Plano Motor e Luz",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-seguro-directo",
+    "repsol-luz"
+   ],
+   "exclui": [],
+   "direto": 0.0,
+   "saldo": 0.15,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "15 cênt./litro no total: 15 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/banca-e-seguros/seguro-directo/",
+   "fontes": [
+    "https://www.repsol.pt/particulares/parceiros/banca-e-seguros/seguro-directo/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado",
+   "nota": "A página do parceiro não separa o desconto imediato do saldo; aqui conta-se tudo como saldo."
+  },
+  {
+   "id": "p-seguro-directo-repsol-luzgas",
+   "titulo": "Seguro Directo + Plano Motor, Luz e Calor",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-seguro-directo",
+    "repsol-luzgas"
+   ],
+   "exclui": [],
+   "direto": 0.0,
+   "saldo": 0.2,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "20 cênt./litro no total: 20 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/banca-e-seguros/seguro-directo/",
+   "fontes": [
+    "https://www.repsol.pt/particulares/parceiros/banca-e-seguros/seguro-directo/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado",
+   "nota": "A página do parceiro não separa o desconto imediato do saldo; aqui conta-se tudo como saldo."
+  },
+  {
+   "id": "p-santander-repsol-motor",
+   "titulo": "Santander + Plano Motor",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-santander",
+    "repsol-motor"
+   ],
+   "exclui": [],
+   "direto": 0.0,
+   "saldo": 0.1,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "10 cênt./litro no total: 10 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/banca-e-seguros/santander/",
+   "fontes": [
+    "https://www.repsol.pt/particulares/parceiros/banca-e-seguros/santander/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado",
+   "nota": "A página do parceiro não separa o desconto imediato do saldo; aqui conta-se tudo como saldo."
+  },
+  {
+   "id": "p-santander-repsol-luz",
+   "titulo": "Santander + Plano Motor e Luz",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-santander",
+    "repsol-luz"
+   ],
+   "exclui": [],
+   "direto": 0.0,
+   "saldo": 0.15,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "15 cênt./litro no total: 15 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/banca-e-seguros/santander/",
+   "fontes": [
+    "https://www.repsol.pt/particulares/parceiros/banca-e-seguros/santander/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado",
+   "nota": "A página do parceiro não separa o desconto imediato do saldo; aqui conta-se tudo como saldo."
+  },
+  {
+   "id": "p-santander-repsol-luzgas",
+   "titulo": "Santander + Plano Motor, Luz e Calor",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-santander",
+    "repsol-luzgas"
+   ],
+   "exclui": [],
+   "direto": 0.0,
+   "saldo": 0.2,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "20 cênt./litro no total: 20 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/banca-e-seguros/santander/",
+   "fontes": [
+    "https://www.repsol.pt/particulares/parceiros/banca-e-seguros/santander/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado",
+   "nota": "A página do parceiro não separa o desconto imediato do saldo; aqui conta-se tudo como saldo."
+  },
+  {
+   "id": "p-cgd-sem-app",
+   "titulo": "Caixa Geral de Depósitos (sem My Repsol)",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-cgd"
+   ],
+   "exclui": [
+    "repsol-motor",
+    "repsol-luz",
+    "repsol-luzgas"
+   ],
+   "direto": 0.05,
+   "saldo": 0,
+   "cumulativo": false,
+   "condicoes": "5 cênt./litro de desconto imediato com o cartão Caixa Geral de Depósitos, mesmo sem a App My Repsol.",
+   "comoUsar": "Apresente o cartão de parceiro ao pagar (ou associe-o na App My Repsol para ganhar também saldo).",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/banca-e-seguros/cgd/",
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-cgd-repsol-motor",
+   "titulo": "Caixa Geral de Depósitos + Plano Motor",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-cgd",
+    "repsol-motor"
+   ],
+   "exclui": [],
+   "direto": 0.05,
+   "saldo": 0.05,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "10 cênt./litro no total: 5 cênt. de desconto imediato do parceiro e 5 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/banca-e-seguros/cgd/",
+   "fontes": [
+    "https://www.repsol.pt/particulares/parceiros/banca-e-seguros/cgd/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-cgd-repsol-luz",
+   "titulo": "Caixa Geral de Depósitos + Plano Motor e Luz",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-cgd",
+    "repsol-luz"
+   ],
+   "exclui": [],
+   "direto": 0.05,
+   "saldo": 0.1,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "15 cênt./litro no total: 5 cênt. de desconto imediato do parceiro e 10 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/banca-e-seguros/cgd/",
+   "fontes": [
+    "https://www.repsol.pt/particulares/parceiros/banca-e-seguros/cgd/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-cgd-repsol-luzgas",
+   "titulo": "Caixa Geral de Depósitos + Plano Motor, Luz e Calor",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-cgd",
+    "repsol-luzgas"
+   ],
+   "exclui": [],
+   "direto": 0.05,
+   "saldo": 0.15,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "20 cênt./litro no total: 5 cênt. de desconto imediato do parceiro e 15 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/banca-e-seguros/cgd/",
+   "fontes": [
+    "https://www.repsol.pt/particulares/parceiros/banca-e-seguros/cgd/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-montepio-sem-app",
+   "titulo": "Montepio (sem My Repsol)",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-montepio"
+   ],
+   "exclui": [
+    "repsol-motor",
+    "repsol-luz",
+    "repsol-luzgas"
+   ],
+   "direto": 0.06,
+   "saldo": 0,
+   "cumulativo": false,
+   "condicoes": "6 cênt./litro de desconto imediato com o cartão Montepio, mesmo sem a App My Repsol.",
+   "comoUsar": "Apresente o cartão de parceiro ao pagar (ou associe-o na App My Repsol para ganhar também saldo).",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/banca-e-seguros/montepio/",
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-montepio-repsol-motor",
+   "titulo": "Montepio + Plano Motor",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-montepio",
+    "repsol-motor"
+   ],
+   "exclui": [],
+   "direto": 0.06,
+   "saldo": 0.04,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "10 cênt./litro no total: 6 cênt. de desconto imediato do parceiro e 4 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/banca-e-seguros/montepio/",
+   "fontes": [
+    "https://www.repsol.pt/particulares/parceiros/banca-e-seguros/montepio/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-montepio-repsol-luz",
+   "titulo": "Montepio + Plano Motor e Luz",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-montepio",
+    "repsol-luz"
+   ],
+   "exclui": [],
+   "direto": 0.06,
+   "saldo": 0.09,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "15 cênt./litro no total: 6 cênt. de desconto imediato do parceiro e 9 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/banca-e-seguros/montepio/",
+   "fontes": [
+    "https://www.repsol.pt/particulares/parceiros/banca-e-seguros/montepio/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-montepio-repsol-luzgas",
+   "titulo": "Montepio + Plano Motor, Luz e Calor",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-montepio",
+    "repsol-luzgas"
+   ],
+   "exclui": [],
+   "direto": 0.06,
+   "saldo": 0.14,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "20 cênt./litro no total: 6 cênt. de desconto imediato do parceiro e 14 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/banca-e-seguros/montepio/",
+   "fontes": [
+    "https://www.repsol.pt/particulares/parceiros/banca-e-seguros/montepio/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-edenred-sem-app",
+   "titulo": "Edenred (sem My Repsol)",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-edenred"
+   ],
+   "exclui": [
+    "repsol-motor",
+    "repsol-luz",
+    "repsol-luzgas"
+   ],
+   "direto": 0.06,
+   "saldo": 0,
+   "cumulativo": false,
+   "condicoes": "6 cênt./litro de desconto imediato com o cartão Edenred, mesmo sem a App My Repsol.",
+   "comoUsar": "Apresente o cartão de parceiro ao pagar (ou associe-o na App My Repsol para ganhar também saldo).",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/banca-e-seguros/edenred/",
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-edenred-repsol-motor",
+   "titulo": "Edenred + Plano Motor",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-edenred",
+    "repsol-motor"
+   ],
+   "exclui": [],
+   "direto": 0.06,
+   "saldo": 0.04,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "10 cênt./litro no total: 6 cênt. de desconto imediato do parceiro e 4 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/banca-e-seguros/edenred/",
+   "fontes": [
+    "https://www.repsol.pt/particulares/parceiros/banca-e-seguros/edenred/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-edenred-repsol-luz",
+   "titulo": "Edenred + Plano Motor e Luz",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-edenred",
+    "repsol-luz"
+   ],
+   "exclui": [],
+   "direto": 0.06,
+   "saldo": 0.09,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "15 cênt./litro no total: 6 cênt. de desconto imediato do parceiro e 9 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/banca-e-seguros/edenred/",
+   "fontes": [
+    "https://www.repsol.pt/particulares/parceiros/banca-e-seguros/edenred/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-edenred-repsol-luzgas",
+   "titulo": "Edenred + Plano Motor, Luz e Calor",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-edenred",
+    "repsol-luzgas"
+   ],
+   "exclui": [],
+   "direto": 0.06,
+   "saldo": 0.14,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "20 cênt./litro no total: 6 cênt. de desconto imediato do parceiro e 14 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/banca-e-seguros/edenred/",
+   "fontes": [
+    "https://www.repsol.pt/particulares/parceiros/banca-e-seguros/edenred/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-interpass-repsol-motor",
+   "titulo": "Interpass + Plano Motor",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-interpass",
+    "repsol-motor"
+   ],
+   "exclui": [],
+   "direto": 0.0,
+   "saldo": 0.1,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "10 cênt./litro no total: 10 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/outros-parceiros/interpass/",
+   "fontes": [
+    "https://www.repsol.pt/particulares/parceiros/outros-parceiros/interpass/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado",
+   "nota": "A página do parceiro não separa o desconto imediato do saldo; aqui conta-se tudo como saldo."
+  },
+  {
+   "id": "p-interpass-repsol-luz",
+   "titulo": "Interpass + Plano Motor e Luz",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-interpass",
+    "repsol-luz"
+   ],
+   "exclui": [],
+   "direto": 0.0,
+   "saldo": 0.15,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "15 cênt./litro no total: 15 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/outros-parceiros/interpass/",
+   "fontes": [
+    "https://www.repsol.pt/particulares/parceiros/outros-parceiros/interpass/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado",
+   "nota": "A página do parceiro não separa o desconto imediato do saldo; aqui conta-se tudo como saldo."
+  },
+  {
+   "id": "p-interpass-repsol-luzgas",
+   "titulo": "Interpass + Plano Motor, Luz e Calor",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-interpass",
+    "repsol-luzgas"
+   ],
+   "exclui": [],
+   "direto": 0.0,
+   "saldo": 0.2,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "20 cênt./litro no total: 20 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/outros-parceiros/interpass/",
+   "fontes": [
+    "https://www.repsol.pt/particulares/parceiros/outros-parceiros/interpass/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado",
+   "nota": "A página do parceiro não separa o desconto imediato do saldo; aqui conta-se tudo como saldo."
+  },
+  {
+   "id": "p-benfica-repsol-motor",
+   "titulo": "Benfica + Plano Motor",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-benfica",
+    "repsol-motor"
+   ],
+   "exclui": [],
+   "direto": 0.0,
+   "saldo": 0.1,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "10 cênt./litro no total: 10 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/desporto/benfica/",
+   "fontes": [
+    "https://www.repsol.pt/particulares/parceiros/desporto/benfica/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado",
+   "nota": "A página do parceiro não separa o desconto imediato do saldo; aqui conta-se tudo como saldo."
+  },
+  {
+   "id": "p-benfica-repsol-luz",
+   "titulo": "Benfica + Plano Motor e Luz",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-benfica",
+    "repsol-luz"
+   ],
+   "exclui": [],
+   "direto": 0.0,
+   "saldo": 0.15,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "15 cênt./litro no total: 15 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/desporto/benfica/",
+   "fontes": [
+    "https://www.repsol.pt/particulares/parceiros/desporto/benfica/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado",
+   "nota": "A página do parceiro não separa o desconto imediato do saldo; aqui conta-se tudo como saldo."
+  },
+  {
+   "id": "p-benfica-repsol-luzgas",
+   "titulo": "Benfica + Plano Motor, Luz e Calor",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-benfica",
+    "repsol-luzgas"
+   ],
+   "exclui": [],
+   "direto": 0.0,
+   "saldo": 0.2,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "20 cênt./litro no total: 20 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/desporto/benfica/",
+   "fontes": [
+    "https://www.repsol.pt/particulares/parceiros/desporto/benfica/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado",
+   "nota": "A página do parceiro não separa o desconto imediato do saldo; aqui conta-se tudo como saldo."
+  },
+  {
+   "id": "p-porto-repsol-motor",
+   "titulo": "FC Porto + Plano Motor",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-porto",
+    "repsol-motor"
+   ],
+   "exclui": [],
+   "direto": 0.0,
+   "saldo": 0.1,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "10 cênt./litro no total: 10 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/desporto/porto/",
+   "fontes": [
+    "https://www.repsol.pt/particulares/parceiros/desporto/porto/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado",
+   "nota": "A página do parceiro não separa o desconto imediato do saldo; aqui conta-se tudo como saldo."
+  },
+  {
+   "id": "p-porto-repsol-luz",
+   "titulo": "FC Porto + Plano Motor e Luz",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-porto",
+    "repsol-luz"
+   ],
+   "exclui": [],
+   "direto": 0.0,
+   "saldo": 0.15,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "15 cênt./litro no total: 15 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/desporto/porto/",
+   "fontes": [
+    "https://www.repsol.pt/particulares/parceiros/desporto/porto/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado",
+   "nota": "A página do parceiro não separa o desconto imediato do saldo; aqui conta-se tudo como saldo."
+  },
+  {
+   "id": "p-porto-repsol-luzgas",
+   "titulo": "FC Porto + Plano Motor, Luz e Calor",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-porto",
+    "repsol-luzgas"
+   ],
+   "exclui": [],
+   "direto": 0.0,
+   "saldo": 0.2,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "20 cênt./litro no total: 20 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/desporto/porto/",
+   "fontes": [
+    "https://www.repsol.pt/particulares/parceiros/desporto/porto/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado",
+   "nota": "A página do parceiro não separa o desconto imediato do saldo; aqui conta-se tudo como saldo."
+  },
+  {
+   "id": "p-sporting-repsol-motor",
+   "titulo": "Sporting CP + Plano Motor",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-sporting",
+    "repsol-motor"
+   ],
+   "exclui": [],
+   "direto": 0.0,
+   "saldo": 0.1,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "10 cênt./litro no total: 10 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/desporto/sporting/",
+   "fontes": [
+    "https://www.repsol.pt/particulares/parceiros/desporto/sporting/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado",
+   "nota": "A página do parceiro não separa o desconto imediato do saldo; aqui conta-se tudo como saldo."
+  },
+  {
+   "id": "p-sporting-repsol-luz",
+   "titulo": "Sporting CP + Plano Motor e Luz",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-sporting",
+    "repsol-luz"
+   ],
+   "exclui": [],
+   "direto": 0.0,
+   "saldo": 0.15,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "15 cênt./litro no total: 15 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/desporto/sporting/",
+   "fontes": [
+    "https://www.repsol.pt/particulares/parceiros/desporto/sporting/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado",
+   "nota": "A página do parceiro não separa o desconto imediato do saldo; aqui conta-se tudo como saldo."
+  },
+  {
+   "id": "p-sporting-repsol-luzgas",
+   "titulo": "Sporting CP + Plano Motor, Luz e Calor",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-sporting",
+    "repsol-luzgas"
+   ],
+   "exclui": [],
+   "direto": 0.0,
+   "saldo": 0.2,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "20 cênt./litro no total: 20 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/desporto/sporting/",
+   "fontes": [
+    "https://www.repsol.pt/particulares/parceiros/desporto/sporting/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado",
+   "nota": "A página do parceiro não separa o desconto imediato do saldo; aqui conta-se tudo como saldo."
+  },
+  {
+   "id": "p-braga-sem-app",
+   "titulo": "SC Braga (sem My Repsol)",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-braga"
+   ],
+   "exclui": [
+    "repsol-motor",
+    "repsol-luz",
+    "repsol-luzgas"
+   ],
+   "direto": 0.06,
+   "saldo": 0,
+   "cumulativo": false,
+   "condicoes": "6 cênt./litro de desconto imediato com o cartão SC Braga, mesmo sem a App My Repsol.",
+   "comoUsar": "Apresente o cartão de parceiro ao pagar (ou associe-o na App My Repsol para ganhar também saldo).",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/desporto/braga/",
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-braga-repsol-motor",
+   "titulo": "SC Braga + Plano Motor",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-braga",
+    "repsol-motor"
+   ],
+   "exclui": [],
+   "direto": 0.06,
+   "saldo": 0.04,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "10 cênt./litro no total: 6 cênt. de desconto imediato do parceiro e 4 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/desporto/braga/",
+   "fontes": [
+    "https://www.repsol.pt/particulares/parceiros/desporto/braga/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-braga-repsol-luz",
+   "titulo": "SC Braga + Plano Motor e Luz",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-braga",
+    "repsol-luz"
+   ],
+   "exclui": [],
+   "direto": 0.06,
+   "saldo": 0.09,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "15 cênt./litro no total: 6 cênt. de desconto imediato do parceiro e 9 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/desporto/braga/",
+   "fontes": [
+    "https://www.repsol.pt/particulares/parceiros/desporto/braga/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-braga-repsol-luzgas",
+   "titulo": "SC Braga + Plano Motor, Luz e Calor",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-braga",
+    "repsol-luzgas"
+   ],
+   "exclui": [],
+   "direto": 0.06,
+   "saldo": 0.14,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "20 cênt./litro no total: 6 cênt. de desconto imediato do parceiro e 14 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/desporto/braga/",
+   "fontes": [
+    "https://www.repsol.pt/particulares/parceiros/desporto/braga/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-maritimo-sem-app",
+   "titulo": "CS Marítimo (sem My Repsol)",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-maritimo"
+   ],
+   "exclui": [
+    "repsol-motor",
+    "repsol-luz",
+    "repsol-luzgas"
+   ],
+   "direto": 0.06,
+   "saldo": 0,
+   "cumulativo": false,
+   "condicoes": "6 cênt./litro de desconto imediato com o cartão CS Marítimo, mesmo sem a App My Repsol.",
+   "comoUsar": "Apresente o cartão de parceiro ao pagar (ou associe-o na App My Repsol para ganhar também saldo).",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/desporto/maritimo/",
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-maritimo-repsol-motor",
+   "titulo": "CS Marítimo + Plano Motor",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-maritimo",
+    "repsol-motor"
+   ],
+   "exclui": [],
+   "direto": 0.06,
+   "saldo": 0.04,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "10 cênt./litro no total: 6 cênt. de desconto imediato do parceiro e 4 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/desporto/maritimo/",
+   "fontes": [
+    "https://www.repsol.pt/particulares/parceiros/desporto/maritimo/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-maritimo-repsol-luz",
+   "titulo": "CS Marítimo + Plano Motor e Luz",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-maritimo",
+    "repsol-luz"
+   ],
+   "exclui": [],
+   "direto": 0.06,
+   "saldo": 0.09,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "15 cênt./litro no total: 6 cênt. de desconto imediato do parceiro e 9 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/desporto/maritimo/",
+   "fontes": [
+    "https://www.repsol.pt/particulares/parceiros/desporto/maritimo/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-maritimo-repsol-luzgas",
+   "titulo": "CS Marítimo + Plano Motor, Luz e Calor",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-maritimo",
+    "repsol-luzgas"
+   ],
+   "exclui": [],
+   "direto": 0.06,
+   "saldo": 0.14,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "20 cênt./litro no total: 6 cênt. de desconto imediato do parceiro e 14 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/desporto/maritimo/",
+   "fontes": [
+    "https://www.repsol.pt/particulares/parceiros/desporto/maritimo/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-os-belenenses-sem-app",
+   "titulo": "CF Os Belenenses (sem My Repsol)",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-os-belenenses"
+   ],
+   "exclui": [
+    "repsol-motor",
+    "repsol-luz",
+    "repsol-luzgas"
+   ],
+   "direto": 0.05,
+   "saldo": 0,
+   "cumulativo": false,
+   "condicoes": "5 cênt./litro de desconto imediato com o cartão CF Os Belenenses, mesmo sem a App My Repsol.",
+   "comoUsar": "Apresente o cartão de parceiro ao pagar (ou associe-o na App My Repsol para ganhar também saldo).",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/desporto/os-belenenses/",
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-os-belenenses-repsol-motor",
+   "titulo": "CF Os Belenenses + Plano Motor",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-os-belenenses",
+    "repsol-motor"
+   ],
+   "exclui": [],
+   "direto": 0.05,
+   "saldo": 0.05,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "10 cênt./litro no total: 5 cênt. de desconto imediato do parceiro e 5 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/desporto/os-belenenses/",
+   "fontes": [
+    "https://www.repsol.pt/particulares/parceiros/desporto/os-belenenses/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-os-belenenses-repsol-luz",
+   "titulo": "CF Os Belenenses + Plano Motor e Luz",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-os-belenenses",
+    "repsol-luz"
+   ],
+   "exclui": [],
+   "direto": 0.05,
+   "saldo": 0.1,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "15 cênt./litro no total: 5 cênt. de desconto imediato do parceiro e 10 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/desporto/os-belenenses/",
+   "fontes": [
+    "https://www.repsol.pt/particulares/parceiros/desporto/os-belenenses/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-os-belenenses-repsol-luzgas",
+   "titulo": "CF Os Belenenses + Plano Motor, Luz e Calor",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-os-belenenses",
+    "repsol-luzgas"
+   ],
+   "exclui": [],
+   "direto": 0.05,
+   "saldo": 0.15,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "20 cênt./litro no total: 5 cênt. de desconto imediato do parceiro e 15 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/desporto/os-belenenses/",
+   "fontes": [
+    "https://www.repsol.pt/particulares/parceiros/desporto/os-belenenses/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-cop-sem-app",
+   "titulo": "Comité Olímpico de Portugal (sem My Repsol)",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-cop"
+   ],
+   "exclui": [
+    "repsol-motor",
+    "repsol-luz",
+    "repsol-luzgas"
+   ],
+   "direto": 0.06,
+   "saldo": 0,
+   "cumulativo": false,
+   "condicoes": "6 cênt./litro de desconto imediato com o cartão Comité Olímpico de Portugal, mesmo sem a App My Repsol.",
+   "comoUsar": "Apresente o cartão de parceiro ao pagar (ou associe-o na App My Repsol para ganhar também saldo).",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/desporto/cop/",
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-cop-repsol-motor",
+   "titulo": "Comité Olímpico de Portugal + Plano Motor",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-cop",
+    "repsol-motor"
+   ],
+   "exclui": [],
+   "direto": 0.06,
+   "saldo": 0.04,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "10 cênt./litro no total: 6 cênt. de desconto imediato do parceiro e 4 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/desporto/cop/",
+   "fontes": [
+    "https://www.repsol.pt/particulares/parceiros/desporto/cop/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-cop-repsol-luz",
+   "titulo": "Comité Olímpico de Portugal + Plano Motor e Luz",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-cop",
+    "repsol-luz"
+   ],
+   "exclui": [],
+   "direto": 0.06,
+   "saldo": 0.09,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "15 cênt./litro no total: 6 cênt. de desconto imediato do parceiro e 9 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/desporto/cop/",
+   "fontes": [
+    "https://www.repsol.pt/particulares/parceiros/desporto/cop/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-cop-repsol-luzgas",
+   "titulo": "Comité Olímpico de Portugal + Plano Motor, Luz e Calor",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-cop",
+    "repsol-luzgas"
+   ],
+   "exclui": [],
+   "direto": 0.06,
+   "saldo": 0.14,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "20 cênt./litro no total: 6 cênt. de desconto imediato do parceiro e 14 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/desporto/cop/",
+   "fontes": [
+    "https://www.repsol.pt/particulares/parceiros/desporto/cop/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-casa-pia-sem-app",
+   "titulo": "Casa Pia AC (sem My Repsol)",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-casa-pia"
+   ],
+   "exclui": [
+    "repsol-motor",
+    "repsol-luz",
+    "repsol-luzgas"
+   ],
+   "direto": 0.06,
+   "saldo": 0,
+   "cumulativo": false,
+   "condicoes": "6 cênt./litro de desconto imediato com o cartão Casa Pia AC, mesmo sem a App My Repsol.",
+   "comoUsar": "Apresente o cartão de parceiro ao pagar (ou associe-o na App My Repsol para ganhar também saldo).",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/desporto/casa-pia/",
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-casa-pia-repsol-motor",
+   "titulo": "Casa Pia AC + Plano Motor",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-casa-pia",
+    "repsol-motor"
+   ],
+   "exclui": [],
+   "direto": 0.06,
+   "saldo": 0.04,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "10 cênt./litro no total: 6 cênt. de desconto imediato do parceiro e 4 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/desporto/casa-pia/",
+   "fontes": [
+    "https://www.repsol.pt/particulares/parceiros/desporto/casa-pia/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-casa-pia-repsol-luz",
+   "titulo": "Casa Pia AC + Plano Motor e Luz",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-casa-pia",
+    "repsol-luz"
+   ],
+   "exclui": [],
+   "direto": 0.06,
+   "saldo": 0.09,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "15 cênt./litro no total: 6 cênt. de desconto imediato do parceiro e 9 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/desporto/casa-pia/",
+   "fontes": [
+    "https://www.repsol.pt/particulares/parceiros/desporto/casa-pia/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-casa-pia-repsol-luzgas",
+   "titulo": "Casa Pia AC + Plano Motor, Luz e Calor",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-casa-pia",
+    "repsol-luzgas"
+   ],
+   "exclui": [],
+   "direto": 0.06,
+   "saldo": 0.14,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "20 cênt./litro no total: 6 cênt. de desconto imediato do parceiro e 14 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/desporto/casa-pia/",
+   "fontes": [
+    "https://www.repsol.pt/particulares/parceiros/desporto/casa-pia/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-betano-sem-app",
+   "titulo": "Betano (sem My Repsol)",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-betano"
+   ],
+   "exclui": [
+    "repsol-motor",
+    "repsol-luz",
+    "repsol-luzgas"
+   ],
+   "direto": 0.05,
+   "saldo": 0,
+   "cumulativo": false,
+   "condicoes": "5 cênt./litro de desconto imediato com o cartão Betano, mesmo sem a App My Repsol.",
+   "comoUsar": "Apresente o cartão de parceiro ao pagar (ou associe-o na App My Repsol para ganhar também saldo).",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/desporto/Betano/",
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-betano-repsol-motor",
+   "titulo": "Betano + Plano Motor",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-betano",
+    "repsol-motor"
+   ],
+   "exclui": [],
+   "direto": 0.05,
+   "saldo": 0.05,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "10 cênt./litro no total: 5 cênt. de desconto imediato do parceiro e 5 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/desporto/Betano/",
+   "fontes": [
+    "https://www.repsol.pt/particulares/parceiros/desporto/Betano/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-betano-repsol-luz",
+   "titulo": "Betano + Plano Motor e Luz",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-betano",
+    "repsol-luz"
+   ],
+   "exclui": [],
+   "direto": 0.05,
+   "saldo": 0.1,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "15 cênt./litro no total: 5 cênt. de desconto imediato do parceiro e 10 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/desporto/Betano/",
+   "fontes": [
+    "https://www.repsol.pt/particulares/parceiros/desporto/Betano/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-betano-repsol-luzgas",
+   "titulo": "Betano + Plano Motor, Luz e Calor",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-betano",
+    "repsol-luzgas"
+   ],
+   "exclui": [],
+   "direto": 0.05,
+   "saldo": 0.15,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "20 cênt./litro no total: 5 cênt. de desconto imediato do parceiro e 15 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/desporto/Betano/",
+   "fontes": [
+    "https://www.repsol.pt/particulares/parceiros/desporto/Betano/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-el-corte-ingles-sem-app",
+   "titulo": "El Corte Inglés (sem My Repsol)",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-el-corte-ingles"
+   ],
+   "exclui": [
+    "repsol-motor",
+    "repsol-luz",
+    "repsol-luzgas"
+   ],
+   "direto": 0.06,
+   "saldo": 0,
+   "cumulativo": false,
+   "condicoes": "6 cênt./litro de desconto imediato com o cartão El Corte Inglés, mesmo sem a App My Repsol.",
+   "comoUsar": "Apresente o cartão de parceiro ao pagar (ou associe-o na App My Repsol para ganhar também saldo).",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/grande-distribuicao/el-corte-ingles/",
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-el-corte-ingles-repsol-motor",
+   "titulo": "El Corte Inglés + Plano Motor",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-el-corte-ingles",
+    "repsol-motor"
+   ],
+   "exclui": [],
+   "direto": 0.06,
+   "saldo": 0.04,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "10 cênt./litro no total: 6 cênt. de desconto imediato do parceiro e 4 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/grande-distribuicao/el-corte-ingles/",
+   "fontes": [
+    "https://www.repsol.pt/particulares/parceiros/grande-distribuicao/el-corte-ingles/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-el-corte-ingles-repsol-luz",
+   "titulo": "El Corte Inglés + Plano Motor e Luz",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-el-corte-ingles",
+    "repsol-luz"
+   ],
+   "exclui": [],
+   "direto": 0.06,
+   "saldo": 0.09,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "15 cênt./litro no total: 6 cênt. de desconto imediato do parceiro e 9 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/grande-distribuicao/el-corte-ingles/",
+   "fontes": [
+    "https://www.repsol.pt/particulares/parceiros/grande-distribuicao/el-corte-ingles/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-el-corte-ingles-repsol-luzgas",
+   "titulo": "El Corte Inglés + Plano Motor, Luz e Calor",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-el-corte-ingles",
+    "repsol-luzgas"
+   ],
+   "exclui": [],
+   "direto": 0.06,
+   "saldo": 0.14,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "20 cênt./litro no total: 6 cênt. de desconto imediato do parceiro e 14 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/grande-distribuicao/el-corte-ingles/",
+   "fontes": [
+    "https://www.repsol.pt/particulares/parceiros/grande-distribuicao/el-corte-ingles/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-fnac-sem-app",
+   "titulo": "Fnac (sem My Repsol)",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-fnac"
+   ],
+   "exclui": [
+    "repsol-motor",
+    "repsol-luz",
+    "repsol-luzgas"
+   ],
+   "direto": 0.06,
+   "saldo": 0,
+   "cumulativo": false,
+   "condicoes": "6 cênt./litro de desconto imediato com o cartão Fnac, mesmo sem a App My Repsol.",
+   "comoUsar": "Apresente o cartão de parceiro ao pagar (ou associe-o na App My Repsol para ganhar também saldo).",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/grande-distribuicao/fnac/",
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-fnac-repsol-motor",
+   "titulo": "Fnac + Plano Motor",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-fnac",
+    "repsol-motor"
+   ],
+   "exclui": [],
+   "direto": 0.06,
+   "saldo": 0.04,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "10 cênt./litro no total: 6 cênt. de desconto imediato do parceiro e 4 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/grande-distribuicao/fnac/",
+   "fontes": [
+    "https://www.repsol.pt/particulares/parceiros/grande-distribuicao/fnac/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-fnac-repsol-luz",
+   "titulo": "Fnac + Plano Motor e Luz",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-fnac",
+    "repsol-luz"
+   ],
+   "exclui": [],
+   "direto": 0.06,
+   "saldo": 0.09,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "15 cênt./litro no total: 6 cênt. de desconto imediato do parceiro e 9 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/grande-distribuicao/fnac/",
+   "fontes": [
+    "https://www.repsol.pt/particulares/parceiros/grande-distribuicao/fnac/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-fnac-repsol-luzgas",
+   "titulo": "Fnac + Plano Motor, Luz e Calor",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-fnac",
+    "repsol-luzgas"
+   ],
+   "exclui": [],
+   "direto": 0.06,
+   "saldo": 0.14,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "20 cênt./litro no total: 6 cênt. de desconto imediato do parceiro e 14 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/grande-distribuicao/fnac/",
+   "fontes": [
+    "https://www.repsol.pt/particulares/parceiros/grande-distribuicao/fnac/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-lidl-sem-app",
+   "titulo": "Lidl Plus (sem My Repsol)",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-lidl"
+   ],
+   "exclui": [
+    "repsol-motor",
+    "repsol-luz",
+    "repsol-luzgas"
+   ],
+   "direto": 0.06,
+   "saldo": 0,
+   "cumulativo": false,
+   "condicoes": "6 cênt./litro de desconto imediato com o cartão Lidl Plus, mesmo sem a App My Repsol.",
+   "comoUsar": "Apresente o cartão de parceiro ao pagar (ou associe-o na App My Repsol para ganhar também saldo).",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/grande-distribuicao/lidl/",
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-lidl-repsol-motor",
+   "titulo": "Lidl Plus + Plano Motor",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-lidl",
+    "repsol-motor"
+   ],
+   "exclui": [],
+   "direto": 0.06,
+   "saldo": 0.04,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "10 cênt./litro no total: 6 cênt. de desconto imediato do parceiro e 4 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/grande-distribuicao/lidl/",
+   "fontes": [
+    "https://www.repsol.pt/particulares/parceiros/grande-distribuicao/lidl/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-lidl-repsol-luz",
+   "titulo": "Lidl Plus + Plano Motor e Luz",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-lidl",
+    "repsol-luz"
+   ],
+   "exclui": [],
+   "direto": 0.06,
+   "saldo": 0.09,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "15 cênt./litro no total: 6 cênt. de desconto imediato do parceiro e 9 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/grande-distribuicao/lidl/",
+   "fontes": [
+    "https://www.repsol.pt/particulares/parceiros/grande-distribuicao/lidl/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-lidl-repsol-luzgas",
+   "titulo": "Lidl Plus + Plano Motor, Luz e Calor",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-lidl",
+    "repsol-luzgas"
+   ],
+   "exclui": [],
+   "direto": 0.06,
+   "saldo": 0.14,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "20 cênt./litro no total: 6 cênt. de desconto imediato do parceiro e 14 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/grande-distribuicao/lidl/",
+   "fontes": [
+    "https://www.repsol.pt/particulares/parceiros/grande-distribuicao/lidl/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-staples-sem-app",
+   "titulo": "Staples (sem My Repsol)",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-staples"
+   ],
+   "exclui": [
+    "repsol-motor",
+    "repsol-luz",
+    "repsol-luzgas"
+   ],
+   "direto": 0.06,
+   "saldo": 0,
+   "cumulativo": false,
+   "condicoes": "6 cênt./litro de desconto imediato com o cartão Staples, mesmo sem a App My Repsol.",
+   "comoUsar": "Apresente o cartão de parceiro ao pagar (ou associe-o na App My Repsol para ganhar também saldo).",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/grande-distribuicao/staples/",
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-staples-repsol-motor",
+   "titulo": "Staples + Plano Motor",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-staples",
+    "repsol-motor"
+   ],
+   "exclui": [],
+   "direto": 0.06,
+   "saldo": 0.04,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "10 cênt./litro no total: 6 cênt. de desconto imediato do parceiro e 4 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/grande-distribuicao/staples/",
+   "fontes": [
+    "https://www.repsol.pt/particulares/parceiros/grande-distribuicao/staples/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-staples-repsol-luz",
+   "titulo": "Staples + Plano Motor e Luz",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-staples",
+    "repsol-luz"
+   ],
+   "exclui": [],
+   "direto": 0.06,
+   "saldo": 0.09,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "15 cênt./litro no total: 6 cênt. de desconto imediato do parceiro e 9 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/grande-distribuicao/staples/",
+   "fontes": [
+    "https://www.repsol.pt/particulares/parceiros/grande-distribuicao/staples/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-staples-repsol-luzgas",
+   "titulo": "Staples + Plano Motor, Luz e Calor",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-staples",
+    "repsol-luzgas"
+   ],
+   "exclui": [],
+   "direto": 0.06,
+   "saldo": 0.14,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "20 cênt./litro no total: 6 cênt. de desconto imediato do parceiro e 14 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/grande-distribuicao/staples/",
+   "fontes": [
+    "https://www.repsol.pt/particulares/parceiros/grande-distribuicao/staples/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-recheio-sem-app",
+   "titulo": "Recheio (sem My Repsol)",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-recheio"
+   ],
+   "exclui": [
+    "repsol-motor",
+    "repsol-luz",
+    "repsol-luzgas"
+   ],
+   "direto": 0.09,
+   "saldo": 0,
+   "cumulativo": false,
+   "condicoes": "9 cênt./litro de desconto imediato com o cartão Recheio, mesmo sem a App My Repsol.",
+   "comoUsar": "Apresente o cartão de parceiro ao pagar (ou associe-o na App My Repsol para ganhar também saldo).",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/profissionais/parceiros/grande-distribuicao/recheio/",
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-recheio-repsol-motor",
+   "titulo": "Recheio + Plano Motor",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-recheio",
+    "repsol-motor"
+   ],
+   "exclui": [],
+   "direto": 0.09,
+   "saldo": 0.01,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "10 cênt./litro no total: 9 cênt. de desconto imediato do parceiro e 1 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/profissionais/parceiros/grande-distribuicao/recheio/",
+   "fontes": [
+    "https://www.repsol.pt/profissionais/parceiros/grande-distribuicao/recheio/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-recheio-repsol-luz",
+   "titulo": "Recheio + Plano Motor e Luz",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-recheio",
+    "repsol-luz"
+   ],
+   "exclui": [],
+   "direto": 0.09,
+   "saldo": 0.06,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "15 cênt./litro no total: 9 cênt. de desconto imediato do parceiro e 6 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/profissionais/parceiros/grande-distribuicao/recheio/",
+   "fontes": [
+    "https://www.repsol.pt/profissionais/parceiros/grande-distribuicao/recheio/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-recheio-repsol-luzgas",
+   "titulo": "Recheio + Plano Motor, Luz e Calor",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-recheio",
+    "repsol-luzgas"
+   ],
+   "exclui": [],
+   "direto": 0.09,
+   "saldo": 0.11,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "20 cênt./litro no total: 9 cênt. de desconto imediato do parceiro e 11 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/profissionais/parceiros/grande-distribuicao/recheio/",
+   "fontes": [
+    "https://www.repsol.pt/profissionais/parceiros/grande-distribuicao/recheio/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-norauto-sem-app",
+   "titulo": "Norauto (sem My Repsol)",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-norauto"
+   ],
+   "exclui": [
+    "repsol-motor",
+    "repsol-luz",
+    "repsol-luzgas"
+   ],
+   "direto": 0.05,
+   "saldo": 0,
+   "cumulativo": false,
+   "condicoes": "5 cênt./litro de desconto imediato com o cartão Norauto, mesmo sem a App My Repsol.",
+   "comoUsar": "Apresente o cartão de parceiro ao pagar (ou associe-o na App My Repsol para ganhar também saldo).",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/mundo-automovel/norauto/",
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-norauto-repsol-motor",
+   "titulo": "Norauto + Plano Motor",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-norauto",
+    "repsol-motor"
+   ],
+   "exclui": [],
+   "direto": 0.05,
+   "saldo": 0.05,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "10 cênt./litro no total: 5 cênt. de desconto imediato do parceiro e 5 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/mundo-automovel/norauto/",
+   "fontes": [
+    "https://www.repsol.pt/particulares/parceiros/mundo-automovel/norauto/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-norauto-repsol-luz",
+   "titulo": "Norauto + Plano Motor e Luz",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-norauto",
+    "repsol-luz"
+   ],
+   "exclui": [],
+   "direto": 0.05,
+   "saldo": 0.1,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "15 cênt./litro no total: 5 cênt. de desconto imediato do parceiro e 10 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/mundo-automovel/norauto/",
+   "fontes": [
+    "https://www.repsol.pt/particulares/parceiros/mundo-automovel/norauto/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-norauto-repsol-luzgas",
+   "titulo": "Norauto + Plano Motor, Luz e Calor",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-norauto",
+    "repsol-luzgas"
+   ],
+   "exclui": [],
+   "direto": 0.05,
+   "saldo": 0.15,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "20 cênt./litro no total: 5 cênt. de desconto imediato do parceiro e 15 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/mundo-automovel/norauto/",
+   "fontes": [
+    "https://www.repsol.pt/particulares/parceiros/mundo-automovel/norauto/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-my-peugeot-sem-app",
+   "titulo": "Peugeot (sem My Repsol)",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-my-peugeot"
+   ],
+   "exclui": [
+    "repsol-motor",
+    "repsol-luz",
+    "repsol-luzgas"
+   ],
+   "direto": 0.05,
+   "saldo": 0,
+   "cumulativo": false,
+   "condicoes": "5 cênt./litro de desconto imediato com o cartão Peugeot, mesmo sem a App My Repsol.",
+   "comoUsar": "Apresente o cartão de parceiro ao pagar (ou associe-o na App My Repsol para ganhar também saldo).",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/mundo-automovel/my-peugeot/",
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-my-peugeot-repsol-motor",
+   "titulo": "Peugeot + Plano Motor",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-my-peugeot",
+    "repsol-motor"
+   ],
+   "exclui": [],
+   "direto": 0.05,
+   "saldo": 0.05,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "10 cênt./litro no total: 5 cênt. de desconto imediato do parceiro e 5 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/mundo-automovel/my-peugeot/",
+   "fontes": [
+    "https://www.repsol.pt/particulares/parceiros/mundo-automovel/my-peugeot/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-my-peugeot-repsol-luz",
+   "titulo": "Peugeot + Plano Motor e Luz",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-my-peugeot",
+    "repsol-luz"
+   ],
+   "exclui": [],
+   "direto": 0.05,
+   "saldo": 0.1,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "15 cênt./litro no total: 5 cênt. de desconto imediato do parceiro e 10 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/mundo-automovel/my-peugeot/",
+   "fontes": [
+    "https://www.repsol.pt/particulares/parceiros/mundo-automovel/my-peugeot/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-my-peugeot-repsol-luzgas",
+   "titulo": "Peugeot + Plano Motor, Luz e Calor",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-my-peugeot",
+    "repsol-luzgas"
+   ],
+   "exclui": [],
+   "direto": 0.05,
+   "saldo": 0.15,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "20 cênt./litro no total: 5 cênt. de desconto imediato do parceiro e 15 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/mundo-automovel/my-peugeot/",
+   "fontes": [
+    "https://www.repsol.pt/particulares/parceiros/mundo-automovel/my-peugeot/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-ordem-contabilistas-certificados-sem-app",
+   "titulo": "Ordem dos Contabilistas Certificados (sem My Repsol)",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-ordem-contabilistas-certificados"
+   ],
+   "exclui": [
+    "repsol-motor",
+    "repsol-luz",
+    "repsol-luzgas"
+   ],
+   "direto": 0.05,
+   "saldo": 0,
+   "cumulativo": false,
+   "condicoes": "5 cênt./litro de desconto imediato com o cartão Ordem dos Contabilistas Certificados, mesmo sem a App My Repsol.",
+   "comoUsar": "Apresente o cartão de parceiro ao pagar (ou associe-o na App My Repsol para ganhar também saldo).",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/profissionais/parceiros/ordens-profissionais/ordem-contabilistas-certificados/",
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-ordem-contabilistas-certificados-repsol-motor",
+   "titulo": "Ordem dos Contabilistas Certificados + Plano Motor",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-ordem-contabilistas-certificados",
+    "repsol-motor"
+   ],
+   "exclui": [],
+   "direto": 0.05,
+   "saldo": 0.05,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "10 cênt./litro no total: 5 cênt. de desconto imediato do parceiro e 5 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/profissionais/parceiros/ordens-profissionais/ordem-contabilistas-certificados/",
+   "fontes": [
+    "https://www.repsol.pt/profissionais/parceiros/ordens-profissionais/ordem-contabilistas-certificados/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-ordem-contabilistas-certificados-repsol-luz",
+   "titulo": "Ordem dos Contabilistas Certificados + Plano Motor e Luz",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-ordem-contabilistas-certificados",
+    "repsol-luz"
+   ],
+   "exclui": [],
+   "direto": 0.05,
+   "saldo": 0.1,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "15 cênt./litro no total: 5 cênt. de desconto imediato do parceiro e 10 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/profissionais/parceiros/ordens-profissionais/ordem-contabilistas-certificados/",
+   "fontes": [
+    "https://www.repsol.pt/profissionais/parceiros/ordens-profissionais/ordem-contabilistas-certificados/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-ordem-contabilistas-certificados-repsol-luzgas",
+   "titulo": "Ordem dos Contabilistas Certificados + Plano Motor, Luz e Calor",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-ordem-contabilistas-certificados",
+    "repsol-luzgas"
+   ],
+   "exclui": [],
+   "direto": 0.05,
+   "saldo": 0.15,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "20 cênt./litro no total: 5 cênt. de desconto imediato do parceiro e 15 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/profissionais/parceiros/ordens-profissionais/ordem-contabilistas-certificados/",
+   "fontes": [
+    "https://www.repsol.pt/profissionais/parceiros/ordens-profissionais/ordem-contabilistas-certificados/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-ordem-economistas-sem-app",
+   "titulo": "Ordem dos Economistas (sem My Repsol)",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-ordem-economistas"
+   ],
+   "exclui": [
+    "repsol-motor",
+    "repsol-luz",
+    "repsol-luzgas"
+   ],
+   "direto": 0.05,
+   "saldo": 0,
+   "cumulativo": false,
+   "condicoes": "5 cênt./litro de desconto imediato com o cartão Ordem dos Economistas, mesmo sem a App My Repsol.",
+   "comoUsar": "Apresente o cartão de parceiro ao pagar (ou associe-o na App My Repsol para ganhar também saldo).",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/profissionais/parceiros/ordens-profissionais/ordem-economistas/",
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-ordem-economistas-repsol-motor",
+   "titulo": "Ordem dos Economistas + Plano Motor",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-ordem-economistas",
+    "repsol-motor"
+   ],
+   "exclui": [],
+   "direto": 0.05,
+   "saldo": 0.05,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "10 cênt./litro no total: 5 cênt. de desconto imediato do parceiro e 5 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/profissionais/parceiros/ordens-profissionais/ordem-economistas/",
+   "fontes": [
+    "https://www.repsol.pt/profissionais/parceiros/ordens-profissionais/ordem-economistas/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-ordem-economistas-repsol-luz",
+   "titulo": "Ordem dos Economistas + Plano Motor e Luz",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-ordem-economistas",
+    "repsol-luz"
+   ],
+   "exclui": [],
+   "direto": 0.05,
+   "saldo": 0.1,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "15 cênt./litro no total: 5 cênt. de desconto imediato do parceiro e 10 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/profissionais/parceiros/ordens-profissionais/ordem-economistas/",
+   "fontes": [
+    "https://www.repsol.pt/profissionais/parceiros/ordens-profissionais/ordem-economistas/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-ordem-economistas-repsol-luzgas",
+   "titulo": "Ordem dos Economistas + Plano Motor, Luz e Calor",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-ordem-economistas",
+    "repsol-luzgas"
+   ],
+   "exclui": [],
+   "direto": 0.05,
+   "saldo": 0.15,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "20 cênt./litro no total: 5 cênt. de desconto imediato do parceiro e 15 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/profissionais/parceiros/ordens-profissionais/ordem-economistas/",
+   "fontes": [
+    "https://www.repsol.pt/profissionais/parceiros/ordens-profissionais/ordem-economistas/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-ordem-psicologos-sem-app",
+   "titulo": "Ordem dos Psicólogos (sem My Repsol)",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-ordem-psicologos"
+   ],
+   "exclui": [
+    "repsol-motor",
+    "repsol-luz",
+    "repsol-luzgas"
+   ],
+   "direto": 0.05,
+   "saldo": 0,
+   "cumulativo": false,
+   "condicoes": "5 cênt./litro de desconto imediato com o cartão Ordem dos Psicólogos, mesmo sem a App My Repsol.",
+   "comoUsar": "Apresente o cartão de parceiro ao pagar (ou associe-o na App My Repsol para ganhar também saldo).",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/profissionais/parceiros/ordens-profissionais/ordem-psicologos/",
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-ordem-psicologos-repsol-motor",
+   "titulo": "Ordem dos Psicólogos + Plano Motor",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-ordem-psicologos",
+    "repsol-motor"
+   ],
+   "exclui": [],
+   "direto": 0.05,
+   "saldo": 0.05,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "10 cênt./litro no total: 5 cênt. de desconto imediato do parceiro e 5 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/profissionais/parceiros/ordens-profissionais/ordem-psicologos/",
+   "fontes": [
+    "https://www.repsol.pt/profissionais/parceiros/ordens-profissionais/ordem-psicologos/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-ordem-psicologos-repsol-luz",
+   "titulo": "Ordem dos Psicólogos + Plano Motor e Luz",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-ordem-psicologos",
+    "repsol-luz"
+   ],
+   "exclui": [],
+   "direto": 0.05,
+   "saldo": 0.1,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "15 cênt./litro no total: 5 cênt. de desconto imediato do parceiro e 10 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/profissionais/parceiros/ordens-profissionais/ordem-psicologos/",
+   "fontes": [
+    "https://www.repsol.pt/profissionais/parceiros/ordens-profissionais/ordem-psicologos/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-ordem-psicologos-repsol-luzgas",
+   "titulo": "Ordem dos Psicólogos + Plano Motor, Luz e Calor",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-ordem-psicologos",
+    "repsol-luzgas"
+   ],
+   "exclui": [],
+   "direto": 0.05,
+   "saldo": 0.15,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "20 cênt./litro no total: 5 cênt. de desconto imediato do parceiro e 15 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/profissionais/parceiros/ordens-profissionais/ordem-psicologos/",
+   "fontes": [
+    "https://www.repsol.pt/profissionais/parceiros/ordens-profissionais/ordem-psicologos/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-ordem-enfermeiros-sem-app",
+   "titulo": "Ordem dos Enfermeiros (sem My Repsol)",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-ordem-enfermeiros"
+   ],
+   "exclui": [
+    "repsol-motor",
+    "repsol-luz",
+    "repsol-luzgas"
+   ],
+   "direto": 0.05,
+   "saldo": 0,
+   "cumulativo": false,
+   "condicoes": "5 cênt./litro de desconto imediato com o cartão Ordem dos Enfermeiros, mesmo sem a App My Repsol.",
+   "comoUsar": "Apresente o cartão de parceiro ao pagar (ou associe-o na App My Repsol para ganhar também saldo).",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/profissionais/parceiros/ordens-profissionais/ordem-enfermeiros/",
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-ordem-enfermeiros-repsol-motor",
+   "titulo": "Ordem dos Enfermeiros + Plano Motor",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-ordem-enfermeiros",
+    "repsol-motor"
+   ],
+   "exclui": [],
+   "direto": 0.05,
+   "saldo": 0.05,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "10 cênt./litro no total: 5 cênt. de desconto imediato do parceiro e 5 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/profissionais/parceiros/ordens-profissionais/ordem-enfermeiros/",
+   "fontes": [
+    "https://www.repsol.pt/profissionais/parceiros/ordens-profissionais/ordem-enfermeiros/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-ordem-enfermeiros-repsol-luz",
+   "titulo": "Ordem dos Enfermeiros + Plano Motor e Luz",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-ordem-enfermeiros",
+    "repsol-luz"
+   ],
+   "exclui": [],
+   "direto": 0.05,
+   "saldo": 0.1,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "15 cênt./litro no total: 5 cênt. de desconto imediato do parceiro e 10 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/profissionais/parceiros/ordens-profissionais/ordem-enfermeiros/",
+   "fontes": [
+    "https://www.repsol.pt/profissionais/parceiros/ordens-profissionais/ordem-enfermeiros/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-ordem-enfermeiros-repsol-luzgas",
+   "titulo": "Ordem dos Enfermeiros + Plano Motor, Luz e Calor",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-ordem-enfermeiros",
+    "repsol-luzgas"
+   ],
+   "exclui": [],
+   "direto": 0.05,
+   "saldo": 0.15,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "20 cênt./litro no total: 5 cênt. de desconto imediato do parceiro e 15 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/profissionais/parceiros/ordens-profissionais/ordem-enfermeiros/",
+   "fontes": [
+    "https://www.repsol.pt/profissionais/parceiros/ordens-profissionais/ordem-enfermeiros/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-ordem-medicos-veterinarios-sem-app",
+   "titulo": "Ordem dos Médicos Veterinários (sem My Repsol)",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-ordem-medicos-veterinarios"
+   ],
+   "exclui": [
+    "repsol-motor",
+    "repsol-luz",
+    "repsol-luzgas"
+   ],
+   "direto": 0.05,
+   "saldo": 0,
+   "cumulativo": false,
+   "condicoes": "5 cênt./litro de desconto imediato com o cartão Ordem dos Médicos Veterinários, mesmo sem a App My Repsol.",
+   "comoUsar": "Apresente o cartão de parceiro ao pagar (ou associe-o na App My Repsol para ganhar também saldo).",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/profissionais/parceiros/ordens-profissionais/ordem-medicos-veterinarios/",
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-ordem-medicos-veterinarios-repsol-motor",
+   "titulo": "Ordem dos Médicos Veterinários + Plano Motor",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-ordem-medicos-veterinarios",
+    "repsol-motor"
+   ],
+   "exclui": [],
+   "direto": 0.05,
+   "saldo": 0.05,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "10 cênt./litro no total: 5 cênt. de desconto imediato do parceiro e 5 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/profissionais/parceiros/ordens-profissionais/ordem-medicos-veterinarios/",
+   "fontes": [
+    "https://www.repsol.pt/profissionais/parceiros/ordens-profissionais/ordem-medicos-veterinarios/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-ordem-medicos-veterinarios-repsol-luz",
+   "titulo": "Ordem dos Médicos Veterinários + Plano Motor e Luz",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-ordem-medicos-veterinarios",
+    "repsol-luz"
+   ],
+   "exclui": [],
+   "direto": 0.05,
+   "saldo": 0.1,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "15 cênt./litro no total: 5 cênt. de desconto imediato do parceiro e 10 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/profissionais/parceiros/ordens-profissionais/ordem-medicos-veterinarios/",
+   "fontes": [
+    "https://www.repsol.pt/profissionais/parceiros/ordens-profissionais/ordem-medicos-veterinarios/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-ordem-medicos-veterinarios-repsol-luzgas",
+   "titulo": "Ordem dos Médicos Veterinários + Plano Motor, Luz e Calor",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-ordem-medicos-veterinarios",
+    "repsol-luzgas"
+   ],
+   "exclui": [],
+   "direto": 0.05,
+   "saldo": 0.15,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "20 cênt./litro no total: 5 cênt. de desconto imediato do parceiro e 15 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/profissionais/parceiros/ordens-profissionais/ordem-medicos-veterinarios/",
+   "fontes": [
+    "https://www.repsol.pt/profissionais/parceiros/ordens-profissionais/ordem-medicos-veterinarios/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-ordem-engenheiros-sul-sem-app",
+   "titulo": "Ordem dos Engenheiros (sem My Repsol)",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-ordem-engenheiros-sul"
+   ],
+   "exclui": [
+    "repsol-motor",
+    "repsol-luz",
+    "repsol-luzgas"
+   ],
+   "direto": 0.05,
+   "saldo": 0,
+   "cumulativo": false,
+   "condicoes": "5 cênt./litro de desconto imediato com o cartão Ordem dos Engenheiros, mesmo sem a App My Repsol.",
+   "comoUsar": "Apresente o cartão de parceiro ao pagar (ou associe-o na App My Repsol para ganhar também saldo).",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/profissionais/parceiros/ordens-profissionais/ordem-engenheiros-sul/",
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-ordem-engenheiros-sul-repsol-motor",
+   "titulo": "Ordem dos Engenheiros + Plano Motor",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-ordem-engenheiros-sul",
+    "repsol-motor"
+   ],
+   "exclui": [],
+   "direto": 0.05,
+   "saldo": 0.05,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "10 cênt./litro no total: 5 cênt. de desconto imediato do parceiro e 5 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/profissionais/parceiros/ordens-profissionais/ordem-engenheiros-sul/",
+   "fontes": [
+    "https://www.repsol.pt/profissionais/parceiros/ordens-profissionais/ordem-engenheiros-sul/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-ordem-engenheiros-sul-repsol-luz",
+   "titulo": "Ordem dos Engenheiros + Plano Motor e Luz",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-ordem-engenheiros-sul",
+    "repsol-luz"
+   ],
+   "exclui": [],
+   "direto": 0.05,
+   "saldo": 0.1,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "15 cênt./litro no total: 5 cênt. de desconto imediato do parceiro e 10 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/profissionais/parceiros/ordens-profissionais/ordem-engenheiros-sul/",
+   "fontes": [
+    "https://www.repsol.pt/profissionais/parceiros/ordens-profissionais/ordem-engenheiros-sul/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-ordem-engenheiros-sul-repsol-luzgas",
+   "titulo": "Ordem dos Engenheiros + Plano Motor, Luz e Calor",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-ordem-engenheiros-sul",
+    "repsol-luzgas"
+   ],
+   "exclui": [],
+   "direto": 0.05,
+   "saldo": 0.15,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "20 cênt./litro no total: 5 cênt. de desconto imediato do parceiro e 15 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/profissionais/parceiros/ordens-profissionais/ordem-engenheiros-sul/",
+   "fontes": [
+    "https://www.repsol.pt/profissionais/parceiros/ordens-profissionais/ordem-engenheiros-sul/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-antral-sem-app",
+   "titulo": "ANTRAL (sem My Repsol)",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-antral"
+   ],
+   "exclui": [
+    "repsol-motor",
+    "repsol-luz",
+    "repsol-luzgas"
+   ],
+   "direto": 0.09,
+   "saldo": 0,
+   "cumulativo": false,
+   "condicoes": "9 cênt./litro de desconto imediato com o cartão ANTRAL, mesmo sem a App My Repsol.",
+   "comoUsar": "Apresente o cartão de parceiro ao pagar (ou associe-o na App My Repsol para ganhar também saldo).",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/profissionais/parceiros/setor-transportes/antral/",
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-antral-repsol-motor",
+   "titulo": "ANTRAL + Plano Motor",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-antral",
+    "repsol-motor"
+   ],
+   "exclui": [],
+   "direto": 0.09,
+   "saldo": 0.01,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "10 cênt./litro no total: 9 cênt. de desconto imediato do parceiro e 1 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/profissionais/parceiros/setor-transportes/antral/",
+   "fontes": [
+    "https://www.repsol.pt/profissionais/parceiros/setor-transportes/antral/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-antral-repsol-luz",
+   "titulo": "ANTRAL + Plano Motor e Luz",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-antral",
+    "repsol-luz"
+   ],
+   "exclui": [],
+   "direto": 0.09,
+   "saldo": 0.06,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "15 cênt./litro no total: 9 cênt. de desconto imediato do parceiro e 6 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/profissionais/parceiros/setor-transportes/antral/",
+   "fontes": [
+    "https://www.repsol.pt/profissionais/parceiros/setor-transportes/antral/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-antral-repsol-luzgas",
+   "titulo": "ANTRAL + Plano Motor, Luz e Calor",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-antral",
+    "repsol-luzgas"
+   ],
+   "exclui": [],
+   "direto": 0.09,
+   "saldo": 0.11,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "20 cênt./litro no total: 9 cênt. de desconto imediato do parceiro e 11 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/profissionais/parceiros/setor-transportes/antral/",
+   "fontes": [
+    "https://www.repsol.pt/profissionais/parceiros/setor-transportes/antral/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-aitram-sem-app",
+   "titulo": "AITRAM (sem My Repsol)",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-aitram"
+   ],
+   "exclui": [
+    "repsol-motor",
+    "repsol-luz",
+    "repsol-luzgas"
+   ],
+   "direto": 0.09,
+   "saldo": 0,
+   "cumulativo": false,
+   "condicoes": "9 cênt./litro de desconto imediato com o cartão AITRAM, mesmo sem a App My Repsol.",
+   "comoUsar": "Apresente o cartão de parceiro ao pagar (ou associe-o na App My Repsol para ganhar também saldo).",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/profissionais/parceiros/setor-transportes/aitram/",
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-aitram-repsol-motor",
+   "titulo": "AITRAM + Plano Motor",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-aitram",
+    "repsol-motor"
+   ],
+   "exclui": [],
+   "direto": 0.09,
+   "saldo": 0.01,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "10 cênt./litro no total: 9 cênt. de desconto imediato do parceiro e 1 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/profissionais/parceiros/setor-transportes/aitram/",
+   "fontes": [
+    "https://www.repsol.pt/profissionais/parceiros/setor-transportes/aitram/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-aitram-repsol-luz",
+   "titulo": "AITRAM + Plano Motor e Luz",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-aitram",
+    "repsol-luz"
+   ],
+   "exclui": [],
+   "direto": 0.09,
+   "saldo": 0.06,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "15 cênt./litro no total: 9 cênt. de desconto imediato do parceiro e 6 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/profissionais/parceiros/setor-transportes/aitram/",
+   "fontes": [
+    "https://www.repsol.pt/profissionais/parceiros/setor-transportes/aitram/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-aitram-repsol-luzgas",
+   "titulo": "AITRAM + Plano Motor, Luz e Calor",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-aitram",
+    "repsol-luzgas"
+   ],
+   "exclui": [],
+   "direto": 0.09,
+   "saldo": 0.11,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "20 cênt./litro no total: 9 cênt. de desconto imediato do parceiro e 11 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/profissionais/parceiros/setor-transportes/aitram/",
+   "fontes": [
+    "https://www.repsol.pt/profissionais/parceiros/setor-transportes/aitram/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-federacao-portuguesa-taxi-sem-app",
+   "titulo": "Federação Portuguesa do Táxi (sem My Repsol)",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-federacao-portuguesa-taxi"
+   ],
+   "exclui": [
+    "repsol-motor",
+    "repsol-luz",
+    "repsol-luzgas"
+   ],
+   "direto": 0.09,
+   "saldo": 0,
+   "cumulativo": false,
+   "condicoes": "9 cênt./litro de desconto imediato com o cartão Federação Portuguesa do Táxi, mesmo sem a App My Repsol.",
+   "comoUsar": "Apresente o cartão de parceiro ao pagar (ou associe-o na App My Repsol para ganhar também saldo).",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/profissionais/parceiros/setor-transportes/federacao-portuguesa-taxi/",
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-federacao-portuguesa-taxi-repsol-motor",
+   "titulo": "Federação Portuguesa do Táxi + Plano Motor",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-federacao-portuguesa-taxi",
+    "repsol-motor"
+   ],
+   "exclui": [],
+   "direto": 0.09,
+   "saldo": 0.01,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "10 cênt./litro no total: 9 cênt. de desconto imediato do parceiro e 1 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/profissionais/parceiros/setor-transportes/federacao-portuguesa-taxi/",
+   "fontes": [
+    "https://www.repsol.pt/profissionais/parceiros/setor-transportes/federacao-portuguesa-taxi/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-federacao-portuguesa-taxi-repsol-luz",
+   "titulo": "Federação Portuguesa do Táxi + Plano Motor e Luz",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-federacao-portuguesa-taxi",
+    "repsol-luz"
+   ],
+   "exclui": [],
+   "direto": 0.09,
+   "saldo": 0.06,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "15 cênt./litro no total: 9 cênt. de desconto imediato do parceiro e 6 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/profissionais/parceiros/setor-transportes/federacao-portuguesa-taxi/",
+   "fontes": [
+    "https://www.repsol.pt/profissionais/parceiros/setor-transportes/federacao-portuguesa-taxi/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-federacao-portuguesa-taxi-repsol-luzgas",
+   "titulo": "Federação Portuguesa do Táxi + Plano Motor, Luz e Calor",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-federacao-portuguesa-taxi",
+    "repsol-luzgas"
+   ],
+   "exclui": [],
+   "direto": 0.09,
+   "saldo": 0.11,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "20 cênt./litro no total: 9 cênt. de desconto imediato do parceiro e 11 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/profissionais/parceiros/setor-transportes/federacao-portuguesa-taxi/",
+   "fontes": [
+    "https://www.repsol.pt/profissionais/parceiros/setor-transportes/federacao-portuguesa-taxi/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-taxisram-sem-app",
+   "titulo": "Táxis RAM (sem My Repsol)",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-taxisram"
+   ],
+   "exclui": [
+    "repsol-motor",
+    "repsol-luz",
+    "repsol-luzgas"
+   ],
+   "direto": 0.09,
+   "saldo": 0,
+   "cumulativo": false,
+   "condicoes": "9 cênt./litro de desconto imediato com o cartão Táxis RAM, mesmo sem a App My Repsol.",
+   "comoUsar": "Apresente o cartão de parceiro ao pagar (ou associe-o na App My Repsol para ganhar também saldo).",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/profissionais/parceiros/setor-transportes/taxisRam/",
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-taxisram-repsol-motor",
+   "titulo": "Táxis RAM + Plano Motor",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-taxisram",
+    "repsol-motor"
+   ],
+   "exclui": [],
+   "direto": 0.09,
+   "saldo": 0.01,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "10 cênt./litro no total: 9 cênt. de desconto imediato do parceiro e 1 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/profissionais/parceiros/setor-transportes/taxisRam/",
+   "fontes": [
+    "https://www.repsol.pt/profissionais/parceiros/setor-transportes/taxisRam/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-taxisram-repsol-luz",
+   "titulo": "Táxis RAM + Plano Motor e Luz",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-taxisram",
+    "repsol-luz"
+   ],
+   "exclui": [],
+   "direto": 0.09,
+   "saldo": 0.06,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "15 cênt./litro no total: 9 cênt. de desconto imediato do parceiro e 6 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/profissionais/parceiros/setor-transportes/taxisRam/",
+   "fontes": [
+    "https://www.repsol.pt/profissionais/parceiros/setor-transportes/taxisRam/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-taxisram-repsol-luzgas",
+   "titulo": "Táxis RAM + Plano Motor, Luz e Calor",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-taxisram",
+    "repsol-luzgas"
+   ],
+   "exclui": [],
+   "direto": 0.09,
+   "saldo": 0.11,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "20 cênt./litro no total: 9 cênt. de desconto imediato do parceiro e 11 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/profissionais/parceiros/setor-transportes/taxisRam/",
+   "fontes": [
+    "https://www.repsol.pt/profissionais/parceiros/setor-transportes/taxisRam/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-vodafone-sem-app",
+   "titulo": "Vodafone (sem My Repsol)",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-vodafone"
+   ],
+   "exclui": [
+    "repsol-motor",
+    "repsol-luz",
+    "repsol-luzgas"
+   ],
+   "direto": 0.06,
+   "saldo": 0,
+   "cumulativo": false,
+   "condicoes": "6 cênt./litro de desconto imediato com o cartão Vodafone, mesmo sem a App My Repsol.",
+   "comoUsar": "Apresente o cartão de parceiro ao pagar (ou associe-o na App My Repsol para ganhar também saldo).",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/outros-parceiros/vodafone/",
+   "verificado": "2026-11-25",
+   "estado": "a confirmar",
+   "nota": "Divisão 6 cênt. imediatos + resto em saldo indicada pelo dono do site; a página da Vodafone só indica o total."
+  },
+  {
+   "id": "p-vodafone-repsol-motor",
+   "titulo": "Vodafone + Plano Motor",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-vodafone",
+    "repsol-motor"
+   ],
+   "exclui": [],
+   "direto": 0.06,
+   "saldo": 0.04,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "10 cênt./litro no total: 6 cênt. de desconto imediato do parceiro e 4 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/outros-parceiros/vodafone/",
+   "fontes": [
+    "https://www.repsol.pt/particulares/parceiros/outros-parceiros/vodafone/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "a confirmar",
+   "nota": "Divisão 6 cênt. imediatos + resto em saldo indicada pelo dono do site; a página da Vodafone só indica o total."
+  },
+  {
+   "id": "p-vodafone-repsol-luz",
+   "titulo": "Vodafone + Plano Motor e Luz",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-vodafone",
+    "repsol-luz"
+   ],
+   "exclui": [],
+   "direto": 0.06,
+   "saldo": 0.09,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "15 cênt./litro no total: 6 cênt. de desconto imediato do parceiro e 9 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/outros-parceiros/vodafone/",
+   "fontes": [
+    "https://www.repsol.pt/particulares/parceiros/outros-parceiros/vodafone/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "a confirmar",
+   "nota": "Divisão 6 cênt. imediatos + resto em saldo indicada pelo dono do site; a página da Vodafone só indica o total."
+  },
+  {
+   "id": "p-vodafone-repsol-luzgas",
+   "titulo": "Vodafone + Plano Motor, Luz e Calor",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-vodafone",
+    "repsol-luzgas"
+   ],
+   "exclui": [],
+   "direto": 0.06,
+   "saldo": 0.14,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "20 cênt./litro no total: 6 cênt. de desconto imediato do parceiro e 14 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/outros-parceiros/vodafone/",
+   "fontes": [
+    "https://www.repsol.pt/particulares/parceiros/outros-parceiros/vodafone/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "a confirmar",
+   "nota": "Divisão 6 cênt. imediatos + resto em saldo indicada pelo dono do site; a página da Vodafone só indica o total."
+  },
+  {
+   "id": "p-associacao-sorriso-solidario-sem-app",
+   "titulo": "Cartão Solidário (Associação Sorriso Solidário) (sem My Repsol)",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-associacao-sorriso-solidario"
+   ],
+   "exclui": [
+    "repsol-motor",
+    "repsol-luz",
+    "repsol-luzgas"
+   ],
+   "direto": 0.06,
+   "saldo": 0,
+   "cumulativo": false,
+   "condicoes": "6 cênt./litro de desconto imediato com o cartão Cartão Solidário (Associação Sorriso Solidário), mesmo sem a App My Repsol.",
+   "comoUsar": "Apresente o cartão de parceiro ao pagar (ou associe-o na App My Repsol para ganhar também saldo).",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/outros-parceiros/associacao-sorriso-solidario/",
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-associacao-sorriso-solidario-repsol-motor",
+   "titulo": "Cartão Solidário (Associação Sorriso Solidário) + Plano Motor",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-associacao-sorriso-solidario",
+    "repsol-motor"
+   ],
+   "exclui": [],
+   "direto": 0.06,
+   "saldo": 0.04,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "10 cênt./litro no total: 6 cênt. de desconto imediato do parceiro e 4 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/outros-parceiros/associacao-sorriso-solidario/",
+   "fontes": [
+    "https://www.repsol.pt/particulares/parceiros/outros-parceiros/associacao-sorriso-solidario/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-associacao-sorriso-solidario-repsol-luz",
+   "titulo": "Cartão Solidário (Associação Sorriso Solidário) + Plano Motor e Luz",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-associacao-sorriso-solidario",
+    "repsol-luz"
+   ],
+   "exclui": [],
+   "direto": 0.06,
+   "saldo": 0.09,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "15 cênt./litro no total: 6 cênt. de desconto imediato do parceiro e 9 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/outros-parceiros/associacao-sorriso-solidario/",
+   "fontes": [
+    "https://www.repsol.pt/particulares/parceiros/outros-parceiros/associacao-sorriso-solidario/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "p-associacao-sorriso-solidario-repsol-luzgas",
+   "titulo": "Cartão Solidário (Associação Sorriso Solidário) + Plano Motor, Luz e Calor",
+   "marcas": [
+    "REPSOL"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "p-associacao-sorriso-solidario",
+    "repsol-luzgas"
+   ],
+   "exclui": [],
+   "direto": 0.06,
+   "saldo": 0.14,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "20 cênt./litro no total: 6 cênt. de desconto imediato do parceiro e 14 cênt. em saldo My Repsol.",
+   "comoUsar": "Associe o cartão de parceiro na App My Repsol (Perfil › Cartão My Repsol e parceiros › Associar cartão de parceiro) e mostre o QR Code da app ao pagar.",
+   "limite": "Desconto imediato de parceiros: até 3 abastecimentos por dia, 300 € por dia e 1200 € por mês. O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/parceiros/outros-parceiros/associacao-sorriso-solidario/",
+   "fontes": [
+    "https://www.repsol.pt/particulares/parceiros/outros-parceiros/associacao-sorriso-solidario/",
+    "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  }
+ ],
+ "fontesGerais": [
+  {
+   "marca": "Repsol",
+   "url": "https://www.repsol.pt/particulares/beneficios/"
+  },
+  {
+   "marca": "Repsol (parceiros)",
+   "url": "https://www.repsol.pt/particulares/parceiros/"
+  },
+  {
+   "marca": "Repsol (FAQ My Repsol)",
+   "url": "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+  }
+ ]
 }

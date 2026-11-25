@@ -29,7 +29,7 @@ Site para encontrar e comparar postos de abastecimento em Portugal continental, 
 | `carregadores.html` | Carregadores elétricos da MOBI.E, com estado em direto e preços do operador. |
 | `route.js` | O percurso partilhado pelas três páginas (guardado no navegador). |
 | `worker/mobie-proxy.js` | Código do intermediário (Cloudflare Worker) que corre em `https://mobie-proxy.bhcsantos.workers.dev`. Está no repositório para consulta; não corre no GitHub Pages. |
-| `descontos.js`, `data/descontos.json` | Cartões de desconto: lógica e regras (fonte, validade, estado). |
+| `descontos.js`, `data/descontos.json` | Cartões de desconto: o utilizador acrescenta o que tem (pesquisa por nome), o site aplica a melhor combinação em cada posto e explica o que é preciso. Regras com fonte, validade e estado. Repsol: planos My Repsol e 35 cartões de parceiro, a partir de repsol.pt/particulares/beneficios e /parceiros. |
 | `scripts/historico.py`, `.github/workflows/historico.yml` | Recolha diária dos preços da DGEG (GitHub Actions, 09:17 UTC) para `data/historico/`. |
 | `manifest.webmanifest`, `sw.js`, `icons/` | Instalação como app (PWA). |
 | `account.js`, `conta.html`, `admin.html`, `privacidade.html` | Contas (Firebase): login Google ou email, perfis, favoritos, casa/trabalho, alertas, pedidos de funcionalidades, exportar/apagar dados; administração dos pedidos; política de privacidade. |

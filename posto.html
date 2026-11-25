@@ -193,6 +193,7 @@ async function main(){
         <tbody>${fuels.map((c,i)=>`<tr><td><span style="display:inline-flex;align-items:center;gap:8px">${fuelBadge(c.name,26)}${esc(c.name)}</span></td><td class="num price">${eur(c.price)}</td><td class="num">${(()=>{const a=Discounts.apply(p.Marca,c.name,c.price);return a.regras.length?`${eur(a.final)}<small class="mut cheaper">${Discounts.describe(a)}${a.saldo?` · efetivo ${eur(a.efetivo)}`:""}</small>`:`<span class="skel">—</span>`})()}</td><td class="num" id="avg${i}"><span class="skel">…</span></td><td class="num" id="rank${i}"><span class="skel">…</span></td><td>${fmtDate(c.date)}</td></tr>`).join("")
           || `<tr><td colspan="6">Este posto não tem preços publicados.</td></tr>`}</tbody>
       </table></div>
+      ${(()=>{const ex=fuels.map(c=>Discounts.apply(p.Marca,c.name,c.price)).find(x=>x.regras.length);return ex?`<details class="discd" style="margin:10px 0 0"><summary>Como obter o desconto neste posto</summary>${Discounts.explain(ex)}</details>`:""})()}
       <p class="note" style="margin:10px 0 0"><button type="button" class="discbtn" id="discBtn" style="margin-bottom:8px"></button><br>A média e a posição comparam com os postos do mesmo concelho que vendem esse combustível (1.º = o mais barato).</p>
     </section>
 
