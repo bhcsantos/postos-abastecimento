@@ -3,6 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#1f4fa8">
+<link rel="icon" href="icons/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
 <title>Posto · Postos de Abastecimento</title>
 <meta name="description" content="Combustíveis, preços, horário e serviços de um posto de abastecimento, com dados da DGEG.">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
@@ -41,6 +46,26 @@ h1{font-family:var(--display);font-size:2.1rem;line-height:1.05;margin:0;overflo
 .btn.on{background:var(--sel);border-color:var(--sel);color:#1a1300}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:14px 16px;min-width:0}
 h2{font-family:var(--display);font-size:1.35rem;margin:0 0 10px}
+.discbtn{font:inherit;font-weight:600;display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border:1px solid var(--line);border-radius:6px;background:var(--surface);color:var(--fg);cursor:pointer}
+.discbtn[aria-pressed="true"]{border-color:var(--good);color:var(--good);box-shadow:inset 0 0 0 1px var(--good)}
+.disc{display:block;font-size:.8rem;color:var(--good);margin-top:3px}
+.price .pump{display:block;font-size:.72rem;color:var(--muted);font-family:var(--body);text-decoration:line-through}
+dialog.dlg{border:1px solid var(--line);border-radius:12px;padding:0;max-width:min(560px,calc(100vw - 32px));width:100%;background:var(--surface);color:var(--fg);box-shadow:0 20px 60px rgba(0,0,0,.3)}
+dialog.dlg::backdrop{background:rgba(10,16,26,.55)}
+.dlgbox{padding:18px 20px;display:grid;gap:12px;max-height:80vh;overflow:auto}
+.dlgbox h2{font-family:var(--display);font-size:1.5rem;margin:0}
+.dlgsub{margin:0;color:var(--muted);font-size:.88rem}
+.dlgbox fieldset{border:1px solid var(--line);border-radius:8px;padding:8px 12px;display:grid;gap:6px;margin:0}
+.dlgbox legend{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);padding:0 4px}
+.opt{display:flex;gap:10px;align-items:center;cursor:pointer}
+.opt input{width:18px;height:18px}
+.rules summary{cursor:pointer;color:var(--accent);font-weight:600}
+.rule{border-top:1px solid var(--line);padding:8px 0;font-size:.88rem}
+.rule a{color:var(--accent)}
+.rule .st{font-size:.7rem;border-radius:999px;padding:1px 8px;margin-left:4px}
+.rule .st.ok{background:var(--good);color:#fff}.rule .st.warn{background:#d97a00;color:#fff}
+.dlgact{display:flex;gap:8px}
+
 .tablewrap{overflow-x:auto}
 table{width:100%;border-collapse:collapse;font-size:.93rem}
 th{font-size:.72rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:600;text-align:left;padding:6px 8px;border-bottom:1px solid var(--line);white-space:nowrap}
@@ -58,6 +83,13 @@ dt{color:var(--muted)} dd{margin:0;font-weight:500}
 .chip{font-size:.85rem;border:1px solid var(--line);border-radius:999px;padding:3px 11px;background:var(--bg)}
 .sub{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:14px 0 6px}
 #map{height:300px;border-radius:6px}
+.tab{font:inherit;font-size:.85rem;border:1px solid var(--line);border-radius:999px;padding:3px 11px 3px 4px;background:var(--bg);color:var(--fg);cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.tab[aria-selected="true"]{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+.hist svg{width:100%;height:auto;display:block}
+.hist .ax{font:11px var(--mono);fill:var(--muted)}
+.hist .grid line{stroke:var(--line)}
+.histleg{display:flex;flex-wrap:wrap;gap:14px;font-size:.8rem;color:var(--muted);margin-top:6px}
+.histleg i{display:inline-block;width:18px;height:3px;border-radius:2px;vertical-align:middle;margin-right:6px}
 .leaflet-tile-pane{filter:var(--mapfilter)}
 .note{font-size:.82rem;color:var(--muted)}
 .note a{color:var(--accent)}
@@ -72,6 +104,7 @@ dt{color:var(--muted)} dd{margin:0;font-weight:500}
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="descontos.js"></script>
 <script src="route.js"></script>
 <script>
 const API="https://precoscombustiveis.dgeg.gov.pt/api/PrecoComb";
@@ -113,6 +146,7 @@ const id=+new URLSearchParams(location.search).get("id");
 async function getJSON(u){const r=await fetch(u,{cache:"no-store"});if(!r.ok)throw new Error(r.status);const j=await r.json();if(!j.status)throw new Error(j.mensagem||"erro");return j.resultado}
 
 async function main(){
+  await Discounts.load();
   if(!id){$("content").innerHTML=`<p class="err">Falta o número do posto no endereço. Volte à lista e escolha um posto.</p>`;return}
   let p;
   try{p=await getJSON(`${API}/GetDadosPosto?id=${id}`)}
@@ -152,11 +186,17 @@ async function main(){
     <section class="card">
       <h2>Combustíveis e preços</h2>
       <div class="tablewrap"><table>
-        <thead><tr><th>Combustível</th><th class="num">Preço por litro</th><th class="num">Média no concelho</th><th class="num">Posição no concelho</th><th>Atualizado</th></tr></thead>
-        <tbody>${fuels.map((c,i)=>`<tr><td><span style="display:inline-flex;align-items:center;gap:8px">${fuelBadge(c.name,26)}${esc(c.name)}</span></td><td class="num price">${eur(c.price)}</td><td class="num" id="avg${i}"><span class="skel">…</span></td><td class="num" id="rank${i}"><span class="skel">…</span></td><td>${fmtDate(c.date)}</td></tr>`).join("")
-          || `<tr><td colspan="5">Este posto não tem preços publicados.</td></tr>`}</tbody>
+        <thead><tr><th>Combustível</th><th class="num">Preço por litro</th><th class="num">Com os seus descontos</th><th class="num">Média no concelho</th><th class="num">Posição no concelho</th><th>Atualizado</th></tr></thead>
+        <tbody>${fuels.map((c,i)=>`<tr><td><span style="display:inline-flex;align-items:center;gap:8px">${fuelBadge(c.name,26)}${esc(c.name)}</span></td><td class="num price">${eur(c.price)}</td><td class="num">${(()=>{const a=Discounts.apply(p.Marca,c.name,c.price);return a.regras.length?`${eur(a.final)}<small class="mut cheaper">${Discounts.describe(a)}${a.saldo?` · efetivo ${eur(a.efetivo)}`:""}</small>`:`<span class="skel">—</span>`})()}</td><td class="num" id="avg${i}"><span class="skel">…</span></td><td class="num" id="rank${i}"><span class="skel">…</span></td><td>${fmtDate(c.date)}</td></tr>`).join("")
+          || `<tr><td colspan="6">Este posto não tem preços publicados.</td></tr>`}</tbody>
       </table></div>
-      <p class="note" style="margin:10px 0 0">A média e a posição comparam com os postos do mesmo concelho que vendem esse combustível (1.º = o mais barato).</p>
+      <p class="note" style="margin:10px 0 0"><button type="button" class="discbtn" id="discBtn" style="margin-bottom:8px"></button><br>A média e a posição comparam com os postos do mesmo concelho que vendem esse combustível (1.º = o mais barato).</p>
+    </section>
+
+    <section class="card">
+      <h2>Evolução do preço</h2>
+      <div class="chips" id="histTabs" role="tablist"></div>
+      <div id="histChart" style="margin-top:10px"><p class="skel">A carregar o histórico…</p></div>
     </section>
 
     <div class="grid">
@@ -184,6 +224,7 @@ async function main(){
     <p class="note">Fonte: <a href="https://precoscombustiveis.dgeg.gov.pt/" target="_blank" rel="noopener">DGEG, Preços dos Combustíveis</a>, consultado agora. Mapa © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">colaboradores do OpenStreetMap</a>.</p>
   </div>`;
 
+  Discounts.renderButton(); $("discBtn").onclick=()=>Discounts.openPanel(); Discounts.onchange=()=>location.reload();
   /* Mapa */
   if(isFinite(lat)&&isFinite(lon)){
     const map=L.map("map",{scrollWheelZoom:false}).setView([lat,lon],16);
@@ -197,6 +238,9 @@ async function main(){
   const updSel=()=>{const on=Route.has("fuel",id);$("selbtn").textContent=on?"✓ No meu percurso (remover)":"Adicionar ao meu percurso";$("selbtn").classList.toggle("on",on)};
   $("selbtn").onclick=()=>{Route.toggle(stop);updSel()};
   updSel();
+
+  /* Histórico (guardado todos os dias pelo GitHub Actions a partir da DGEG) */
+  loadHistory(id,p,m,fuels);
 
   /* Comparação com o concelho */
   const did=DISTRITOS[m.Distrito];
@@ -214,7 +258,43 @@ async function main(){
     }catch(e){$("avg"+i).textContent="—";$("rank"+i).textContent="—"}
   }));
 }
+const HIST_ID={"Gasóleo simples":"2101","Gasóleo especial":"2105","Gasolina simples 95":"3201","Gasolina especial 95":"3205","Gasolina especial 98":"3405","GPL Auto":"1120"};
+async function loadHistory(id,p,m,fuels){
+  const box=$("histChart");
+  let shard=null,medias=null;
+  try{[shard,medias]=await Promise.all([fetch(`data/historico/${String(id%64).padStart(2,"0")}.json`).then(r=>r.ok?r.json():null),fetch("data/historico/medias.json").then(r=>r.ok?r.json():null)])}catch(e){}
+  const mine=shard&&shard[String(id)]||{};
+  const opts=fuels.filter(c=>HIST_ID[c.name]&&mine[HIST_ID[c.name]]);
+  if(!opts.length){box.innerHTML=`<p class="note">Ainda não há histórico para este posto. O site guarda os preços todos os dias desde 25/11/2026.</p>`;return}
+  let cur=opts[0].name;
+  const draw=()=>{
+    $("histTabs").innerHTML=opts.map(c=>`<button type="button" class="tab" role="tab" aria-selected="${c.name===cur}" data-f="${esc(c.name)}">${fuelBadge(c.name,20)}${esc(c.name)}</button>`).join("");
+    $("histTabs").querySelectorAll(".tab").forEach(b=>b.onclick=()=>{cur=b.dataset.f;draw()});
+    const fid=HIST_ID[cur], st=mine[fid]||[], dist=(medias&&medias[fid]&&medias[fid][m.Distrito])||[], nat=(medias&&medias[fid]&&medias[fid]["Portugal"])||[];
+    const series=[{n:"Este posto",c:"var(--accent)",w:3,pts:st.map(([d,v])=>[d,v])},{n:`Mediana do distrito ${m.Distrito?"("+esc(m.Distrito)+")":""}`,c:"#d97a00",w:2,dash:"6 4",pts:dist.map(e=>[e[0],e[2]])},{n:"Mediana nacional",c:"var(--muted)",w:2,dash:"2 4",pts:nat.map(e=>[e[0],e[2]])}].filter(s=>s.pts.length);
+    const days=[...new Set(series.flatMap(s=>s.pts.map(x=>x[0])))].sort();
+    const vals=series.flatMap(s=>s.pts.map(x=>x[1]));
+    let lo=Math.min(...vals),hi=Math.max(...vals); if(hi-lo<0.02){lo-=0.01;hi+=0.01}
+    const pad=(hi-lo)*0.1; lo-=pad; hi+=pad;
+    const W=720,H=240,L=58,R=12,T=12,B=28, x=d=>days.length<2?L+(W-L-R)/2:L+(days.indexOf(d)/(days.length-1))*(W-L-R), y=v=>T+(hi-v)/(hi-lo)*(H-T-B);
+    const ticks=[0,1,2,3,4].map(i=>lo+(hi-lo)*i/4);
+    const fmtD=d=>d.slice(8,10)+"/"+d.slice(5,7);
+    const xt=days.length<=6?days:[0,.25,.5,.75,1].map(f=>days[Math.round(f*(days.length-1))]);
+    box.innerHTML=`<div class="hist"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Evolução do preço de ${esc(cur)}">
+      <g class="grid">${ticks.map(v=>`<line x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}"/>`).join("")}</g>
+      ${ticks.map(v=>`<text class="ax" x="${L-6}" y="${y(v)+4}" text-anchor="end">${v.toFixed(3).replace(".",",")}</text>`).join("")}
+      ${[...new Set(xt)].map(d=>`<text class="ax" x="${x(d)}" y="${H-8}" text-anchor="middle">${fmtD(d)}</text>`).join("")}
+      ${series.map(s=>`<polyline fill="none" stroke="${s.c}" stroke-width="${s.w}" ${s.dash?`stroke-dasharray="${s.dash}"`:""} stroke-linejoin="round" points="${s.pts.map(([d,v])=>`${x(d)},${y(v)}`).join(" ")}"/>${s.pts.length<3?s.pts.map(([d,v])=>`<circle cx="${x(d)}" cy="${y(v)}" r="4" fill="${s.c}"/>`).join(""):""}`).join("")}
+      ${st.length?`<circle cx="${x(st[st.length-1][0])}" cy="${y(st[st.length-1][1])}" r="5" fill="var(--accent)" stroke="var(--surface)" stroke-width="2"/>`:""}
+    </svg></div>
+    <div class="histleg">${series.map(s=>`<span><i style="background:${s.c}"></i>${s.n}</span>`).join("")}</div>
+    <p class="note" style="margin:6px 0 0">${days.length<7?`O site guarda os preços todos os dias desde 25/11/2026; o gráfico ganha forma ao longo das próximas semanas.`:`Preço registado uma vez por dia, de ${fmtD(days[0])} a ${fmtD(days[days.length-1])}.`}</p>`;
+  };
+  draw();
+}
+
 main();
 </script>
+<script>if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));</script>
 </body>
 </html>

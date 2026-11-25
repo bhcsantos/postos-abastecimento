@@ -1,0 +1,47 @@
+{
+  "atualizado": "2026-11-25",
+  "programas": [
+    {
+      "id": "vodafone",
+      "nome": "Cliente Vodafone",
+      "grupo": "Operadoras de telecomunicações"
+    }
+  ],
+  "condicoes": [
+    {
+      "id": "repsol-casa",
+      "nome": "Tenho luz ou gás da Repsol em casa"
+    }
+  ],
+  "descontos": [
+    {
+      "id": "repsol-vodafone",
+      "titulo": "Vodafone na Repsol",
+      "marcas": [
+        "REPSOL"
+      ],
+      "tipos": [
+        "gasolina",
+        "gasoleo"
+      ],
+      "requer": [
+        "vodafone"
+      ],
+      "exclui": [
+        "repsol-casa"
+      ],
+      "direto": 0.06,
+      "saldo": 0.04,
+      "saldoOnde": "saldo na app Repsol",
+      "cumulativo": false,
+      "condicoes": "Para clientes Vodafone sem luz nem gás da Repsol em casa: 6 cêntimos por litro de desconto direto e 4 cêntimos por litro em saldo na app Repsol.",
+      "limite": null,
+      "inicio": null,
+      "fim": null,
+      "fonte": null,
+      "verificado": null,
+      "estado": "a confirmar",
+      "origem": "Indicado pelo dono do site; falta a ligação para a campanha."
+    }
+  ]
+}
