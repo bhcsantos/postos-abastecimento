@@ -7,4 +7,4 @@ Página para escolher postos de abastecimento no concelho do Porto.
 - Zonas: concelho do Porto, qualquer distrito ou Portugal continental.
 - Filtros por combustível e marca, seleção de postos e percurso no Google Maps.
 
-Site: https://bhcsantos.github.io/postos-porto/
+Site: https://bhcsantos.github.io/postos-abastecimento/
