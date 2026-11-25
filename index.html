@@ -258,7 +258,7 @@ const isSel=id=>selected.some(x=>x.id===id);
 function drawPins(){
   pinLayer.clearLayers(); selLayer.clearLayers();
   const mk=(s,sel)=>L.circleMarker([s.lat,s.lon],{radius:sel?9:7,color:sel?"#e8a317":"#ffffff",weight:sel?4:1.5,fillColor:colorOf(s.b),fillOpacity:1,price:s.price})
-      .bindTooltip(`${esc(s.n)} · ${eur(s.price)}`,{direction:"top",offset:[0,-6]})
+      .bindTooltip(`<strong>${esc(s.b)}</strong> · ${esc(s.n)} · ${eur(s.price)}`,{direction:"top",offset:[0,-6]})
       .on("click",()=>toggle(s));
   const normal=[];
   for(const s of data.filter(matches)){ if(isSel(s.id)) mk(s,true).addTo(selLayer); else normal.push(mk(s,false)); }
