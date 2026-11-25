@@ -103,7 +103,7 @@ h1 span{color:var(--accent)}
 <div class="wrap">
   <header>
     <div>
-      <h1 id="h1">Postos do <span>Porto</span></h1>
+      <h1 id="h1">Postos de <span>Portugal</span></h1>
       <p class="sub">Postos de abastecimento com os preços comunicados à DGEG. Escolha a zona e o combustível, selecione os postos e abra o percurso no Google Maps.</p>
     </div>
     <p class="note">Fonte: <a href="https://precoscombustiveis.dgeg.gov.pt/" target="_blank" rel="noopener">DGEG, Preços dos Combustíveis</a> (Portugal continental). <span id="srcinfo">A carregar preços…</span> Os preços mudam; confirme no posto.</p>
@@ -172,10 +172,10 @@ const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v)
 const gmView=s=>`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${s.b} ${s.a}, ${s.cp} ${s.loc||""}`)}`;
 const gmGo=s=>`https://www.google.com/maps/dir/?api=1&destination=${s.lat},${s.lon}&travelmode=driving`;
 
-let scope=store.get("pp-scope","d13");
-let activeConc=new Set(store.get("pp-conc",["Porto"])), activeLoc=new Set();
+let scope=store.get("pp-scope","pt");
+let activeConc=new Set(store.get("pp-conc",[])), activeLoc=new Set();
 if(scope==="c192"){scope="d13";activeConc=new Set(["Porto"])}
-if(!SCOPES.some(x=>x[0]===scope))scope="d13";
+if(!SCOPES.some(x=>x[0]===scope))scope="pt";
 if(scope==="pt")activeConc.clear();
 let fuelId=store.get("pp-fuel",2101); if(!FUEL_NAME[fuelId])fuelId=2101;
 let selected=store.get("pp-sel",[]); // objetos {id,n,b,a,cp,loc,lat,lon,price,fuel}
@@ -194,7 +194,7 @@ FUELS.forEach(([id,name])=>{
 });
 
 /* Mapa */
-const map=L.map("map",{preferCanvas:true,zoomSnap:.5}).setView([41.16,-8.62],13);
+const map=L.map("map",{preferCanvas:true,zoomSnap:.5}).setView([39.6,-8.0],7);
 L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:'© <a href="https://www.openstreetmap.org/copyright">colaboradores do OpenStreetMap</a>'}).addTo(map);
 const pinLayer=L.markerClusterGroup({
   maxClusterRadius:z=>z<9?70:50, disableClusteringAtZoom:15, spiderfyOnMaxZoom:true, showCoverageOnHover:false, chunkedLoading:true,
