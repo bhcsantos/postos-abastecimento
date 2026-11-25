@@ -1,18 +1,1452 @@
 {
-  "nota": "Versões de carros a combustível e híbridos plug-in, acrescentadas à mão. Cada valor tem de vir de uma fonte (ficha técnica do fabricante ou base técnica reconhecida).",
-  "versoes": [
-    {
-      "marca": "BMW", "modelo": "Série 5 (G30) 530e", "ano": 2021, "versao": "530e Berlina (PHEV, 292 cv)",
-      "tipo": "hibrido", "combustivel": 3201, "deposito": 46,
-      "bateria": 12.0, "bateriaTipo": "bruta", "fichas": ["Mennekes"], "acKw": 3.7, "dcKw": null,
-      "consumo": null, "consumoEletrico": null,
-      "fontes": [
-        "https://paultan.org/research/bmw/5-series/g30-lci/530e-m-sport-2021/",
-        "https://auto-data.net/en/bmw-5-series-sedan-g30-lci-facelift-2020-530e-292hp-steptronic-40124",
-        "https://www.press.bmwgroup.com/global/article/attachment/T0317776EN/461553"
-      ],
-      "verificado": "2026-11-25",
-      "nota": "Bateria de 12,0 kWh brutos; a capacidade útil não é publicada nas fontes consultadas. Carregamento AC a 3,7 kW (Tipo 2)."
-    }
-  ]
+ "nota": "Versões de carros a combustível e híbridos plug-in, acrescentadas à mão. Cada valor tem de vir de uma fonte (ficha técnica do fabricante ou base técnica reconhecida).",
+ "versoes": [
+  {
+   "marca": "BMW",
+   "modelo": "Série 5 (G30) 530e",
+   "ano": 2021,
+   "versao": "530e Berlina (PHEV, 292 cv)",
+   "tipo": "hibrido",
+   "combustivel": 3201,
+   "deposito": 46,
+   "bateria": 12.0,
+   "bateriaTipo": "bruta",
+   "fichas": [
+    "Mennekes"
+   ],
+   "acKw": 3.7,
+   "dcKw": null,
+   "consumo": null,
+   "consumoEletrico": null,
+   "fontes": [
+    "https://paultan.org/research/bmw/5-series/g30-lci/530e-m-sport-2021/",
+    "https://auto-data.net/en/bmw-5-series-sedan-g30-lci-facelift-2020-530e-292hp-steptronic-40124",
+    "https://www.press.bmwgroup.com/global/article/attachment/T0317776EN/461553"
+   ],
+   "verificado": "2026-11-25",
+   "nota": "Bateria de 12,0 kWh brutos; a capacidade útil não é publicada nas fontes consultadas. Carregamento AC a 3,7 kW (Tipo 2)."
+  },
+  {
+   "marca": "Dacia",
+   "modelo": "Sandero (3.ª geração)",
+   "ano": "2021–2025",
+   "versao": "1.0 TCe (gasolina)",
+   "tipo": "combustivel",
+   "combustivel": 3201,
+   "deposito": 50,
+   "bateria": null,
+   "bateriaTipo": null,
+   "fichas": [],
+   "acKw": null,
+   "dcKw": null,
+   "consumo": null,
+   "consumoEletrico": null,
+   "fontes": [
+    "https://www.parkers.co.uk/dacia/sandero/hatchback-2021/10-tce-journey-5dr/specs/"
+   ],
+   "verificado": "2026-11-25"
+  },
+  {
+   "marca": "Dacia",
+   "modelo": "Sandero (3.ª geração)",
+   "ano": "2021–2025",
+   "versao": "1.0 TCe ECO-G (GPL)",
+   "tipo": "combustivel",
+   "combustivel": 1120,
+   "deposito": 40,
+   "bateria": null,
+   "bateriaTipo": null,
+   "fichas": [],
+   "acKw": null,
+   "dcKw": null,
+   "consumo": null,
+   "consumoEletrico": null,
+   "fontes": [
+    "https://www.parkers.co.uk/dacia/sandero/hatchback-2021/10-tce-bi-fuel-expression-5dr/specs/",
+    "https://www.user-manual.dacia.com/ja/node/1663"
+   ],
+   "verificado": "2026-11-25",
+   "nota": "Depósito de GPL com cerca de 40 ou 50 L úteis, consoante a versão; tem também um depósito de gasolina de 50 L."
+  },
+  {
+   "marca": "Dacia",
+   "modelo": "Duster (3.ª geração)",
+   "ano": "2024–2025",
+   "versao": "1.2 TCe 130 / Mild Hybrid 140 (gasolina)",
+   "tipo": "combustivel",
+   "combustivel": 3201,
+   "deposito": 50,
+   "bateria": null,
+   "bateriaTipo": null,
+   "fichas": [],
+   "acKw": null,
+   "dcKw": null,
+   "consumo": null,
+   "consumoEletrico": null,
+   "fontes": [
+    "https://auto-data.net/en/dacia-duster-iii-1.2-tce-130hp-mild-hybrid-4x4-51390",
+    "https://www.parkers.co.uk/dacia/duster/suv-2024/12-tce-mild-hybrid-140-extreme-5dr/specs/"
+   ],
+   "verificado": "2026-11-25"
+  },
+  {
+   "marca": "Dacia",
+   "modelo": "Duster (3.ª geração)",
+   "ano": "2024–2025",
+   "versao": "1.6 Hybrid 140 (gasolina, híbrido sem ficha)",
+   "tipo": "combustivel",
+   "combustivel": 3201,
+   "deposito": 50,
+   "bateria": null,
+   "bateriaTipo": null,
+   "fichas": [],
+   "acKw": null,
+   "dcKw": null,
+   "consumo": null,
+   "consumoEletrico": null,
+   "fontes": [
+    "https://www.parkers.co.uk/dacia/duster/suv-2024/16-hybrid-140-expression-5dr-auto/specs/"
+   ],
+   "verificado": "2026-11-25",
+   "nota": "Uma das fontes indica 48,5 L."
+  },
+  {
+   "marca": "Dacia",
+   "modelo": "Jogger",
+   "ano": "2022–2025",
+   "versao": "1.0 TCe (gasolina)",
+   "tipo": "combustivel",
+   "combustivel": 3201,
+   "deposito": 50,
+   "bateria": null,
+   "bateriaTipo": null,
+   "fichas": [],
+   "acKw": null,
+   "dcKw": null,
+   "consumo": null,
+   "consumoEletrico": null,
+   "fontes": [
+    "https://www.user-manual.dacia.com/nb/node/4531",
+    "https://cararac.com/fuel_tank_size/dacia/jogger.html"
+   ],
+   "verificado": "2026-11-25"
+  },
+  {
+   "marca": "Dacia",
+   "modelo": "Jogger",
+   "ano": "2022–2025",
+   "versao": "1.0 TCe ECO-G (GPL)",
+   "tipo": "combustivel",
+   "combustivel": 1120,
+   "deposito": 40,
+   "bateria": null,
+   "bateriaTipo": null,
+   "fichas": [],
+   "acKw": null,
+   "dcKw": null,
+   "consumo": null,
+   "consumoEletrico": null,
+   "fontes": [
+    "https://www.user-manual.dacia.com/nb/node/4531",
+    "https://ultimatespecs.com/car-specs/Dacia/130784/Dacia-Jogger-TCe-100-Bi-Fuel-7-seats.html"
+   ],
+   "verificado": "2026-11-25",
+   "nota": "Depósito de GPL com cerca de 40 ou 50 L úteis, consoante a versão; tem também um depósito de gasolina de 50 L."
+  },
+  {
+   "marca": "Peugeot",
+   "modelo": "208 (2.ª geração)",
+   "ano": "2019–2025",
+   "versao": "1.2 PureTech 100/130 (gasolina)",
+   "tipo": "combustivel",
+   "combustivel": 3201,
+   "deposito": 44,
+   "bateria": null,
+   "bateriaTipo": null,
+   "fichas": [],
+   "acKw": null,
+   "dcKw": null,
+   "consumo": null,
+   "consumoEletrico": null,
+   "fontes": [
+    "https://www.auto-abc.eu/Peugeot-208/v20445-2019",
+    "https://www.auto-abc.eu/Peugeot-208/v20444-2019"
+   ],
+   "verificado": "2026-11-25",
+   "nota": "A versão de 75 cv tem 40 L segundo uma das fontes."
+  },
+  {
+   "marca": "Peugeot",
+   "modelo": "208 (2.ª geração)",
+   "ano": "2019–2025",
+   "versao": "1.5 BlueHDi (gasóleo)",
+   "tipo": "combustivel",
+   "combustivel": 2101,
+   "deposito": 41,
+   "bateria": null,
+   "bateriaTipo": null,
+   "fichas": [],
+   "acKw": null,
+   "dcKw": null,
+   "consumo": null,
+   "consumoEletrico": null,
+   "fontes": [
+    "https://cararac.com/spec/peugeot/208/hatchback-2019/"
+   ],
+   "verificado": "2026-11-25"
+  },
+  {
+   "marca": "Peugeot",
+   "modelo": "2008 (2.ª geração)",
+   "ano": "2020–2025",
+   "versao": "1.2 PureTech 130 / Hybrid 145 (gasolina)",
+   "tipo": "combustivel",
+   "combustivel": 3201,
+   "deposito": 44,
+   "bateria": null,
+   "bateriaTipo": null,
+   "fichas": [],
+   "acKw": null,
+   "dcKw": null,
+   "consumo": null,
+   "consumoEletrico": null,
+   "fontes": [
+    "https://www.auto-data.net/en/peugeot-2008-ii-1.2-puretech-130hp-automatic-38062",
+    "https://www.topgear.com/car-reviews/peugeot/12-puretech-130-allure-premium-5dr-eat8/spec-1",
+    "https://www.auto-data.net/en/peugeot-2008-ii-facelift-2023-1.2-145hp-mild-hybrid-e-dcs-54021"
+   ],
+   "verificado": "2026-11-25"
+  },
+  {
+   "marca": "Peugeot",
+   "modelo": "308 (3.ª geração)",
+   "ano": "2021–2025",
+   "versao": "1.2 PureTech 130 (gasolina)",
+   "tipo": "combustivel",
+   "combustivel": 3201,
+   "deposito": 52,
+   "bateria": null,
+   "bateriaTipo": null,
+   "fichas": [],
+   "acKw": null,
+   "dcKw": null,
+   "consumo": null,
+   "consumoEletrico": null,
+   "fontes": [
+    "https://www.auto-abc.eu/Peugeot-308/v24059-2021",
+    "https://www.auto-data.net/en/peugeot-308-iii-phase-i-2021-1.2-puretech-130hp-eat8-43723"
+   ],
+   "verificado": "2026-11-25"
+  },
+  {
+   "marca": "Peugeot",
+   "modelo": "308 (3.ª geração)",
+   "ano": "2021–2025",
+   "versao": "1.5 BlueHDi 130 (gasóleo)",
+   "tipo": "combustivel",
+   "combustivel": 2101,
+   "deposito": 52,
+   "bateria": null,
+   "bateriaTipo": null,
+   "fichas": [],
+   "acKw": null,
+   "dcKw": null,
+   "consumo": null,
+   "consumoEletrico": null,
+   "fontes": [
+    "https://www.auto-data.net/en/peugeot-308-iii-phase-i-2021-1.5-bluehdi-130hp-eat8-43725"
+   ],
+   "verificado": "2026-11-25"
+  },
+  {
+   "marca": "Peugeot",
+   "modelo": "308 (3.ª geração)",
+   "ano": "2021–2023",
+   "versao": "Hybrid 180 / 225 (PHEV)",
+   "tipo": "hibrido",
+   "combustivel": 3201,
+   "deposito": 40,
+   "bateria": 12.4,
+   "bateriaTipo": "bruta",
+   "fichas": [
+    "Mennekes"
+   ],
+   "acKw": null,
+   "dcKw": null,
+   "consumo": null,
+   "consumoEletrico": null,
+   "fontes": [
+    "https://www.parkers.co.uk/peugeot/308/sw-2021/16-hybrid-gt-premium-5dr-e-eat8/specs",
+    "https://www.auto-data.net/en/peugeot-308-iii-phase-i-2021-1.6-225hp-plug-in-hybrid-e-eat8-43720"
+   ],
+   "verificado": "2026-11-25",
+   "nota": "A potência de carregamento AC não foi confirmada nas fontes."
+  },
+  {
+   "marca": "Renault",
+   "modelo": "Clio (5.ª geração)",
+   "ano": "2019–2025",
+   "versao": "1.0 TCe 90 (gasolina)",
+   "tipo": "combustivel",
+   "combustivel": 3201,
+   "deposito": 42,
+   "bateria": null,
+   "bateriaTipo": null,
+   "fichas": [],
+   "acKw": null,
+   "dcKw": null,
+   "consumo": null,
+   "consumoEletrico": null,
+   "fontes": [
+    "https://www.autoexpress.co.uk/renault/clio/prices-specs/94657/1.0-tce-90-rs-line-5dr-leather",
+    "https://renault.ie/CountriesData/Ireland/images/PDF/brochures/Clio_spec.pdf"
+   ],
+   "verificado": "2026-11-25"
+  },
+  {
+   "marca": "Renault",
+   "modelo": "Clio (5.ª geração)",
+   "ano": "2020–2025",
+   "versao": "E-Tech Hybrid 140/145 (gasolina, híbrido sem ficha)",
+   "tipo": "combustivel",
+   "combustivel": 3201,
+   "deposito": 39,
+   "bateria": null,
+   "bateriaTipo": null,
+   "fichas": [],
+   "acKw": null,
+   "dcKw": null,
+   "consumo": null,
+   "consumoEletrico": null,
+   "fontes": [
+    "https://renault.ie/CountriesData/Ireland/images/PDF/brochures/Clio_spec.pdf",
+    "https://www.autoexpress.co.uk/renault/clio/prices-specs/98295/1.6-e-tech-hybrid-140-lutecia-se-5dr-auto"
+   ],
+   "verificado": "2026-11-25"
+  },
+  {
+   "marca": "Renault",
+   "modelo": "Captur (2.ª geração)",
+   "ano": "2020–2024",
+   "versao": "1.0 TCe 90 (gasolina)",
+   "tipo": "combustivel",
+   "combustivel": 3201,
+   "deposito": 48,
+   "bateria": null,
+   "bateriaTipo": null,
+   "fichas": [],
+   "acKw": null,
+   "dcKw": null,
+   "consumo": null,
+   "consumoEletrico": null,
+   "fontes": [
+    "https://www.whatcar.com/renault/captur/suv/10-tce-techno-suv-5dr-petrol-manual-euro-6-ss-90-ps/version",
+    "https://www.parkers.co.uk/renault/captur/4x4-2020/10-tce-90-evolution-5dr/specs/"
+   ],
+   "verificado": "2026-11-25"
+  },
+  {
+   "marca": "Renault",
+   "modelo": "Captur (2.ª geração)",
+   "ano": "2020–2024",
+   "versao": "E-Tech Plug-in Hybrid 160",
+   "tipo": "hibrido",
+   "combustivel": 3201,
+   "deposito": 39,
+   "bateria": 9.8,
+   "bateriaTipo": "bruta",
+   "fichas": [
+    "Mennekes"
+   ],
+   "acKw": 3.6,
+   "dcKw": null,
+   "consumo": null,
+   "consumoEletrico": null,
+   "fontes": [
+    "https://www.topgear.com/car-reviews/renault/captur/16-e-tech-phev-160-techno-5dr-auto/spec",
+    "https://www.electrifying.com/reviews/renault/captur-e-tech/review"
+   ],
+   "verificado": "2026-11-25"
+  },
+  {
+   "marca": "Citroën",
+   "modelo": "C3 (4.ª geração)",
+   "ano": "2024–2025",
+   "versao": "1.2 PureTech 100 / Hybrid (gasolina)",
+   "tipo": "combustivel",
+   "combustivel": 3201,
+   "deposito": 44,
+   "bateria": null,
+   "bateriaTipo": null,
+   "fichas": [],
+   "acKw": null,
+   "dcKw": null,
+   "consumo": null,
+   "consumoEletrico": null,
+   "fontes": [
+    "https://www.parkers.co.uk/citroen/c3/hatchback-2024/12-puretech-plus-5dr/specs/",
+    "https://auto-data.net/en/citroen-c3-iv-phase-i-2024-1.2-puretech-101hp-51586"
+   ],
+   "verificado": "2026-11-25"
+  },
+  {
+   "marca": "Citroën",
+   "modelo": "C3 Aircross (2.ª geração)",
+   "ano": "2024–2025",
+   "versao": "1.2 PureTech 100 / Hybrid 136 (gasolina)",
+   "tipo": "combustivel",
+   "combustivel": 3201,
+   "deposito": 44,
+   "bateria": null,
+   "bateriaTipo": null,
+   "fichas": [],
+   "acKw": null,
+   "dcKw": null,
+   "consumo": null,
+   "consumoEletrico": null,
+   "fontes": [
+    "https://www.auto-data.net/en/citroen-c3-aircross-ii-phase-i-cc24-1.2-puretech-101hp-52663",
+    "https://www.auto-data.net/en/citroen-c3-aircross-ii-phase-i-cc24-1.2-136hp-mild-hybrid-e-dcs-7-seat-52666"
+   ],
+   "verificado": "2026-11-25"
+  },
+  {
+   "marca": "Citroën",
+   "modelo": "C4 (3.ª geração)",
+   "ano": "2020–2025",
+   "versao": "1.2 PureTech 130 (gasolina)",
+   "tipo": "combustivel",
+   "combustivel": 3201,
+   "deposito": 50,
+   "bateria": null,
+   "bateriaTipo": null,
+   "fichas": [],
+   "acKw": null,
+   "dcKw": null,
+   "consumo": null,
+   "consumoEletrico": null,
+   "fontes": [
+    "https://auto-data.net/en/citroen-c4-iii-phase-i-2020-1.2-puretech-130hp-41597"
+   ],
+   "verificado": "2026-11-25"
+  },
+  {
+   "marca": "Citroën",
+   "modelo": "C4 (3.ª geração)",
+   "ano": "2020–2025",
+   "versao": "1.5 BlueHDi 130 (gasóleo)",
+   "tipo": "combustivel",
+   "combustivel": 2101,
+   "deposito": 50,
+   "bateria": null,
+   "bateriaTipo": null,
+   "fichas": [],
+   "acKw": null,
+   "dcKw": null,
+   "consumo": null,
+   "consumoEletrico": null,
+   "fontes": [
+    "https://www.auto-data.net/en/citroen-c4-iii-phase-i-2020-1.5-bluehdi-130hp-automatic-41599"
+   ],
+   "verificado": "2026-11-25"
+  },
+  {
+   "marca": "Mercedes-Benz",
+   "modelo": "Classe A (W177)",
+   "ano": "2018–2025",
+   "versao": "A 180 (gasolina)",
+   "tipo": "combustivel",
+   "combustivel": 3201,
+   "deposito": 43,
+   "bateria": null,
+   "bateriaTipo": null,
+   "fichas": [],
+   "acKw": null,
+   "dcKw": null,
+   "consumo": null,
+   "consumoEletrico": null,
+   "fontes": [
+    "https://www.auto-data.net/en/mercedes-benz-a-class-w177-facelift-2022-a-180-136hp-mild-hybrid-7g-dct-46621",
+    "https://www.auto-abc.eu/mercedes-a-klase/v24139-2022"
+   ],
+   "verificado": "2026-11-25"
+  },
+  {
+   "marca": "Mercedes-Benz",
+   "modelo": "Classe A (W177)",
+   "ano": "2018–2025",
+   "versao": "A 180 d (gasóleo)",
+   "tipo": "combustivel",
+   "combustivel": 2101,
+   "deposito": 43,
+   "bateria": null,
+   "bateriaTipo": null,
+   "fichas": [],
+   "acKw": null,
+   "dcKw": null,
+   "consumo": null,
+   "consumoEletrico": null,
+   "fontes": [
+    "https://www.auto-abc.eu/mercedes-a-klase/v24138-2022"
+   ],
+   "verificado": "2026-11-25"
+  },
+  {
+   "marca": "Mercedes-Benz",
+   "modelo": "Classe A (W177)",
+   "ano": "2020–2025",
+   "versao": "A 250 e (PHEV)",
+   "tipo": "hibrido",
+   "combustivel": 3201,
+   "deposito": 35,
+   "bateria": 15.6,
+   "bateriaTipo": "bruta",
+   "fichas": [
+    "Mennekes"
+   ],
+   "acKw": null,
+   "dcKw": null,
+   "consumo": null,
+   "consumoEletrico": null,
+   "fontes": [
+    "https://www.auto-data.net/en/mercedes-benz-a-class-w177-facelift-2022-a-250e-218hp-plug-in-hybrid-8g-dct-46625",
+    "https://www.autodata1.com/en/car/mercedes-benz/a-class/a-class-w177-a-250e-218-hp-eq-power-dct"
+   ],
+   "verificado": "2026-11-25",
+   "nota": "Bateria de 15,6 kWh brutos (comum à GLA 250 e). Potência de carregamento AC não confirmada nas fontes."
+  },
+  {
+   "marca": "Mercedes-Benz",
+   "modelo": "GLA (H247)",
+   "ano": "2020–2025",
+   "versao": "GLA 250 e (PHEV)",
+   "tipo": "hibrido",
+   "combustivel": 3201,
+   "deposito": 35,
+   "bateria": 11.5,
+   "bateriaTipo": "útil",
+   "fichas": [
+    "Mennekes"
+   ],
+   "acKw": null,
+   "dcKw": null,
+   "consumo": null,
+   "consumoEletrico": null,
+   "fontes": [
+    "https://www.auto-data.net/en/mercedes-benz-gla-h247-facelift-2023-gla-250e-218hp-plug-in-hybrid-8g-dct-50035",
+    "https://www.adac.de/rund-ums-fahrzeug/autokatalog/marken-modelle/mercedes-benz/gla/247-facelift/328595"
+   ],
+   "verificado": "2026-11-25",
+   "nota": "15,6 kWh brutos; 11,5 kWh úteis a partir de 2023 (10,6 kWh antes)."
+  },
+  {
+   "marca": "Mercedes-Benz",
+   "modelo": "Classe C (W206)",
+   "ano": "2021–2025",
+   "versao": "C 300 e (PHEV)",
+   "tipo": "hibrido",
+   "combustivel": 3201,
+   "deposito": 50,
+   "bateria": 19.5,
+   "bateriaTipo": "útil",
+   "fichas": [
+    "Mennekes"
+   ],
+   "acKw": 11,
+   "dcKw": null,
+   "consumo": null,
+   "consumoEletrico": null,
+   "fontes": [
+    "https://www.auto-data.net/en/mercedes-benz-c-class-w206-c-300e-313hp-plug-in-hybrid-9g-tronic-44914",
+    "https://www.autoexpress.co.uk/mercedes/c-class/21184/saloon/prices-specs/99603/c300e-amg-line-premium-plus-4dr-9g-tronic"
+   ],
+   "verificado": "2026-11-25",
+   "nota": "25,4 kWh brutos, 19,5 kWh úteis."
+  },
+  {
+   "marca": "Mercedes-Benz",
+   "modelo": "Classe E (W214)",
+   "ano": "2023–2025",
+   "versao": "E 300 e (PHEV)",
+   "tipo": "hibrido",
+   "combustivel": 3201,
+   "deposito": 50,
+   "bateria": 19.5,
+   "bateriaTipo": "útil",
+   "fichas": [
+    "Mennekes"
+   ],
+   "acKw": 11,
+   "dcKw": null,
+   "consumo": null,
+   "consumoEletrico": null,
+   "fontes": [
+    "https://www.whatcar.com/mercedes-benz/e-class/saloon/e300e-amg-line-premium-plus-4dr-9g-tronic/103941",
+    "https://www.auto-data.net/en/mercedes-benz-e-class-w214-e-300e-313hp-plug-in-hybrid-9g-tronic-48462"
+   ],
+   "verificado": "2026-11-25",
+   "nota": "Berlina. 25,4 kWh brutos, cerca de 19,5 kWh úteis."
+  },
+  {
+   "marca": "Toyota",
+   "modelo": "Yaris (4.ª geração)",
+   "ano": "2020–2025",
+   "versao": "1.5 Hybrid (gasolina, híbrido sem ficha)",
+   "tipo": "combustivel",
+   "combustivel": 3201,
+   "deposito": 36,
+   "bateria": null,
+   "bateriaTipo": null,
+   "fichas": [],
+   "acKw": null,
+   "dcKw": null,
+   "consumo": null,
+   "consumoEletrico": null,
+   "fontes": [
+    "https://media.toyota.co.uk/wp-content/uploads/sites/5/pdf/210713M-Yaris-Tech-Spec.pdf",
+    "https://www.topgear.com/car-reviews/toyota/15-hybrid-cyan-bi-tone-5dr-cvt/spec"
+   ],
+   "verificado": "2026-11-25"
+  },
+  {
+   "marca": "Toyota",
+   "modelo": "Yaris Cross",
+   "ano": "2021–2025",
+   "versao": "1.5 Hybrid (gasolina, híbrido sem ficha)",
+   "tipo": "combustivel",
+   "combustivel": 3201,
+   "deposito": 36,
+   "bateria": null,
+   "bateriaTipo": null,
+   "fichas": [],
+   "acKw": null,
+   "dcKw": null,
+   "consumo": null,
+   "consumoEletrico": null,
+   "fontes": [
+    "https://media.toyota.co.uk/wp-content/uploads/sites/5/pdf/220714M-Yaris-Cross-Tech-Spec.pdf"
+   ],
+   "verificado": "2026-11-25"
+  },
+  {
+   "marca": "Toyota",
+   "modelo": "Corolla (E210)",
+   "ano": "2019–2025",
+   "versao": "1.8 / 2.0 Hybrid (gasolina, híbrido sem ficha)",
+   "tipo": "combustivel",
+   "combustivel": 3201,
+   "deposito": 43,
+   "bateria": null,
+   "bateriaTipo": null,
+   "fichas": [],
+   "acKw": null,
+   "dcKw": null,
+   "consumo": null,
+   "consumoEletrico": null,
+   "fontes": [
+    "https://media.toyota.co.uk/wp-content/uploads/sites/5/pdf/250305-Corolla-Tech-Specs.pdf",
+    "https://www.ultimatespecs.com/car-specs/Toyota/146152/Toyota-Corolla-E210-Hatchback-2023-18-Hybrid.html"
+   ],
+   "verificado": "2026-11-25"
+  },
+  {
+   "marca": "Toyota",
+   "modelo": "C-HR (2.ª geração)",
+   "ano": "2024–2025",
+   "versao": "1.8 / 2.0 Hybrid (gasolina, híbrido sem ficha)",
+   "tipo": "combustivel",
+   "combustivel": 3201,
+   "deposito": 43,
+   "bateria": null,
+   "bateriaTipo": null,
+   "fichas": [],
+   "acKw": null,
+   "dcKw": null,
+   "consumo": null,
+   "consumoEletrico": null,
+   "fontes": [
+    "https://www.carexpert.com.au/toyota/c-hr/2025/fuel",
+    "https://www.encycarpedia.com/toyota/24-c-hr-2-0-hybrid-suv"
+   ],
+   "verificado": "2026-11-25"
+  },
+  {
+   "marca": "Toyota",
+   "modelo": "C-HR (2.ª geração)",
+   "ano": "2024–2025",
+   "versao": "2.0 Plug-in Hybrid 220",
+   "tipo": "hibrido",
+   "combustivel": 3201,
+   "deposito": 43,
+   "bateria": 13.6,
+   "bateriaTipo": "bruta",
+   "fichas": [
+    "Mennekes"
+   ],
+   "acKw": 6.6,
+   "dcKw": null,
+   "consumo": null,
+   "consumoEletrico": null,
+   "fontes": [
+    "https://media.toyota.co.uk/wp-content/uploads/sites/5/pdf/250428-C-HR-Tech-Specs.pdf",
+    "https://media.toyota.co.uk/the-all-new-toyota-c-hr-plug-in-hybrid/"
+   ],
+   "verificado": "2026-11-25"
+  },
+  {
+   "marca": "SEAT",
+   "modelo": "Ibiza (5.ª geração)",
+   "ano": "2017–2025",
+   "versao": "1.0 TSI (gasolina)",
+   "tipo": "combustivel",
+   "combustivel": 3201,
+   "deposito": 40,
+   "bateria": null,
+   "bateriaTipo": null,
+   "fichas": [],
+   "acKw": null,
+   "dcKw": null,
+   "consumo": null,
+   "consumoEletrico": null,
+   "fontes": [
+    "https://www.parkers.co.uk/seat/ibiza/hatchback-2017/10-tsi-115-fr-5dr/specs/"
+   ],
+   "verificado": "2026-11-25"
+  },
+  {
+   "marca": "SEAT",
+   "modelo": "Arona",
+   "ano": "2017–2025",
+   "versao": "1.0 TSI (gasolina)",
+   "tipo": "combustivel",
+   "combustivel": 3201,
+   "deposito": 40,
+   "bateria": null,
+   "bateriaTipo": null,
+   "fichas": [],
+   "acKw": null,
+   "dcKw": null,
+   "consumo": null,
+   "consumoEletrico": null,
+   "fontes": [
+    "https://mundoseat.seat.com/mediacenter_netstor/seat-media-center/global_site/img/Models/Arona/GD2/TS_New_SEAT_Arona_EN.pdf",
+    "https://www.parkers.co.uk/seat/arona/suv-2018/10-tsi-evo-se-technology-5dr/specs/"
+   ],
+   "verificado": "2026-11-25"
+  },
+  {
+   "marca": "SEAT",
+   "modelo": "Leon (4.ª geração)",
+   "ano": "2020–2025",
+   "versao": "1.0 / 1.5 TSI (gasolina)",
+   "tipo": "combustivel",
+   "combustivel": 3201,
+   "deposito": 40,
+   "bateria": null,
+   "bateriaTipo": null,
+   "fichas": [],
+   "acKw": null,
+   "dcKw": null,
+   "consumo": null,
+   "consumoEletrico": null,
+   "fontes": [
+    "https://www.seat.co.uk/new-cars/leon-estate/technical-data/fr"
+   ],
+   "verificado": "2026-11-25",
+   "nota": "As versões 2.0 TSI 190 cv têm 50 L."
+  },
+  {
+   "marca": "SEAT",
+   "modelo": "Leon (4.ª geração)",
+   "ano": "2020–2023",
+   "versao": "1.4 e-Hybrid (PHEV)",
+   "tipo": "hibrido",
+   "combustivel": 3201,
+   "deposito": 40,
+   "bateria": 12.8,
+   "bateriaTipo": "útil",
+   "fichas": [
+    "Mennekes"
+   ],
+   "acKw": null,
+   "dcKw": null,
+   "consumo": null,
+   "consumoEletrico": null,
+   "fontes": [
+    "https://www.parkers.co.uk/seat/leon/estate-2020/14-ehybrid-xcellence-dsg-5d/specs/",
+    "https://www.electrifying.com/reviews/seat-reviews/seat-leon-e-hybrid"
+   ],
+   "verificado": "2026-11-25",
+   "nota": "13 kWh brutos, 12,8 kWh úteis. Potência de carregamento AC não confirmada nas fontes."
+  },
+  {
+   "marca": "Opel",
+   "modelo": "Corsa F",
+   "ano": "2019–2025",
+   "versao": "1.2 Turbo 100 (gasolina)",
+   "tipo": "combustivel",
+   "combustivel": 3201,
+   "deposito": 44,
+   "bateria": null,
+   "bateriaTipo": null,
+   "fichas": [],
+   "acKw": null,
+   "dcKw": null,
+   "consumo": null,
+   "consumoEletrico": null,
+   "fontes": [
+    "https://www.auto-data.net/en/opel-corsa-f-1.2-turbo-100hp-37423",
+    "https://www.autodata1.com/en/car/opel/corsa/corsa-f-5-door-12-turbo-100-hp"
+   ],
+   "verificado": "2026-11-25"
+  },
+  {
+   "marca": "Nissan",
+   "modelo": "Qashqai (J12)",
+   "ano": "2021–2025",
+   "versao": "1.3 DIG-T Mild Hybrid (gasolina)",
+   "tipo": "combustivel",
+   "combustivel": 3201,
+   "deposito": 55,
+   "bateria": null,
+   "bateriaTipo": null,
+   "fichas": [],
+   "acKw": null,
+   "dcKw": null,
+   "consumo": null,
+   "consumoEletrico": null,
+   "fontes": [
+    "https://auto-data.net/en/nissan-qashqai-iii-j12-1.3-dig-t-158hp-mhev-43428",
+    "https://www.auto-abc.eu/Nissan-Qashqai/v17212-2021"
+   ],
+   "verificado": "2026-11-25"
+  },
+  {
+   "marca": "Hyundai",
+   "modelo": "i20 (BC3)",
+   "ano": "2020–2025",
+   "versao": "1.0 T-GDi (gasolina)",
+   "tipo": "combustivel",
+   "combustivel": 3201,
+   "deposito": 40,
+   "bateria": null,
+   "bateriaTipo": null,
+   "fichas": [],
+   "acKw": null,
+   "dcKw": null,
+   "consumo": null,
+   "consumoEletrico": null,
+   "fontes": [
+    "https://www.parkers.co.uk/hyundai/i20/hatchback-2020/10t-gdi-48v-mhd-ultimate-5dr/specs/"
+   ],
+   "verificado": "2026-11-25"
+  },
+  {
+   "marca": "Hyundai",
+   "modelo": "Kauai (2.ª geração)",
+   "ano": "2023–2025",
+   "versao": "1.0 T-GDi 100 (gasolina)",
+   "tipo": "combustivel",
+   "combustivel": 3201,
+   "deposito": 47,
+   "bateria": null,
+   "bateriaTipo": null,
+   "fichas": [],
+   "acKw": null,
+   "dcKw": null,
+   "consumo": null,
+   "consumoEletrico": null,
+   "fontes": [
+    "https://www.auto-data.net/en/hyundai-kauai-ii-1.0-t-gdi-100hp-56517"
+   ],
+   "verificado": "2026-11-25",
+   "nota": "Valor encontrado para a versão de 100 cv."
+  },
+  {
+   "marca": "Hyundai",
+   "modelo": "Tucson (NX4)",
+   "ano": "2021–2025",
+   "versao": "1.6 T-GDi HEV (gasolina, híbrido sem ficha)",
+   "tipo": "combustivel",
+   "combustivel": 3201,
+   "deposito": 52,
+   "bateria": null,
+   "bateriaTipo": null,
+   "fichas": [],
+   "acKw": null,
+   "dcKw": null,
+   "consumo": null,
+   "consumoEletrico": null,
+   "fontes": [
+    "https://dmassets.hyundai.com/is/content/hyundaiautoever/TUCSON_Tech_Specpdf",
+    "https://cararac.com/spec/hyundai/tucson/tucson-iv/"
+   ],
+   "verificado": "2026-11-25"
+  },
+  {
+   "marca": "Hyundai",
+   "modelo": "Tucson (NX4)",
+   "ano": "2021–2025",
+   "versao": "1.6 T-GDi Plug-in Hybrid",
+   "tipo": "hibrido",
+   "combustivel": 3201,
+   "deposito": 42,
+   "bateria": 13.8,
+   "bateriaTipo": "bruta",
+   "fichas": [
+    "Mennekes"
+   ],
+   "acKw": null,
+   "dcKw": null,
+   "consumo": null,
+   "consumoEletrico": null,
+   "fontes": [
+    "https://www.parkers.co.uk/hyundai/tucson/suv-2021/16t-288-plug-in-hybrid-n-line-s-5dr-4wd-auto-[ni]/specs/",
+    "https://www.autoexpress.co.uk/hyundai/tucson/prices-specs/110305/1.6t-288-phev-n-line-edition-5dr-4wd-auto-ni"
+   ],
+   "verificado": "2026-11-25"
+  },
+  {
+   "marca": "Kia",
+   "modelo": "Sportage (NQ5)",
+   "ano": "2022–2025",
+   "versao": "1.6 T-GDi HEV (gasolina, híbrido sem ficha)",
+   "tipo": "combustivel",
+   "combustivel": 3201,
+   "deposito": 52,
+   "bateria": null,
+   "bateriaTipo": null,
+   "fichas": [],
+   "acKw": null,
+   "dcKw": null,
+   "consumo": null,
+   "consumoEletrico": null,
+   "fontes": [
+    "https://www.ultimatespecs.com/car-specs/Kia/130086/Kia-Sportage-2022-16-T-GDi-Hybrid.html",
+    "https://www.Kia.com/content/dam/kwcms/au/en/images/pdf/sportage/kia-sportage-hybrid-brochure.pdf"
+   ],
+   "verificado": "2026-11-25"
+  },
+  {
+   "marca": "Kia",
+   "modelo": "Sportage (NQ5)",
+   "ano": "2022–2025",
+   "versao": "1.6 T-GDi PHEV",
+   "tipo": "hibrido",
+   "combustivel": 3201,
+   "deposito": 42,
+   "bateria": 13.8,
+   "bateriaTipo": "bruta",
+   "fichas": [
+    "Mennekes"
+   ],
+   "acKw": 7.2,
+   "dcKw": null,
+   "consumo": null,
+   "consumoEletrico": null,
+   "fontes": [
+    "https://ultimatespecs.com/car-specs/Kia/130087/Kia-Sportage-2022-16-T-GDi-Plug-in-Hybrid-4WD.html",
+    "https://www.kia.com/ie/new-cars/all-new-sportage/specifications/"
+   ],
+   "verificado": "2026-11-25"
+  },
+  {
+   "marca": "Volkswagen",
+   "modelo": "T-Roc (1.ª geração)",
+   "ano": "2018–2025",
+   "versao": "1.0 / 1.5 TSI (gasolina)",
+   "tipo": "combustivel",
+   "combustivel": 3201,
+   "deposito": 50,
+   "bateria": null,
+   "bateriaTipo": null,
+   "fichas": [],
+   "acKw": null,
+   "dcKw": null,
+   "consumo": null,
+   "consumoEletrico": null,
+   "fontes": [
+    "https://www.autoexpress.co.uk/volkswagen/t-roc/prices-specs/107772/1.0-tsi-115-style-design-5dr",
+    "https://www.topgear.com/car-reviews/99779/VOLKSWAGEN/T-ROC%20HATCHBACK/1.5%20TSI%20Style%205dr/spec"
+   ],
+   "verificado": "2026-11-25"
+  },
+  {
+   "marca": "Volkswagen",
+   "modelo": "T-Cross",
+   "ano": "2019–2025",
+   "versao": "1.0 TSI (gasolina)",
+   "tipo": "combustivel",
+   "combustivel": 3201,
+   "deposito": 40,
+   "bateria": null,
+   "bateriaTipo": null,
+   "fichas": [],
+   "acKw": null,
+   "dcKw": null,
+   "consumo": null,
+   "consumoEletrico": null,
+   "fontes": [
+    "https://www.auto-data.net/en/volkswagen-t-cross-facelift-2023-1.0-tsi-115hp-50253",
+    "https://www.vw.co.za/idhub/content/dam/onehub_pkw/importers/za/brochures/pv/VW-Spec-sheet-T-Cross-2025.pdf"
+   ],
+   "verificado": "2026-11-25"
+  },
+  {
+   "marca": "Volkswagen",
+   "modelo": "Taigo",
+   "ano": "2021–2025",
+   "versao": "1.0 TSI (gasolina)",
+   "tipo": "combustivel",
+   "combustivel": 3201,
+   "deposito": 40,
+   "bateria": null,
+   "bateriaTipo": null,
+   "fichas": [],
+   "acKw": null,
+   "dcKw": null,
+   "consumo": null,
+   "consumoEletrico": null,
+   "fontes": [
+    "https://auto-data.net/en/volkswagen-taigo-1.0-tsi-116hp-dsg-51819",
+    "https://www.parkers.co.uk/volkswagen/taigo/suv-2022/10-tsi-115-life-5dr/specs/"
+   ],
+   "verificado": "2026-11-25"
+  },
+  {
+   "marca": "Ford",
+   "modelo": "Puma",
+   "ano": "2019–2025",
+   "versao": "1.0 EcoBoost Hybrid mHEV (gasolina)",
+   "tipo": "combustivel",
+   "combustivel": 3201,
+   "deposito": 42,
+   "bateria": null,
+   "bateriaTipo": null,
+   "fichas": [],
+   "acKw": null,
+   "dcKw": null,
+   "consumo": null,
+   "consumoEletrico": null,
+   "fontes": [
+    "https://www.autoexpress.co.uk/ford/puma/prices-specs/97423/1.0-ecoboost-hybr-mhev-155-st-line-vignale-5dr-dct",
+    "https://www.topgear.com/car-reviews/ford/10-ecoboost-hybrid-mhev-st-line-x-first-ed-5dr/spec"
+   ],
+   "verificado": "2026-11-25",
+   "nota": "Uma das fontes indica 45 L."
+  },
+  {
+   "marca": "Ford",
+   "modelo": "Focus (4.ª geração)",
+   "ano": "2018–2025",
+   "versao": "1.0 EcoBoost (gasolina)",
+   "tipo": "combustivel",
+   "combustivel": 3201,
+   "deposito": 52,
+   "bateria": null,
+   "bateriaTipo": null,
+   "fichas": [],
+   "acKw": null,
+   "dcKw": null,
+   "consumo": null,
+   "consumoEletrico": null,
+   "fontes": [
+    "https://www.autoevolution.com/pdf/news_attachements/ford-focus-facelift-unveiled-gets-new-tech-and-48v-hybrids-171700.pdf"
+   ],
+   "verificado": "2026-11-25"
+  },
+  {
+   "marca": "Ford",
+   "modelo": "Focus (4.ª geração)",
+   "ano": "2018–2025",
+   "versao": "1.5 EcoBlue (gasóleo)",
+   "tipo": "combustivel",
+   "combustivel": 2101,
+   "deposito": 47,
+   "bateria": null,
+   "bateriaTipo": null,
+   "fichas": [],
+   "acKw": null,
+   "dcKw": null,
+   "consumo": null,
+   "consumoEletrico": null,
+   "fontes": [
+    "https://www.parkers.co.uk/ford/focus/hatchback-2018/engine-15-ecoblue-(115ps)-diesel/specs/",
+    "https://www.encycarpedia.com/ford/18-focus-1-5-ecoblue-120-hatch"
+   ],
+   "verificado": "2026-11-25"
+  },
+  {
+   "marca": "Fiat",
+   "modelo": "500",
+   "ano": "2020–2024",
+   "versao": "1.0 Hybrid (gasolina)",
+   "tipo": "combustivel",
+   "combustivel": 3201,
+   "deposito": 35,
+   "bateria": null,
+   "bateriaTipo": null,
+   "fichas": [],
+   "acKw": null,
+   "dcKw": null,
+   "consumo": null,
+   "consumoEletrico": null,
+   "fontes": [
+    "https://www.topgear.com/car-reviews/fiat/10-mild-hybrid-2dr/spec",
+    "https://www.encycarpedia.com/fiat/20-500-1-0-hybrid-hatch"
+   ],
+   "verificado": "2026-11-25",
+   "nota": "O 500 Hybrid de 2025 em diante tem 37 L."
+  },
+  {
+   "marca": "Fiat",
+   "modelo": "Panda (3.ª geração)",
+   "ano": "2020–2025",
+   "versao": "1.0 Hybrid (gasolina)",
+   "tipo": "combustivel",
+   "combustivel": 3201,
+   "deposito": 38,
+   "bateria": null,
+   "bateriaTipo": null,
+   "fichas": [],
+   "acKw": null,
+   "dcKw": null,
+   "consumo": null,
+   "consumoEletrico": null,
+   "fontes": [
+    "https://www.topgear.com/car-reviews/fiat/panda/10-mild-hybrid-5dr/spec",
+    "https://cars-data.com/en/fiat/panda/2020/1-0-hybrid-red--104997/specs"
+   ],
+   "verificado": "2026-11-25"
+  },
+  {
+   "marca": "Jeep",
+   "modelo": "Avenger",
+   "ano": "2023–2025",
+   "versao": "1.2 Turbo / e-Hybrid (gasolina)",
+   "tipo": "combustivel",
+   "combustivel": 3201,
+   "deposito": 44,
+   "bateria": null,
+   "bateriaTipo": null,
+   "fichas": [],
+   "acKw": null,
+   "dcKw": null,
+   "consumo": null,
+   "consumoEletrico": null,
+   "fontes": [
+    "https://www.auto-data.net/en/jeep-avenger-1.2-gse-t3-100hp-49064",
+    "https://www.ultimatespecs.com/car-specs/Jeep/136360/Jeep-Avenger-12-GSE-T3.html"
+   ],
+   "verificado": "2026-11-25"
+  },
+  {
+   "marca": "Škoda",
+   "modelo": "Octavia (4.ª geração)",
+   "ano": "2020–2025",
+   "versao": "1.5 TSI (gasolina)",
+   "tipo": "combustivel",
+   "combustivel": 3201,
+   "deposito": 45,
+   "bateria": null,
+   "bateriaTipo": null,
+   "fichas": [],
+   "acKw": null,
+   "dcKw": null,
+   "consumo": null,
+   "consumoEletrico": null,
+   "fontes": [
+    "https://auto-data.net/en/skoda-octavia-iv-facelift-2024-1.5-tsi-116hp-51305"
+   ],
+   "verificado": "2026-11-25"
+  },
+  {
+   "marca": "Škoda",
+   "modelo": "Octavia (4.ª geração)",
+   "ano": "2020–2025",
+   "versao": "2.0 TDI (gasóleo)",
+   "tipo": "combustivel",
+   "combustivel": 2101,
+   "deposito": 45,
+   "bateria": null,
+   "bateriaTipo": null,
+   "fichas": [],
+   "acKw": null,
+   "dcKw": null,
+   "consumo": null,
+   "consumoEletrico": null,
+   "fontes": [
+    "https://www.auto-data.net/en/skoda-octavia-iv-facelift-2024-2.0-tdi-115hp-52154",
+    "https://www.auto-data.net/en/compare&carId1=38008&carId2=&carId3="
+   ],
+   "verificado": "2026-11-25"
+  },
+  {
+   "marca": "BMW",
+   "modelo": "Série 1 (F40)",
+   "ano": "2019–2024",
+   "versao": "118i (gasolina)",
+   "tipo": "combustivel",
+   "combustivel": 3201,
+   "deposito": 42,
+   "bateria": null,
+   "bateriaTipo": null,
+   "fichas": [],
+   "acKw": null,
+   "dcKw": null,
+   "consumo": null,
+   "consumoEletrico": null,
+   "fontes": [
+    "https://www.auto-abc.eu/bmw-1-serija/v14180-2019",
+    "https://www.auto-data.net/en/bmw-1-series-hatchback-f40-118i-136hp-42483"
+   ],
+   "verificado": "2026-11-25"
+  },
+  {
+   "marca": "BMW",
+   "modelo": "Série 1 (F40)",
+   "ano": "2019–2024",
+   "versao": "116d (gasóleo)",
+   "tipo": "combustivel",
+   "combustivel": 2101,
+   "deposito": 42,
+   "bateria": null,
+   "bateriaTipo": null,
+   "fichas": [],
+   "acKw": null,
+   "dcKw": null,
+   "consumo": null,
+   "consumoEletrico": null,
+   "fontes": [
+    "https://www.auto-abc.eu/bmw-1-serija/v14176-2019",
+    "https://press.bmwgroup.com/global/article/attachment/T0327030EN/473056"
+   ],
+   "verificado": "2026-11-25"
+  },
+  {
+   "marca": "BMW",
+   "modelo": "X1 (U11)",
+   "ano": "2022–2025",
+   "versao": "sDrive18i (gasolina)",
+   "tipo": "combustivel",
+   "combustivel": 3201,
+   "deposito": 45,
+   "bateria": null,
+   "bateriaTipo": null,
+   "fichas": [],
+   "acKw": null,
+   "dcKw": null,
+   "consumo": null,
+   "consumoEletrico": null,
+   "fontes": [
+    "https://bmw.co.id/en/all-models/x-series/X1/2022/bmw-X1-technical-data.html"
+   ],
+   "verificado": "2026-11-25"
+  },
+  {
+   "marca": "BMW",
+   "modelo": "X1 (U11)",
+   "ano": "2022–2025",
+   "versao": "xDrive25e / xDrive30e (PHEV)",
+   "tipo": "hibrido",
+   "combustivel": 3201,
+   "deposito": 47,
+   "bateria": 14.2,
+   "bateriaTipo": "útil",
+   "fichas": [
+    "Mennekes"
+   ],
+   "acKw": 11,
+   "dcKw": null,
+   "consumo": null,
+   "consumoEletrico": null,
+   "fontes": [
+    "https://www.topgear.com/car-reviews/bmw/xdrive-25e-xline-5dr-auto/spec",
+    "https://www.bmw.co.uk/en/all-models/x-models/x1/bmw-x1-technical-data.html"
+   ],
+   "verificado": "2026-11-25",
+   "nota": "16,3 kWh brutos, 14,2 kWh úteis."
+  },
+  {
+   "marca": "BMW",
+   "modelo": "Série 2 Active Tourer (U06)",
+   "ano": "2022–2025",
+   "versao": "225e xDrive (PHEV)",
+   "tipo": "hibrido",
+   "combustivel": 3201,
+   "deposito": 47,
+   "bateria": 14.2,
+   "bateriaTipo": "útil",
+   "fichas": [
+    "Mennekes"
+   ],
+   "acKw": 7.4,
+   "dcKw": null,
+   "consumo": null,
+   "consumoEletrico": null,
+   "fontes": [
+    "https://www.bmw.co.nz/en/all-models/2-series/activetourer/2021/bmw-2-series-active-tourer-technical-data.html",
+    "https://cararac.com/spec/bmw/2-series/2-series-active-tourer-u06/"
+   ],
+   "verificado": "2026-11-25",
+   "nota": "Algumas versões aceitam 11 kW em AC."
+  },
+  {
+   "marca": "BMW",
+   "modelo": "Série 5 (G60) 530e",
+   "ano": "2024–2025",
+   "versao": "530e Berlina (PHEV, 299 cv)",
+   "tipo": "hibrido",
+   "combustivel": 3201,
+   "deposito": 60,
+   "bateria": 19.4,
+   "bateriaTipo": "útil",
+   "fichas": [
+    "Mennekes"
+   ],
+   "acKw": 11,
+   "dcKw": null,
+   "consumo": null,
+   "consumoEletrico": null,
+   "fontes": [
+    "https://auto-data.net/en/bmw-5-series-sedan-g60-530e-299hp-plug-in-hybrid-xdrive-steptronic-52129",
+    "https://www.bmw.co.uk/en/all-models/5-series/saloon/bmw-5-series-saloon-phev-technical-data.html/bmw-530e-m-sport-pro-saloon/steptronic-transmission-with-gearshift-paddles.bmw"
+   ],
+   "verificado": "2026-11-25",
+   "nota": "22,1 kWh brutos, 19,4 kWh úteis."
+  },
+  {
+   "marca": "Volvo",
+   "modelo": "XC40",
+   "ano": "2021–2025",
+   "versao": "B3 / B4 Mild Hybrid (gasolina)",
+   "tipo": "combustivel",
+   "combustivel": 3201,
+   "deposito": 54,
+   "bateria": null,
+   "bateriaTipo": null,
+   "fichas": [],
+   "acKw": null,
+   "dcKw": null,
+   "consumo": null,
+   "consumoEletrico": null,
+   "fontes": [
+    "https://www.volvocars.com/intl/cars/xc40/specifications/"
+   ],
+   "verificado": "2026-11-25"
+  },
+  {
+   "marca": "Volvo",
+   "modelo": "XC40",
+   "ano": "2019–2024",
+   "versao": "T5 Recharge (PHEV)",
+   "tipo": "hibrido",
+   "combustivel": 3201,
+   "deposito": 48,
+   "bateria": 8.5,
+   "bateriaTipo": "útil",
+   "fichas": [
+    "Mennekes"
+   ],
+   "acKw": null,
+   "dcKw": null,
+   "consumo": null,
+   "consumoEletrico": null,
+   "fontes": [
+    "https://www.auto-data.net/en/volvo-xc40-1.5-recharge-plug-in-hybrid-t5-262hp-dcth-37835",
+    "https://www.encycarpedia.com/volvo/21-xc40-t5-recharge-suv"
+   ],
+   "verificado": "2026-11-25",
+   "nota": "10,7 kWh brutos, 8,5 kWh úteis."
+  },
+  {
+   "marca": "Volvo",
+   "modelo": "XC60",
+   "ano": "2022–2025",
+   "versao": "T6 / T8 Recharge (PHEV)",
+   "tipo": "hibrido",
+   "combustivel": 3201,
+   "deposito": 71,
+   "bateria": null,
+   "bateriaTipo": null,
+   "fichas": [
+    "Mennekes"
+   ],
+   "acKw": null,
+   "dcKw": null,
+   "consumo": null,
+   "consumoEletrico": null,
+   "fontes": [
+    "https://volvocars.com/ie/cars/xc60-hybrid",
+    "https://www.volvocars.com/uk/cars/xc60-hybrid/"
+   ],
+   "verificado": "2026-11-25",
+   "nota": "A capacidade da bateria não foi confirmada nas fontes."
+  },
+  {
+   "marca": "Audi",
+   "modelo": "A3 (8Y)",
+   "ano": "2020–2025",
+   "versao": "30 TFSI (gasolina)",
+   "tipo": "combustivel",
+   "combustivel": 3201,
+   "deposito": 45,
+   "bateria": null,
+   "bateriaTipo": null,
+   "fichas": [],
+   "acKw": null,
+   "dcKw": null,
+   "consumo": null,
+   "consumoEletrico": null,
+   "fontes": [
+    "https://ultimatespecs.com/car-specs/Audi/121167/Audi-A3-(8Y)-Sportback-30-TFSI-Auto.html",
+    "https://www.auto-data.net/en/audi-a3-sportback-8y-30-tfsi-110hp-40104"
+   ],
+   "verificado": "2026-11-25"
+  },
+  {
+   "marca": "Audi",
+   "modelo": "A3 (8Y)",
+   "ano": "2020–2025",
+   "versao": "35 TFSI (gasolina)",
+   "tipo": "combustivel",
+   "combustivel": 3201,
+   "deposito": 50,
+   "bateria": null,
+   "bateriaTipo": null,
+   "fichas": [],
+   "acKw": null,
+   "dcKw": null,
+   "consumo": null,
+   "consumoEletrico": null,
+   "fontes": [
+    "https://www.auto-abc.eu/audi-a3/v13996-2020"
+   ],
+   "verificado": "2026-11-25"
+  },
+  {
+   "marca": "Audi",
+   "modelo": "A3 (8Y)",
+   "ano": "2020–2024",
+   "versao": "40 TFSI e (PHEV)",
+   "tipo": "hibrido",
+   "combustivel": 3201,
+   "deposito": 40,
+   "bateria": 13.0,
+   "bateriaTipo": "bruta",
+   "fichas": [
+    "Mennekes"
+   ],
+   "acKw": 2.9,
+   "dcKw": null,
+   "consumo": null,
+   "consumoEletrico": null,
+   "fontes": [
+    "https://www.parkers.co.uk/audi/a3/sportback-2020/40-tfsi-e-sport-5dr-s-tronic/specs/",
+    "https://www.audi-technology-portal.de/en/drivetrain/hybrid-technologies/audi-a3-sportback-40-tfsi-e-drive"
+   ],
+   "verificado": "2026-11-25"
+  }
+ ],
+ "fonteRanking": "Modelos mais vendidos em Portugal (ACAP 2024, via autto.pt e Forbes Portugal; top 10 de 2025 via ECO)."
 }
