@@ -42,7 +42,10 @@ h1 span{color:var(--accent)}
 .note{font-size:.82rem;color:var(--muted);background:var(--accent-soft);border-radius:6px;padding:8px 12px;max-width:52ch;margin:0}
 .note a{color:var(--accent)}
 .controls{display:grid;gap:10px}
-.search{font:inherit;padding:10px 12px;border:1px solid var(--line);border-radius:6px;background:var(--surface);color:var(--fg);width:100%}
+.row{display:flex;flex-wrap:wrap;gap:10px}
+.search,.scope{font:inherit;padding:10px 12px;border:1px solid var(--line);border-radius:6px;background:var(--surface);color:var(--fg)}
+.search{flex:1 1 260px;min-width:0}
+.scope{flex:0 1 260px;font-weight:600}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .chips{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
 .chips .lbl{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-right:4px;min-width:84px}
@@ -105,14 +108,18 @@ h1 span{color:var(--accent)}
   <nav class="tabs" aria-label="Secções"><a href="./"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 21V5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v16"/><path d="M3 21h12"/><path d="M7 7h4v4H7z"/><path d="M14 10h2a2 2 0 0 1 2 2v4a1.5 1.5 0 0 0 3 0V8l-3-3"/></svg>Combustíveis</a><a href="carregadores.html" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg>Carregadores elétricos</a></nav>
   <header>
     <div>
-      <h1>Carregadores <span>elétricos</span></h1>
+      <h1 id="h1">Carregadores em <span>Portugal</span></h1>
       <p class="sub">Postos de carregamento da rede MOBI.E em Portugal, com o tipo de ficha, a potência e se estão livres agora.</p>
     </div>
     <p class="note">Fonte: <a href="https://www.mobie.pt/mapa-de-postos" target="_blank" rel="noopener">MOBI.E</a>. <span id="srcinfo">A carregar…</span> O estado atualiza-se sozinho a cada minuto.</p>
   </header>
 
   <section class="controls" aria-label="Filtros">
-    <input id="q" class="search" type="search" placeholder="Procurar por concelho, morada, operador ou código do posto (ex.: Porto, Galp, PRT-00123)…" autocomplete="off">
+    <div class="row">
+      <select id="scope" class="scope" aria-label="Zona"></select>
+      <input id="q" class="search" type="search" placeholder="Procurar por morada, operador ou código do posto (ex.: Galp, PRT-00123)…" autocomplete="off">
+    </div>
+    <div class="chips" id="concs" hidden><span class="lbl">Concelho</span></div>
     <div class="chips" id="fConn"><span class="lbl">Ficha</span></div>
     <div class="chips" id="fPow"><span class="lbl">Potência</span></div>
     <div class="chips" id="fState"><span class="lbl">Estado</span></div>
@@ -138,6 +145,26 @@ h1 span{color:var(--accent)}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/leaflet.markercluster.js"></script>
 <script>
 const PROXY="https://mobie-proxy.bhcsantos.workers.dev";
+/* Concelhos: distrito ou região e centro aproximado (média das coordenadas dos postos de combustível da DGEG; ilhas a partir dos carregadores) */
+const AREAS={"Vale de Cambra":["Aveiro",40.8406,-8.3972],"Vagos":["Aveiro",40.5217,-8.6841],"Sever do Vouga":["Aveiro",40.7354,-8.3593],"São João da Madeira":["Aveiro",40.8967,-8.4864],"Santa Maria da Feira":["Aveiro",40.9646,-8.5291],"Ovar":["Aveiro",40.8967,-8.6078],"Oliveira do Bairro":["Aveiro",40.5182,-8.5322],"Oliveira de Azeméis":["Aveiro",40.858,-8.4766],"Murtosa":["Aveiro",40.7651,-8.6589],"Mealhada":["Aveiro",40.3585,-8.4469],"Ílhavo":["Aveiro",40.6175,-8.699],"Estarreja":["Aveiro",40.7681,-8.567],"Espinho":["Aveiro",41.0048,-8.6288],"Castelo de Paiva":["Aveiro",41.0386,-8.3178],"Aveiro":["Aveiro",40.6394,-8.6234],"Arouca":["Aveiro",40.9392,-8.2821],"Anadia":["Aveiro",40.447,-8.4788],"Albergaria-a-Velha":["Aveiro",40.7082,-8.487],"Águeda":["Aveiro",40.5701,-8.4557],"Vidigueira":["Beja",38.2085,-7.8015],"Serpa":["Beja",37.942,-7.5188],"Ourique":["Beja",37.6425,-8.2343],"Odemira":["Beja",37.6346,-8.6085],"Moura":["Beja",38.1475,-7.3574],"Mértola":["Beja",37.7168,-7.7545],"Ferreira do Alentejo":["Beja",38.0677,-8.1377],"Cuba":["Beja",38.1645,-7.8937],"Castro Verde":["Beja",37.7,-8.056],"Beja":["Beja",38.0062,-7.8564],"Barrancos":["Beja",38.1343,-6.9799],"Alvito":["Beja",38.2894,-8.0375],"Almodôvar":["Beja",37.511,-8.1117],"Aljustrel":["Beja",37.8859,-8.1946],"Vizela":["Braga",41.3799,-8.3067],"Vila Verde":["Braga",41.6427,-8.4706],"Vila Nova de Famalicão":["Braga",41.3999,-8.5039],"Vieira do Minho":["Braga",41.6425,-8.1267],"Terras de Bouro":["Braga",41.6985,-8.2402],"Póvoa de Lanhoso":["Braga",41.5776,-8.2669],"Guimarães":["Braga",41.4428,-8.3299],"Fafe":["Braga",41.4464,-8.1752],"Esposende":["Braga",41.5394,-8.7692],"Celorico de Basto":["Braga",41.4,-8.0229],"Cabeceiras de Basto":["Braga",41.4995,-7.9757],"Braga":["Braga",41.545,-8.4281],"Barcelos":["Braga",41.5234,-8.6194],"Amares":["Braga",41.6314,-8.3515],"Vinhais":["Bragança",41.7844,-7.0374],"Vimioso":["Bragança",41.6188,-6.5771],"Vila Flor":["Bragança",41.3115,-7.1647],"Torre de Moncorvo":["Bragança",41.1874,-7.0365],"Mogadouro":["Bragança",41.3481,-6.6656],"Mirandela":["Bragança",41.5039,-7.1992],"Miranda do Douro":["Bragança",41.4715,-6.3502],"Macedo de Cavaleiros":["Bragança",41.5363,-6.9351],"Freixo de Espada à Cinta":["Bragança",41.0882,-6.8085],"Carrazeda de Ansiães":["Bragança",41.2597,-7.2976],"Bragança":["Bragança",41.77,-6.7686],"Alfândega da Fé":["Bragança",41.3391,-6.9643],"Vila Velha de Ródão":["Castelo Branco",39.639,-7.7105],"Vila de Rei":["Castelo Branco",39.6787,-8.1424],"Sertã":["Castelo Branco",39.8171,-8.1347],"Proença-a-Nova":["Castelo Branco",39.7673,-7.8697],"Penamacor":["Castelo Branco",40.1582,-7.2146],"Oleiros":["Castelo Branco",39.9591,-7.8556],"Idanha-a-Nova":["Castelo Branco",39.937,-7.1929],"Fundão":["Castelo Branco",40.1533,-7.4876],"Covilhã":["Castelo Branco",40.2556,-7.5279],"Castelo Branco":["Castelo Branco",39.8475,-7.5149],"Belmonte":["Castelo Branco",40.3418,-7.3532],"Vila Nova de Poiares":["Coimbra",40.1991,-8.2524],"Tábua":["Coimbra",40.3545,-8.0168],"Soure":["Coimbra",40.0864,-8.6423],"Penela":["Coimbra",40.0208,-8.3794],"Penacova":["Coimbra",40.2879,-8.2718],"Pampilhosa da Serra":["Coimbra",40.0708,-7.879],"Oliveira do Hospital":["Coimbra",40.3705,-7.8581],"Montemor-o-Velho":["Coimbra",40.2127,-8.6536],"Miranda do Corvo":["Coimbra",40.1024,-8.3268],"Mira":["Coimbra",40.4266,-8.7349],"Lousã":["Coimbra",40.1202,-8.2577],"Góis":["Coimbra",40.1558,-8.1216],"Figueira da Foz":["Coimbra",40.1652,-8.8198],"Condeixa-a-Nova":["Coimbra",40.1137,-8.5031],"Coimbra":["Coimbra",40.2072,-8.4411],"Cantanhede":["Coimbra",40.3454,-8.634],"Arganil":["Coimbra",40.2409,-8.036],"Vila Viçosa":["Évora",38.7785,-7.423],"Viana do Alentejo":["Évora",38.3667,-8.056],"Vendas Novas":["Évora",38.6637,-8.5076],"Reguengos de Monsaraz":["Évora",38.4248,-7.5442],"Redondo":["Évora",38.6496,-7.549],"Portel":["Évora",38.2793,-7.66],"Mourão":["Évora",38.3817,-7.3345],"Mora":["Évora",38.9232,-8.1004],"Montemor-o-Novo":["Évora",38.6539,-8.2177],"Évora":["Évora",38.5465,-7.9017],"Estremoz":["Évora",38.8291,-7.6148],"Borba":["Évora",38.7999,-7.4658],"Arraiolos":["Évora",38.7665,-7.9034],"Alandroal":["Évora",38.5836,-7.4418],"Vila Real de Santo António":["Faro",37.1863,-7.4619],"Vila do Bispo":["Faro",37.0343,-8.9203],"Tavira":["Faro",37.1377,-7.6762],"Silves":["Faro",37.1925,-8.3361],"São Brás de Alportel":["Faro",37.1515,-7.9007],"Portimão":["Faro",37.147,-8.5525],"Olhão":["Faro",37.0582,-7.8061],"Monchique":["Faro",37.3115,-8.5838],"Loulé":["Faro",37.13,-8.078],"Lagos":["Faro",37.1153,-8.6812],"Lagoa":["Faro",37.1355,-8.4559],"Faro":["Faro",37.046,-7.9329],"Castro Marim":["Faro",37.2417,-7.4845],"Aljezur":["Faro",37.3594,-8.7889],"Alcoutim":["Faro",37.4396,-7.6609],"Albufeira":["Faro",37.1128,-8.2436],"Vila Nova de Foz Côa":["Guarda",41.0671,-7.197],"Trancoso":["Guarda",40.7556,-7.3382],"Seia":["Guarda",40.4159,-7.7171],"Sabugal":["Guarda",40.39,-7.0022],"Pinhel":["Guarda",40.752,-7.1035],"Meda":["Guarda",40.9617,-7.2594],"Manteigas":["Guarda",40.3985,-7.5404],"Guarda":["Guarda",40.5366,-7.2426],"Gouveia":["Guarda",40.5101,-7.6151],"Fornos de Algodres":["Guarda",40.6142,-7.5332],"Figueira de Castelo Rodrigo":["Guarda",40.8842,-6.9645],"Celorico da Beira":["Guarda",40.6317,-7.3876],"Almeida":["Guarda",40.6413,-6.9148],"Aguiar da Beira":["Guarda",40.8057,-7.5374],"Porto de Mós":["Leiria",39.5775,-8.8313],"Pombal":["Leiria",39.9255,-8.6696],"Peniche":["Leiria",39.3402,-9.3296],"Pedrógão Grande":["Leiria",39.9287,-8.1657],"Óbidos":["Leiria",39.3695,-9.1478],"Nazaré":["Leiria",39.5951,-9.048],"Marinha Grande":["Leiria",39.7708,-8.9231],"Leiria":["Leiria",39.7744,-8.79],"Figueiró dos Vinhos":["Leiria",39.9002,-8.3006],"Castanheira de Pêra":["Leiria",40.0044,-8.2104],"Caldas da Rainha":["Leiria",39.4037,-9.1156],"Bombarral":["Leiria",39.2715,-9.1646],"Batalha":["Leiria",39.6461,-8.7998],"Ansião":["Leiria",39.9278,-8.4341],"Alvaiázere":["Leiria",39.8307,-8.3643],"Alcobaça":["Leiria",39.5421,-8.9936],"Vila Franca de Xira":["Lisboa",38.9216,-9.0214],"Torres Vedras":["Lisboa",39.1107,-9.2729],"Sobral de Monte Agraço":["Lisboa",39.0101,-9.1603],"Sintra":["Lisboa",38.8013,-9.3476],"Oeiras":["Lisboa",38.7126,-9.2731],"Odivelas":["Lisboa",38.7955,-9.1967],"Mafra":["Lisboa",38.9537,-9.3081],"Lourinhã":["Lisboa",39.2384,-9.2955],"Loures":["Lisboa",38.8338,-9.1402],"Lisboa":["Lisboa",38.7455,-9.1541],"Cascais":["Lisboa",38.7126,-9.3912],"Cadaval":["Lisboa",39.242,-9.084],"Azambuja":["Lisboa",39.1152,-8.9068],"Arruda dos Vinhos":["Lisboa",38.9744,-9.0963],"Amadora":["Lisboa",38.7553,-9.2239],"Alenquer":["Lisboa",39.0771,-9.0165],"Sousel":["Portalegre",38.9553,-7.7353],"Portalegre":["Portalegre",39.2736,-7.4222],"Ponte de Sor":["Portalegre",39.2015,-8.0604],"Nisa":["Portalegre",39.51,-7.6446],"Monforte":["Portalegre",38.9729,-7.4285],"Marvão":["Portalegre",39.4127,-7.3465],"Gavião":["Portalegre",39.4653,-7.937],"Fronteira":["Portalegre",39.099,-7.6229],"Elvas":["Portalegre",38.8949,-7.1431],"Crato":["Portalegre",39.2991,-7.6453],"Castelo de Vide":["Portalegre",39.4226,-7.4742],"Campo Maior":["Portalegre",39.0159,-7.0714],"Avis":["Portalegre",39.052,-7.8843],"Arronches":["Portalegre",39.1221,-7.2837],"Alter do Chão":["Portalegre",39.2059,-7.6992],"Vila Nova de Gaia":["Porto",41.0888,-8.6008],"Vila do Conde":["Porto",41.3305,-8.7066],"Valongo":["Porto",41.2091,-8.5168],"Trofa":["Porto",41.3189,-8.5621],"Santo Tirso":["Porto",41.3428,-8.4481],"Póvoa de Varzim":["Porto",41.4076,-8.7306],"Porto":["Porto",41.1643,-8.6181],"Penafiel":["Porto",41.1797,-8.2779],"Paredes":["Porto",41.2065,-8.3817],"Paços de Ferreira":["Porto",41.2812,-8.3778],"Matosinhos":["Porto",41.2022,-8.6647],"Marco de Canaveses":["Porto",41.1571,-8.1678],"Maia":["Porto",41.2354,-8.6085],"Lousada":["Porto",41.282,-8.2623],"Gondomar":["Porto",41.1427,-8.5231],"Felgueiras":["Porto",41.3497,-8.1954],"Baião":["Porto",41.1481,-8.0186],"Amarante":["Porto",41.2776,-8.1068],"Vila Nova da Barquinha":["Santarém",39.4602,-8.4403],"Torres Novas":["Santarém",39.4674,-8.5536],"Tomar":["Santarém",39.6109,-8.4082],"Sardoal":["Santarém",39.5258,-8.1562],"Santarém":["Santarém",39.3114,-8.7158],"Salvaterra de Magos":["Santarém",39.0431,-8.722],"Rio Maior":["Santarém",39.3228,-8.9055],"Ourém":["Santarém",39.6695,-8.5964],"Mação":["Santarém",39.6124,-7.96],"Golegã":["Santarém",39.4094,-8.4875],"Ferreira do Zêzere":["Santarém",39.7354,-8.305],"Entroncamento":["Santarém",39.4686,-8.4798],"Coruche":["Santarém",38.9435,-8.5169],"Constância":["Santarém",39.4794,-8.314],"Chamusca":["Santarém",39.3491,-8.4554],"Cartaxo":["Santarém",39.1471,-8.8],"Benavente":["Santarém",38.9395,-8.8369],"Alpiarça":["Santarém",39.2646,-8.5755],"Almeirim":["Santarém",39.1739,-8.6164],"Alcanena":["Santarém",39.4855,-8.6792],"Abrantes":["Santarém",39.4686,-8.181],"Sines":["Setúbal",37.9617,-8.8576],"Setúbal":["Setúbal",38.5341,-8.8883],"Sesimbra":["Setúbal",38.4995,-9.0963],"Seixal":["Setúbal",38.6116,-9.1093],"Santiago do Cacém":["Setúbal",37.9824,-8.6361],"Palmela":["Setúbal",38.5939,-8.8801],"Montijo":["Setúbal",38.7016,-8.8529],"Moita":["Setúbal",38.6488,-9.0033],"Grândola":["Setúbal",38.1919,-8.5753],"Barreiro":["Setúbal",38.6308,-9.0522],"Almada":["Setúbal",38.649,-9.1818],"Alcochete":["Setúbal",38.738,-8.9527],"Alcácer do Sal":["Setúbal",38.3845,-8.5312],"Vila Nova de Cerveira":["Viana do Castelo",41.9252,-8.7298],"Viana do Castelo":["Viana do Castelo",41.6885,-8.7847],"Valença":["Viana do Castelo",42.0095,-8.6404],"Ponte de Lima":["Viana do Castelo",41.7575,-8.5806],"Ponte da Barca":["Viana do Castelo",41.7953,-8.4134],"Paredes de Coura":["Viana do Castelo",41.918,-8.5846],"Monção":["Viana do Castelo",42.0634,-8.4865],"Melgaço":["Viana do Castelo",42.0878,-8.2363],"Caminha":["Viana do Castelo",41.8578,-8.8365],"Arcos de Valdevez":["Viana do Castelo",41.8446,-8.4221],"Vila Real":["Vila Real",41.305,-7.7355],"Vila Pouca de Aguiar":["Vila Real",41.4968,-7.6659],"Valpaços":["Vila Real",41.6236,-7.3452],"Santa Marta de Penaguião":["Vila Real",41.2207,-7.8063],"Sabrosa":["Vila Real",41.2655,-7.5971],"Ribeira de Pena":["Vila Real",41.5018,-7.8168],"Peso da Régua":["Vila Real",41.1644,-7.7961],"Murça":["Vila Real",41.39,-7.4257],"Montalegre":["Vila Real",41.7932,-7.8225],"Mondim de Basto":["Vila Real",41.4172,-7.9361],"Mesão Frio":["Vila Real",41.1592,-7.8904],"Chaves":["Vila Real",41.7274,-7.476],"Boticas":["Vila Real",41.6855,-7.676],"Alijó":["Vila Real",41.2667,-7.4943],"Vouzela":["Viseu",40.6912,-8.1744],"Viseu":["Viseu",40.6694,-7.9026],"Vila Nova de Paiva":["Viseu",40.858,-7.7323],"Tondela":["Viseu",40.5465,-8.0819],"Tarouca":["Viseu",41.0298,-7.7703],"Tabuaço":["Viseu",41.0726,-7.5623],"Sernancelhe":["Viseu",40.8972,-7.4832],"Sátão":["Viseu",40.7423,-7.7269],"São Pedro do Sul":["Viseu",40.7821,-8.0548],"São João da Pesqueira":["Viseu",41.1175,-7.4378],"Santa Comba Dão":["Viseu",40.3844,-8.136],"Resende":["Viseu",41.1092,-7.9477],"Penedono":["Viseu",41.0034,-7.4013],"Penalva do Castelo":["Viseu",40.6701,-7.7083],"Oliveira de Frades":["Viseu",40.7274,-8.206],"Nelas":["Viseu",40.5307,-7.8685],"Mortágua":["Viseu",40.4183,-8.2537],"Moimenta da Beira":["Viseu",40.9802,-7.6551],"Mangualde":["Viseu",40.6119,-7.7455],"Lamego":["Viseu",41.0892,-7.8047],"Cinfães":["Viseu",41.0667,-8.136],"Castro Daire":["Viseu",40.91,-7.9406],"Carregal do Sal":["Viseu",40.4406,-7.9936],"Armamar":["Viseu",41.0905,-7.6754],"Câmara de Lobos":["Madeira",32.6563,-16.9801],"Funchal":["Madeira",32.6549,-16.9198],"Santa Cruz":["Madeira",32.6672,-16.8176],"Ponta Delgada":["Açores",37.7553,-25.6747],"Calheta (Madeira)":["Madeira",32.7252,-17.1865],"Vila Franca do Campo":["Açores",37.7176,-25.4448],"Angra do Heroísmo":["Açores",38.6592,-27.215],"Praia da Vitória":["Açores",38.7401,-27.0955],"Santana":["Madeira",32.8124,-16.8838],"Porto Santo":["Madeira",33.0562,-16.3437],"Machico":["Madeira",32.7308,-16.7725],"Porto Moniz":["Madeira",32.8612,-17.1847],"Ribeira Grande":["Açores",37.8156,-25.5364],"Horta":["Açores",38.5456,-28.6364],"Santa Cruz da Graciosa":["Açores",39.0809,-28.0078],"Calheta (Açores)":["Açores",38.6035,-27.9971],"Ribeira Brava":["Madeira",32.6771,-17.0599],"São Vicente":["Madeira",32.8094,-17.0313],"São Roque do Pico":["Açores",38.5253,-28.3191],"Nordeste":["Açores",37.8313,-25.1472],"Velas":["Açores",38.6829,-28.2055],"Vila do Porto":["Açores",36.9561,-25.1301],"Corvo":["Açores",39.6728,-31.1137],"Lajes do Pico":["Açores",38.3962,-28.2517],"Madalena":["Açores",38.5258,-28.5308],"Povoação":["Açores",37.7635,-25.2852],"Santa Cruz das Flores":["Açores",39.4545,-31.1301],"Lagoa (Açores)":["Açores",37.7407,-25.5649],"Ponta do Sol":["Madeira",32.6798,-17.0867],"Lajes das Flores":["Açores",39.379,-31.1814]};
+const REGIONS=["Aveiro","Beja","Braga","Bragança","Castelo Branco","Coimbra","Évora","Faro","Guarda","Leiria","Lisboa","Portalegre","Porto","Santarém","Setúbal","Viana do Castelo","Vila Real","Viseu"];
+const DPREP={Guarda:"da",Porto:"do"};
+const SCOPES=[...REGIONS.map(n=>[n,"Distrito "+(DPREP[n]||"de")+" "+n,"Carregadores do distrito "+(DPREP[n]||"de")+" <span>"+n+"</span>"]),
+  ["Açores","Região Autónoma dos Açores","Carregadores dos <span>Açores</span>"],["Madeira","Região Autónoma da Madeira","Carregadores da <span>Madeira</span>"],
+  ["pt","Portugal (todo o país)","Carregadores em <span>Portugal</span>"]];
+const CPREP={"Porto":"do","Maia":"da","Trofa":"da","Póvoa de Varzim":"da","Póvoa de Lanhoso":"da","Lousã":"da","Nazaré":"da","Figueira da Foz":"da","Amadora":"da","Guarda":"da","Golegã":"da","Mealhada":"da","Batalha":"da","Moita":"da","Marinha Grande":"da","Murtosa":"da","Sertã":"da","Chamusca":"da","Azambuja":"da","Lourinhã":"da","Mêda":"da","Covilhã":"da","Anadia":"da","Horta":"da","Madalena":"da","Calheta (Madeira)":"da","Calheta (Açores)":"da","Lagoa (Açores)":"da","Povoação":"da","Ribeira Grande":"da","Ribeira Brava":"da","Praia da Vitória":"da","Entroncamento":"do","Cartaxo":"do","Barreiro":"do","Seixal":"do","Montijo":"do","Bombarral":"do","Cadaval":"do","Crato":"do","Fundão":"do","Sabugal":"do","Redondo":"do","Alandroal":"do","Gavião":"do","Sardoal":"do","Alvito":"do","Peso da Régua":"do","Marco de Canaveses":"do","Funchal":"do","Corvo":"do","Nordeste":"do","Porto Santo":"do","Porto Moniz":"do","Corvo":"do"};
+const regionOf=lng=>lng<-20?"Açores":lng<-15?"Madeira":"C";
+const AREA_BY_NORM={};for(const[n,[d]]of Object.entries(AREAS)){const g=(d==="Açores"||d==="Madeira")?d:"C";AREA_BY_NORM[g+"|"+String(n).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase()]=n}
+/* Atribui o concelho: o nome da MOBI.E se for um concelho; senão, o concelho com o centro mais próximo */
+function assignArea(s){
+  const g=regionOf(s.lng); let base=String(s.municipality||"").split(",")[0].trim();
+  if(g!=="C"&&(base==="Calheta"||base==="Lagoa"))base=`${base} (${g})`;
+  const hit=AREA_BY_NORM[g+"|"+base.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase()];
+  let conc=hit;
+  if(!conc){let best=1e9;const c=Math.cos(s.lat*Math.PI/180);
+    for(const[n,[d,la,lo]]of Object.entries(AREAS)){const gg=(d==="Açores"||d==="Madeira")?d:"C";if(gg!==g)continue;const dd=(la-s.lat)**2+((lo-s.lng)*c)**2;if(dd<best){best=dd;conc=n}}}
+  s.conc=conc||"?"; s.dist=conc?AREAS[conc][0]:"?";
+}
 const STATE_LABEL={available:"Livre",inUse:"Ocupado",outOfService:"Fora de serviço",unknown:"Desconhecido"};
 const STATE_COLOR={available:"#1d8a4a",inUse:"#d97a00",outOfService:"#c0392b",unknown:"#8a94a3"};
 const CONN_LABEL={Mennekes:"Tipo 2 (Mennekes)",CCS:"CCS",CHAdeMO:"CHAdeMO",Industrial:"Industrial"};
@@ -167,6 +194,9 @@ let stations=[], live={}, liveAt=null;
 const f=store.get("ev-f",{conn:[],pow:0,free:false,ops:[]});
 const fConn=new Set(f.conn), fOps=new Set(f.ops); let fPow=f.pow, fFree=f.free;
 let sortBy="pow", shown=40, me=null, watchId=null, openId=null;
+let scope=store.get("ev-scope","pt"); if(!SCOPES.some(x=>x[0]===scope))scope="pt";
+const activeConc=new Set(scope==="pt"?[]:store.get("ev-conc",[]));
+const inArea=s=>(scope==="pt"||s.dist===scope)&&(!activeConc.size||activeConc.has(s.conc));
 const saveF=()=>store.set("ev-f",{conn:[...fConn],pow:fPow,free:fFree,ops:[...fOps]});
 
 /* Estado de uma tomada e de um posto */
@@ -205,7 +235,7 @@ map.on("moveend",()=>{shown=40;renderList()});
 function chip(box,label,on,fn,extra=""){const b=document.createElement("button");b.type="button";b.className="chip";b.setAttribute("aria-pressed",on);b.innerHTML=label+extra;b.onclick=fn;box.appendChild(b);return b}
 function buildFilters(){
   for(const id of ["fConn","fPow","fState","fOp"]) $(id).querySelectorAll(".chip").forEach(c=>c.remove());
-  const cc={};stations.forEach(s=>s.sockets.forEach(k=>{if(k.connector)cc[k.connector]=(cc[k.connector]||0)+1}));
+  const cc={};stations.filter(inArea).forEach(s=>s.sockets.forEach(k=>{if(k.connector)cc[k.connector]=(cc[k.connector]||0)+1}));
   Object.keys(cc).sort((a,b)=>cc[b]-cc[a]).forEach(c=>{
     const b=chip($("fConn"),`${connIcon(c)}<span class="t"><strong>${esc(CONN_LABEL[c]||c)} <small>${cc[c].toLocaleString("pt-PT")}</small></strong><span>${esc(CONN_HINT[c]||"")}</span></span>`,fConn.has(c),()=>{fConn.has(c)?fConn.delete(c):fConn.add(c);changed()});
     b.classList.add("conn"); b.title=`${CONN_LABEL[c]||c}: ${CONN_HINT[c]||""}`;
@@ -213,13 +243,36 @@ function buildFilters(){
   POWERS.forEach(([v,l])=>chip($("fPow"),l,fPow===v,()=>{fPow=v;changed()}));
   chip($("fState"),"Todos",!fFree,()=>{fFree=false;changed()});
   chip($("fState"),`<i style="display:inline-block;width:9px;height:9px;border-radius:50%;background:${STATE_COLOR.available}"></i>Só com tomada livre agora`,fFree,()=>{fFree=true;changed()});
-  const oc={};stations.forEach(s=>{if(s.operator)oc[s.operator]=(oc[s.operator]||0)+1});
+  const oc={};stations.filter(inArea).forEach(s=>{if(s.operator)oc[s.operator]=(oc[s.operator]||0)+1});
   Object.keys(oc).sort((a,b)=>oc[b]-oc[a]).slice(0,16).forEach(o=>chip($("fOp"),esc(o),fOps.has(o),()=>{fOps.has(o)?fOps.delete(o):fOps.add(o);changed()},` <small>${oc[o]}</small>`));
 }
 function changed(){saveF();buildFilters();shown=40;draw()}
+function updateTitle(){
+  let h=SCOPES.find(x=>x[0]===scope)[2];
+  const cs=[...activeConc].sort((a,b)=>a.localeCompare(b,"pt"));
+  if(cs.length===1)h=`Carregadores ${CPREP[cs[0]]||"de"} <span>${esc(cs[0])}</span>`;
+  else if(cs.length>1&&cs.length<=3)h=`Carregadores: <span>${cs.map(esc).join(", ")}</span>`;
+  else if(cs.length>3)h=`Carregadores em <span>${cs.length} concelhos</span>`;
+  $("h1").innerHTML=h;
+}
+function buildAreas(){
+  const box=$("concs"); box.querySelectorAll(".chip").forEach(c=>c.remove());
+  if(scope==="pt"){box.hidden=true;return}
+  const cc={};stations.filter(s=>s.dist===scope).forEach(s=>cc[s.conc]=(cc[s.conc]||0)+1);
+  for(const c of [...activeConc]) if(!cc[c]) activeConc.delete(c);
+  box.hidden=false;
+  chip(box,`Todos <small>${Object.values(cc).reduce((a,b)=>a+b,0)}</small>`,!activeConc.size,()=>{activeConc.clear();areaChanged()});
+  Object.keys(cc).sort((a,b)=>a.localeCompare(b,"pt")).forEach(c=>chip(box,`${esc(c)} <small>${cc[c]}</small>`,activeConc.has(c),()=>{activeConc.has(c)?activeConc.delete(c):activeConc.add(c);areaChanged()}));
+}
+function fitArea(){const a=stations.filter(inArea);if(!a.length)return;if(scope==="pt"&&!activeConc.size){map.setView([39.6,-8.0],7);return}map.fitBounds(L.latLngBounds(a.map(s=>[s.lat,s.lng])),{padding:[24,24],maxZoom:15})}
+function areaChanged(){store.set("ev-scope",scope);store.set("ev-conc",[...activeConc]);buildAreas();updateTitle();buildFilters();fitArea();shown=40;draw()}
+$("scope").innerHTML=SCOPES.map(([v,l])=>`<option value="${v}">${l}</option>`).join("");
+$("scope").value=scope;
+$("scope").onchange=()=>{scope=$("scope").value;activeConc.clear();fOps.clear();saveF();areaChanged()};
 function matches(s){
   const q=norm($("q").value.trim());
-  if(q&&!norm([s.name,s.address,s.municipality,s.operator].join(" ")).includes(q))return false;
+  if(q&&!norm([s.name,s.address,s.municipality,s.conc,s.operator].join(" ")).includes(q))return false;
+  if(!inArea(s))return false;
   if(fOps.size&&!fOps.has(s.operator))return false;
   const socks=relevantSockets(s); if(!socks.length)return false;
   if(fFree&&!socks.some(k=>sockState(k)==="available"))return false;
@@ -261,7 +314,7 @@ function renderList(){
   $("items").innerHTML=list.length?list.slice(0,shown).map(({s,socks,st,free})=>`
     <div class="item" data-sid="${esc(s.id)}">
       <div class="top"><div><h3>${esc(s.address||s.name)}</h3>
-        <span class="addr">${me?`<span class="dist">${km(distKm(me,s))}</span> · `:""}${esc(s.municipality||"")} · ${esc(s.operator||"")} · <span style="font-family:var(--mono)">${esc(s.name)}</span></span></div>
+        <span class="addr">${me?`<span class="dist">${km(distKm(me,s))}</span> · `:""}${esc(s.conc)} · ${esc(s.operator||"")} · <span style="font-family:var(--mono)">${esc(s.name)}</span></span></div>
         <span class="state s-${st}">${st==="available"?`${free} ${free===1?"livre":"livres"}`:STATE_LABEL[st]}</span></div>
       <div class="sockets">${groupSockets(socks).map(g=>`<span class="sock"><i style="background:${g.free?STATE_COLOR.available:STATE_COLOR.inUse}"></i>${connIcon(g.c)}${g.n}× ${esc(CONN_LABEL[g.c]||g.c||"?")} <b>${kw(g.kw)}</b> · ${g.free} ${g.free===1?"livre":"livres"}</span>`).join("")}</div>
       <div class="links"><button type="button" data-open="${esc(s.id)}">${openId===s.id?"Esconder tomadas ▴":"Ver tomadas e preços ▾"}</button>
@@ -294,6 +347,7 @@ async function loadStations(){
     const r=await fetch(`${PROXY}/stations`); if(!r.ok)throw new Error(r.status);
     const j=await r.json();
     stations=(j.stations||[]).filter(s=>isFinite(s.lat)&&isFinite(s.lng)&&s.sockets&&s.sockets.length).map(s=>({...s,sockets:s.sockets.filter(k=>k.evse)}));
+    stations.forEach(assignArea);
   }catch(e){$("loading").hidden=true;$("srcinfo").innerHTML=`<span class="err">Não foi possível obter os carregadores da MOBI.E. Tente de novo dentro de momentos.</span>`;return false}
   return true;
 }
@@ -311,7 +365,7 @@ async function start(){
   if(!(await loadStations()))return;
   await loadStatus();
   $("loading").hidden=true;
-  buildFilters(); draw();
+  buildAreas(); updateTitle(); buildFilters(); if(scope!=="pt")fitArea(); draw();
   setInterval(async()=>{await loadStatus();draw()},60000);
 }
 
