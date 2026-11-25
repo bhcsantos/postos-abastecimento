@@ -113,6 +113,13 @@ h1 span{color:var(--accent)}
 .check:hover{border-color:var(--sel)}
 .item.on .check{background:var(--sel);border-color:var(--sel);color:#1a1300}
 .tray{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:14px;display:grid;gap:10px}
+.leftcol{position:sticky;top:12px;display:flex;flex-direction:column;gap:12px;max-height:calc(100vh - 24px);overflow-y:auto;overscroll-behavior:contain;min-width:0;scrollbar-width:thin}
+.leftcol .mapbox{position:static;flex:none}
+.leftcol #map{height:min(62vh,580px)}
+.leftcol .tray{flex:none;padding:12px}
+.leftcol .tray h2{font-size:1.2rem}
+.leftcol .traydesc{font-size:.8rem}
+@media (max-width:860px){.leftcol{position:static;max-height:none;overflow:visible}.leftcol #map{height:420px}}
 .routetools{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
 .routetools .btn{padding:6px 12px;font-size:.85rem}
 .routehint{font-size:.8rem;color:var(--muted);flex:1 1 220px}
@@ -168,11 +175,24 @@ h1 span{color:var(--accent)}
   </section>
 
   <div class="main">
-    <div class="mapbox">
-      <div id="map" role="region" aria-label="Mapa dos carregadores"></div>
-      <div class="loading" id="loading">A carregar carregadores…</div>
-      <div class="legend"><span><i style="background:transparent;box-shadow:0 0 0 3px var(--sel)"></i>Selecionado</span><span><i style="background:var(--free)"></i>Com tomada livre</span><span><i style="background:var(--busy)"></i>Todas ocupadas</span><span><i style="background:var(--oos)"></i>Fora de serviço</span><span><i style="background:var(--unk)"></i>Estado desconhecido</span></div>
-      <div class="locmsg" id="locmsg" aria-live="polite"></div>
+    <div class="leftcol">
+      <div class="mapbox">
+        <div id="map" role="region" aria-label="Mapa dos carregadores"></div>
+        <div class="loading" id="loading">A carregar carregadores…</div>
+        <div class="legend"><span><i style="background:transparent;box-shadow:0 0 0 3px var(--sel)"></i>Selecionado</span><span><i style="background:var(--free)"></i>Com tomada livre</span><span><i style="background:var(--busy)"></i>Todas ocupadas</span><span><i style="background:var(--oos)"></i>Fora de serviço</span><span><i style="background:var(--unk)"></i>Estado desconhecido</span></div>
+        <div class="locmsg" id="locmsg" aria-live="polite"></div>
+      </div>
+    <section class="tray" aria-live="polite">
+      <h2 id="trayTitle">O meu percurso</h2>
+      <p class="traydesc">Os postos que selecionar ficam aqui, pela ordem em que os escolheu. Use <strong>Abrir percurso no Google Maps</strong> para ser guiado por todos, um a seguir ao outro, ou <strong>Copiar lista</strong> para a enviar a alguém.</p>
+      <div id="trayBody"></div>
+      <div class="actions">
+        <a id="route" class="btn" href="#" target="_blank" rel="noopener">Abrir percurso no Google Maps</a>
+        <button id="copy" class="btn ghost" type="button">Copiar lista</button>
+        <button id="clear" class="btn ghost" type="button">Limpar seleção</button>
+      </div>
+      <div class="toast" id="toast"></div>
+    </section>
     </div>
     <div class="list">
       <div class="selbar" id="selbar" hidden><strong id="selcount"></strong><a href="#trayTitle">Ver o meu percurso ↓</a><button type="button" class="btn ghost" id="clearTop">Limpar seleção</button></div>
@@ -182,17 +202,6 @@ h1 span{color:var(--accent)}
     </div>
   </div>
 
-  <section class="tray" aria-live="polite">
-    <h2 id="trayTitle">O meu percurso</h2>
-    <p class="traydesc">Os postos que selecionar ficam aqui, pela ordem em que os escolheu. Use <strong>Abrir percurso no Google Maps</strong> para ser guiado por todos, um a seguir ao outro, ou <strong>Copiar lista</strong> para a enviar a alguém.</p>
-    <div id="trayBody"></div>
-    <div class="actions">
-      <a id="route" class="btn" href="#" target="_blank" rel="noopener">Abrir percurso no Google Maps</a>
-      <button id="copy" class="btn ghost" type="button">Copiar lista</button>
-      <button id="clear" class="btn ghost" type="button">Limpar seleção</button>
-    </div>
-    <div class="toast" id="toast"></div>
-  </section>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
@@ -516,8 +525,9 @@ $("zme").onclick=()=>{
   watchId=navigator.geolocation.watchPosition(onPos,onPosErr,{enableHighAccuracy:true,maximumAge:30000,timeout:20000});
 };
 Route.liveInfo=stop=>{if(stop.k!=="ev")return null;const s=stations.find(x=>x.id===stop.id);if(!s)return null;const f=s.sockets.filter(k=>sockState(k)==="available").length;return `${f} de ${s.sockets.length} tomadas livres`};
-Route.onchange=()=>draw();
+Route.onchange=()=>{draw();setTimeout(()=>map.invalidateSize(),0)};
 Route.bind();
+new ResizeObserver(()=>map.invalidateSize()).observe(document.getElementById("map"));
 start();
 </script>
 </body>
