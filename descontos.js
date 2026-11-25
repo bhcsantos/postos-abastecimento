@@ -13,7 +13,7 @@
   const today=()=>new Date().toISOString().slice(0,10);
   /* Tipo de combustível a partir do nome da DGEG: "gasolina", "gasoleo" ou "gas" (GPL, GNC, GNL) */
   const fuelType=f=>/gpl|gnc|gnl|g[áa]s natural/i.test(f)?"gas":/gas[óo]leo|biodiesel/i.test(f)?"gasoleo":/gasolina/i.test(f)?"gasolina":"outro";
-  const nice=b=>b.length<=4?b:b.charAt(0)+b.slice(1).toLowerCase();
+  const nice=b=>b.length<=2?b:b.charAt(0)+b.slice(1).toLowerCase();
 
   const D={
     data:null, prefs:read(), onchange:null,

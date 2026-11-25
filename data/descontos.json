@@ -2,6 +2,7 @@
  "atualizado": "2026-11-25",
  "grupos": [
   "Repsol",
+  "Galp",
   "Operadoras de telecomunicações",
   "Seguros e bancos",
   "Lojas e supermercados",
@@ -515,6 +516,66 @@
     "sorriso"
    ],
    "fonte": "https://www.repsol.pt/particulares/parceiros/outros-parceiros/associacao-sorriso-solidario/"
+  },
+  {
+   "id": "auchan-clube",
+   "nome": "Auchan — Conta Clube Auchan",
+   "grupo": "Lojas e supermercados",
+   "pesquisa": [
+    "auchan",
+    "clube auchan",
+    "cartao auchan",
+    "jumbo"
+   ],
+   "fonte": "https://www.auchan.pt/pt/termos-condicoes/termos-e-condicoes.html"
+  },
+  {
+   "id": "galp-combina-1",
+   "nome": "Galp + Continente — Plano COMBINA, 1 serviço (luz, gás, solar Galp ou pacote NOS)",
+   "grupo": "Galp",
+   "marca": "GALP",
+   "exclusivo": "galp-combina",
+   "pesquisa": [
+    "galp",
+    "combina",
+    "continente",
+    "nos",
+    "mundo galp",
+    "cartao continente"
+   ],
+   "fonte": "https://www.galp.com/pt/energias/pt/combina"
+  },
+  {
+   "id": "galp-combina-2",
+   "nome": "Galp + Continente — Plano COMBINA, 2 serviços",
+   "grupo": "Galp",
+   "marca": "GALP",
+   "exclusivo": "galp-combina",
+   "pesquisa": [
+    "galp",
+    "combina",
+    "continente",
+    "nos",
+    "mundo galp",
+    "cartao continente"
+   ],
+   "fonte": "https://www.galp.com/pt/energias/pt/combina"
+  },
+  {
+   "id": "galp-combina-3",
+   "nome": "Galp + Continente — Plano COMBINA, 3 ou mais serviços",
+   "grupo": "Galp",
+   "marca": "GALP",
+   "exclusivo": "galp-combina",
+   "pesquisa": [
+    "galp",
+    "combina",
+    "continente",
+    "nos",
+    "mundo galp",
+    "cartao continente"
+   ],
+   "fonte": "https://www.galp.com/pt/energias/pt/combina"
   }
  ],
  "descontos": [
@@ -4626,6 +4687,118 @@
    "fonte": "https://www.repsol.pt/particulares/beneficios/",
    "verificado": "2026-11-25",
    "estado": "confirmado"
+  },
+  {
+   "id": "auchan-clube",
+   "titulo": "Conta Clube Auchan",
+   "marcas": [
+    "AUCHAN"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "auchan-clube"
+   ],
+   "exclui": [],
+   "direto": 0,
+   "saldo": 0.02,
+   "saldoOnde": "Saldo Auchan (para as lojas Auchan, válido 30 dias)",
+   "cumulativo": false,
+   "condicoes": "2 cêntimos por litro em Saldo Auchan, com validade de 30 dias, ao pedir a fatura com os dados fiscais da Conta Clube Auchan.",
+   "comoUsar": "Ao pagar na gasolineira Auchan, peça a fatura com o NIF associado à sua Conta Clube Auchan.",
+   "limite": "O Saldo Auchan não pode ser usado nas gasolineiras Auchan; usa-se nas lojas Auchan.",
+   "fonte": "https://www.auchan.pt/pt/termos-condicoes/termos-e-condicoes.html",
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "galp-combina-1",
+   "titulo": "Plano COMBINA (1 serviço)",
+   "marcas": [
+    "GALP"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "galp-combina-1"
+   ],
+   "exclui": [],
+   "direto": 0,
+   "saldo": 0.2,
+   "saldoOnde": "saldo Cartão Continente",
+   "cumulativo": false,
+   "condicoes": "20 cênt./litro na Galp em saldo Cartão Continente (e 2% nas compras Continente), com 1 serviço COMBINA: eletricidade, gás ou solar Galp, ou pacote NOS (TV Net Voz).",
+   "comoUsar": "Associe o Cartão Continente à app Mundo Galp. Ao abastecer, use a app Mundo Galp ou o Cartão Continente. O saldo pode ser usado na Galp (abastecimentos e fatura de energia) e no Continente.",
+   "limite": "Até 60 litros por abastecimento e 7000 litros por ano (perguntas frequentes); as condições da oferta indicam também um limite de 250 litros por mês.",
+   "fonte": "https://www.galp.com/pt/energias/pt/combina",
+   "fontes": [
+    "https://www.galp.com/pt/energias/pt/combina",
+    "https://www.galp.com/pt/energias/system/files/2026-05/combina-termos-e-condicoes.pdf"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "galp-combina-2",
+   "titulo": "Plano COMBINA (2 serviços)",
+   "marcas": [
+    "GALP"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "galp-combina-2"
+   ],
+   "exclui": [],
+   "direto": 0,
+   "saldo": 0.25,
+   "saldoOnde": "saldo Cartão Continente",
+   "cumulativo": false,
+   "condicoes": "25 cênt./litro na Galp em saldo Cartão Continente (e 5% nas compras Continente), com 2 serviços COMBINA: eletricidade, gás ou solar Galp, ou pacote NOS (TV Net Voz).",
+   "comoUsar": "Associe o Cartão Continente à app Mundo Galp. Ao abastecer, use a app Mundo Galp ou o Cartão Continente. O saldo pode ser usado na Galp (abastecimentos e fatura de energia) e no Continente.",
+   "limite": "Até 60 litros por abastecimento e 7000 litros por ano (perguntas frequentes); as condições da oferta indicam também um limite de 250 litros por mês.",
+   "fonte": "https://www.galp.com/pt/energias/pt/combina",
+   "fontes": [
+    "https://www.galp.com/pt/energias/pt/combina",
+    "https://www.galp.com/pt/energias/system/files/2026-05/combina-termos-e-condicoes.pdf"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "galp-combina-3",
+   "titulo": "Plano COMBINA (3 ou mais serviços)",
+   "marcas": [
+    "GALP"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "requer": [
+    "galp-combina-3"
+   ],
+   "exclui": [],
+   "direto": 0,
+   "saldo": 0.3,
+   "saldoOnde": "saldo Cartão Continente",
+   "cumulativo": false,
+   "condicoes": "30 cênt./litro na Galp em saldo Cartão Continente (e 10% nas compras Continente), com 3 ou mais serviços COMBINA: eletricidade, gás ou solar Galp, ou pacote NOS (TV Net Voz).",
+   "comoUsar": "Associe o Cartão Continente à app Mundo Galp. Ao abastecer, use a app Mundo Galp ou o Cartão Continente. O saldo pode ser usado na Galp (abastecimentos e fatura de energia) e no Continente.",
+   "limite": "Até 60 litros por abastecimento e 7000 litros por ano (perguntas frequentes); as condições da oferta indicam também um limite de 250 litros por mês.",
+   "fonte": "https://www.galp.com/pt/energias/pt/combina",
+   "fontes": [
+    "https://www.galp.com/pt/energias/pt/combina",
+    "https://www.galp.com/pt/energias/system/files/2026-05/combina-termos-e-condicoes.pdf"
+   ],
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
   }
  ],
  "fontesGerais": [
@@ -4640,6 +4813,14 @@
   {
    "marca": "Repsol (FAQ My Repsol)",
    "url": "https://www.repsol.pt/perguntas-frequentes/my-repsol/"
+  },
+  {
+   "marca": "Auchan",
+   "url": "https://www.auchan.pt/pt/termos-condicoes/termos-e-condicoes.html"
+  },
+  {
+   "marca": "Galp (COMBINA)",
+   "url": "https://www.galp.com/pt/energias/pt/combina"
   }
  ]
 }
