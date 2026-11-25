@@ -4563,6 +4563,69 @@
    ],
    "verificado": "2026-11-25",
    "estado": "confirmado"
+  },
+  {
+   "id": "repsol-motor-ev",
+   "titulo": "My Repsol (Plano Motor) — carregamentos",
+   "carregamento": true,
+   "marcas": [
+    "REPSOL"
+   ],
+   "requer": [
+    "repsol-motor"
+   ],
+   "exclui": [],
+   "percSaldo": 0.1,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "10% do valor dos carregamentos elétricos em saldo My Repsol, nos pontos de carregamento Repsol, com o Plano Motor.",
+   "comoUsar": "Carregue nos pontos Repsol identificando-se com a App My Repsol.",
+   "limite": "O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/beneficios/",
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "repsol-luz-ev",
+   "titulo": "My Repsol (Plano Motor e Luz) — carregamentos",
+   "carregamento": true,
+   "marcas": [
+    "REPSOL"
+   ],
+   "requer": [
+    "repsol-luz"
+   ],
+   "exclui": [],
+   "percSaldo": 0.15,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "15% do valor dos carregamentos elétricos em saldo My Repsol, nos pontos de carregamento Repsol, com o Plano Motor e Luz.",
+   "comoUsar": "Carregue nos pontos Repsol identificando-se com a App My Repsol.",
+   "limite": "O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/beneficios/",
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
+  },
+  {
+   "id": "repsol-luzgas-ev",
+   "titulo": "My Repsol (Plano Motor, Luz e Calor) — carregamentos",
+   "carregamento": true,
+   "marcas": [
+    "REPSOL"
+   ],
+   "requer": [
+    "repsol-luzgas"
+   ],
+   "exclui": [],
+   "percSaldo": 0.2,
+   "saldoOnde": "saldo My Repsol",
+   "cumulativo": false,
+   "condicoes": "20% do valor dos carregamentos elétricos em saldo My Repsol, nos pontos de carregamento Repsol, com o Plano Motor, Luz e Calor.",
+   "comoUsar": "Carregue nos pontos Repsol identificando-se com a App My Repsol.",
+   "limite": "O saldo My Repsol tem limites diários e mensais (ver FAQ).",
+   "fonte": "https://www.repsol.pt/particulares/beneficios/",
+   "verificado": "2026-11-25",
+   "estado": "confirmado"
   }
  ],
  "fontesGerais": [

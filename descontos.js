@@ -38,13 +38,20 @@
     /* Melhor cenário: final = na bomba − desconto imediato; efetivo = final − saldo */
     apply(brand,fuel,price){
       const b=norm(brand), ft=fuelType(fuel||"");
-      const rs=this.rules().filter(r=>(r.marcas||[]).map(norm).includes(b)&&(!r.tipos||r.tipos.includes(ft))&&(!r.combustiveis||r.combustiveis.includes(fuel)));
+      const rs=this.rules().filter(r=>!r.carregamento&&(r.marcas||[]).map(norm).includes(b)&&(!r.tipos||r.tipos.includes(ft))&&(!r.combustiveis||r.combustiveis.includes(fuel)));
       if(!rs.length)return{price,final:price,efetivo:price,direto:0,saldo:0,regras:[]};
       const cum=rs.filter(r=>r.cumulativo);
       const best=rs.filter(r=>!r.cumulativo).sort((a,b)=>((b.direto+b.saldo)-(a.direto+a.saldo))||(b.direto-a.direto))[0];
       const use=[...(best?[best]:[]),...cum];
       const direto=use.reduce((a,r)=>a+(r.direto||0),0), saldo=use.reduce((a,r)=>a+(r.saldo||0),0);
       return{price,final:price-direto,efetivo:price-direto-saldo,direto,saldo,regras:use};
+    },
+    /* Carregamentos elétricos: percentagem devolvida em saldo no operador (ex.: Repsol) */
+    applyEv(operator,cost){
+      const b=norm(operator), rs=this.rules().filter(r=>r.carregamento&&(r.marcas||[]).map(norm).includes(b));
+      if(!rs.length)return{cost,saldo:0,efetivo:cost,regras:[]};
+      const best=rs.sort((x,y)=>(y.percSaldo||0)-(x.percSaldo||0))[0], saldo=cost*(best.percSaldo||0);
+      return{cost,saldo,efetivo:cost-saldo,perc:best.percSaldo||0,regras:[best]};
     },
     /* Frase curta para a lista: "Lidl Plus + Plano Motor: −6 cênt. na hora + 4 cênt. em saldo My Repsol" */
     describe(a){
@@ -56,7 +63,7 @@
     explain(a){
       return a.regras.map(r=>`<div class="dexp"><div><strong>${esc(r.titulo)}</strong>${r.estado&&r.estado!=="confirmado"?` <span class="dst warn">a confirmar</span>`:""}</div>
         <div>${esc(r.condicoes||"")}</div>
-        <div><b>O que precisa:</b> ${(r.requer||[]).map(id=>esc(this.prog(id)?.nome||id)).join(" + ")}${(r.exclui||[]).length?` (sem ${(r.exclui||[]).filter(id=>this.prog(id)).map(id=>esc(this.prog(id).nome)).join(" nem ")})`.replace(/\(sem \)/,""):""}.</div>
+        ${r.carregamento?"":""}<div><b>O que precisa:</b> ${(r.requer||[]).map(id=>esc(this.prog(id)?.nome||id)).join(" + ")}${(r.exclui||[]).length?` (sem ${(r.exclui||[]).filter(id=>this.prog(id)).map(id=>esc(this.prog(id).nome)).join(" nem ")})`.replace(/\(sem \)/,""):""}.</div>
         ${r.comoUsar?`<div><b>Como usar:</b> ${esc(r.comoUsar)}</div>`:""}
         ${r.limite?`<div class="dlim">${esc(r.limite)}</div>`:""}
         ${r.nota?`<div class="dlim">${esc(r.nota)}</div>`:""}
@@ -113,8 +120,10 @@
       dlg.querySelector("[data-all]").innerHTML=order.map(g=>{const l=ps.filter(p=>p.grupo===g);return l.length?`<div class="dgrp">${esc(g)}</div>${l.map(p=>this.item(p)).join("")}`:""}).join("");
     },
     renderBest(dlg){
-      const brands=[...new Set((this.data?.descontos||[]).flatMap(r=>r.marcas||[]))];
-      const out=brands.map(b=>{const a=this.apply(b,"Gasolina 95 simples",2);return a.regras.length?`<div class="dbest"><div class="dbt">${esc(nice(b))}: <strong>${cent(a.direto+a.saldo)}/litro</strong> (${[a.direto?`${cent(a.direto)} na hora`:"",a.saldo?`${cent(a.saldo)} em saldo`:""].filter(Boolean).join(" + ")})</div>${this.explain(a)}</div>`:""}).join("");
+      const ds=this.data?.descontos||[];
+      const brands=[...new Set(ds.filter(r=>!r.carregamento).flatMap(r=>r.marcas||[]))], evBrands=[...new Set(ds.filter(r=>r.carregamento).flatMap(r=>r.marcas||[]))];
+      const out=brands.map(b=>{const a=this.apply(b,"Gasolina 95 simples",2);return a.regras.length?`<div class="dbest"><div class="dbt">⛽ ${esc(nice(b))}: <strong>${cent(a.direto+a.saldo)}/litro</strong> (${[a.direto?`${cent(a.direto)} na hora`:"",a.saldo?`${cent(a.saldo)} em saldo`:""].filter(Boolean).join(" + ")})</div>${this.explain(a)}</div>`:""}).join("")
+        +evBrands.map(b=>{const a=this.applyEv(b,100);return a.regras.length?`<div class="dbest"><div class="dbt">⚡ ${esc(nice(b))} (carregamentos): <strong>${Math.round(a.perc*100)}% em saldo</strong></div>${this.explain(a)}</div>`:""}).join("");
       dlg.querySelector("[data-best]").innerHTML=out||`<p class="dempty">Com o que escolheu ainda não há descontos registados. Acrescente cartões ou programas acima.</p>`;
     },
     injectCss(){
