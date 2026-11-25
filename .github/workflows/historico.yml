@@ -1,0 +1,29 @@
+name: Histórico de preços
+on:
+  schedule:
+    - cron: "17 9 * * *"   # todos os dias às 09:17 UTC, depois das atualizações da manhã na DGEG
+  workflow_dispatch: {}
+permissions:
+  contents: write
+concurrency:
+  group: historico
+  cancel-in-progress: false
+jobs:
+  guardar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python scripts/historico.py
+      - name: Gravar no repositório
+        run: |
+          git config user.name "historico-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/historico
+          git diff --cached --quiet && exit 0
+          git commit -m "Histórico de preços: $(date -u +%F)"
+          git pull --rebase --autostash
+          git push
