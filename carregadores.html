@@ -28,9 +28,13 @@
 body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--body);font-size:15px;line-height:1.45}
 [hidden]{display:none!important}
 .wrap{max-width:1280px;margin:0 auto;padding-block:20px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:16px}
-nav.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line)}
-nav.tabs a{padding:8px 14px;text-decoration:none;color:var(--muted);font-weight:600;border-bottom:3px solid transparent;margin-bottom:-1px}
-nav.tabs a[aria-current="page"]{color:var(--accent);border-bottom-color:var(--accent)}
+nav.tabs{display:inline-flex;gap:4px;padding:4px;background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:0 1px 3px rgba(20,32,46,.08);justify-self:start;max-width:100%}
+nav.tabs a{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 18px;border-radius:9px;text-decoration:none;color:var(--fg);font-weight:600;font-size:1rem;white-space:nowrap;transition:background .15s}
+nav.tabs a:hover{background:var(--accent-soft)}
+nav.tabs a[aria-current="page"]{background:var(--accent);color:var(--surface)}
+nav.tabs svg{width:20px;height:20px;flex:none}
+@media (max-width:520px){nav.tabs{display:flex;justify-self:stretch}nav.tabs a{flex:1;padding:10px 8px;font-size:.95rem}}
+@media (prefers-reduced-motion:reduce){nav.tabs a{transition:none}}
 header{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:12px}
 h1{font-family:var(--display);font-size:2.3rem;line-height:1;margin:0;letter-spacing:.01em}
 h1 span{color:var(--accent)}
@@ -98,7 +102,7 @@ h1 span{color:var(--accent)}
 </head>
 <body>
 <div class="wrap">
-  <nav class="tabs" aria-label="Secções"><a href="./">Combustíveis</a><a href="carregadores.html" aria-current="page">Carregadores elétricos</a></nav>
+  <nav class="tabs" aria-label="Secções"><a href="./"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 21V5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v16"/><path d="M3 21h12"/><path d="M7 7h4v4H7z"/><path d="M14 10h2a2 2 0 0 1 2 2v4a1.5 1.5 0 0 0 3 0V8l-3-3"/></svg>Combustíveis</a><a href="carregadores.html" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg>Carregadores elétricos</a></nav>
   <header>
     <div>
       <h1>Carregadores <span>elétricos</span></h1>
