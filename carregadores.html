@@ -45,6 +45,13 @@ h1 span{color:var(--accent)}
 .chip{font:inherit;font-size:.85rem;border:1px solid var(--line);background:var(--surface);color:var(--fg);border-radius:999px;padding:4px 11px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
 .chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--surface)}
 .chip small{opacity:.65}
+.chip.conn{padding:6px 14px 6px 8px;border-radius:10px;gap:10px;text-align:left}
+.chip.conn svg{width:40px;height:40px;flex:none;color:var(--fg)}
+.chip.conn[aria-pressed="true"] svg{color:var(--surface)}
+.chip.conn .t{display:grid;line-height:1.2}
+.chip.conn .t strong{font-weight:600}
+.chip.conn .t span{font-size:.72rem;opacity:.75}
+.sock svg{width:18px;height:18px;flex:none}
 .main{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:16px;align-items:start}
 @media (max-width:860px){.main{grid-template-columns:1fr}}
 .mapbox{position:sticky;top:12px;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:8px}
@@ -130,6 +137,16 @@ const PROXY="https://mobie-proxy.bhcsantos.workers.dev";
 const STATE_LABEL={available:"Livre",inUse:"Ocupado",outOfService:"Fora de serviço",unknown:"Desconhecido"};
 const STATE_COLOR={available:"#1d8a4a",inUse:"#d97a00",outOfService:"#c0392b",unknown:"#8a94a3"};
 const CONN_LABEL={Mennekes:"Tipo 2 (Mennekes)",CCS:"CCS",CHAdeMO:"CHAdeMO",Industrial:"Industrial"};
+const CONN_HINT={Mennekes:"Corrente alternada · a mais comum",CCS:"Carregamento rápido · maioria dos elétricos",CHAdeMO:"Carregamento rápido · Nissan, Mitsubishi",Industrial:"Tomada industrial (CEE)"};
+/* Desenho da frente de cada ficha, visto de frente */
+const P=(x,y,r)=>`<circle cx="${x}" cy="${y}" r="${r}" fill="currentColor"/>`;
+const CONN_ICON={
+  Mennekes:`<svg viewBox="0 0 40 40" aria-hidden="true"><path d="M9.3 11H30.7A14 14 0 1 1 9.3 11Z" fill="none" stroke="currentColor" stroke-width="2.2"/>${P(16,15.5,1.6)}${P(24,15.5,1.6)}${P(12.5,21.5,2.6)}${P(20,21.5,2.6)}${P(27.5,21.5,2.6)}${P(16,28,2.6)}${P(24,28,2.6)}</svg>`,
+  CCS:`<svg viewBox="0 0 40 40" aria-hidden="true"><path d="M13.4 4.5H26.6A10.5 10.5 0 1 1 13.4 4.5Z" fill="none" stroke="currentColor" stroke-width="2"/>${P(17.2,8,1.1)}${P(22.8,8,1.1)}${P(15,13,1.8)}${P(20,13,1.8)}${P(25,13,1.8)}${P(17.5,18,1.8)}${P(22.5,18,1.8)}<rect x="8" y="26" width="24" height="11.5" rx="5.75" fill="none" stroke="currentColor" stroke-width="2"/>${P(14.5,31.75,3.2)}${P(25.5,31.75,3.2)}</svg>`,
+  CHAdeMO:`<svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="15" fill="none" stroke="currentColor" stroke-width="2.2"/><rect x="18" y="3" width="4" height="4" fill="currentColor"/>${P(13,20,4)}${P(27,20,4)}${P(20,11.5,1.4)}${P(15.5,13,1.2)}${P(24.5,13,1.2)}${P(20,28.5,1.4)}${P(15.5,27,1.2)}${P(24.5,27,1.2)}${P(20,20,1.2)}</svg>`,
+  Industrial:`<svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="15" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M17 5.2h6v3h-6z" fill="currentColor"/>${P(20,11,2.8)}${P(12.4,17.5,2)}${P(15.3,26.8,2)}${P(24.7,26.8,2)}${P(27.6,17.5,2)}</svg>`
+};
+const connIcon=c=>CONN_ICON[c]||`<svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="14" fill="none" stroke="currentColor" stroke-width="2"/></svg>`;
 const POWERS=[[0,"Todas"],[11,"≥ 11 kW"],[22,"≥ 22 kW"],[50,"≥ 50 kW"],[150,"≥ 150 kW"]];
 const $=id=>document.getElementById(id);
 const esc=t=>String(t??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -185,7 +202,10 @@ function chip(box,label,on,fn,extra=""){const b=document.createElement("button")
 function buildFilters(){
   for(const id of ["fConn","fPow","fState","fOp"]) $(id).querySelectorAll(".chip").forEach(c=>c.remove());
   const cc={};stations.forEach(s=>s.sockets.forEach(k=>{if(k.connector)cc[k.connector]=(cc[k.connector]||0)+1}));
-  Object.keys(cc).sort((a,b)=>cc[b]-cc[a]).forEach(c=>chip($("fConn"),esc(CONN_LABEL[c]||c),fConn.has(c),()=>{fConn.has(c)?fConn.delete(c):fConn.add(c);changed()},` <small>${cc[c]}</small>`));
+  Object.keys(cc).sort((a,b)=>cc[b]-cc[a]).forEach(c=>{
+    const b=chip($("fConn"),`${connIcon(c)}<span class="t"><strong>${esc(CONN_LABEL[c]||c)} <small>${cc[c].toLocaleString("pt-PT")}</small></strong><span>${esc(CONN_HINT[c]||"")}</span></span>`,fConn.has(c),()=>{fConn.has(c)?fConn.delete(c):fConn.add(c);changed()});
+    b.classList.add("conn"); b.title=`${CONN_LABEL[c]||c}: ${CONN_HINT[c]||""}`;
+  });
   POWERS.forEach(([v,l])=>chip($("fPow"),l,fPow===v,()=>{fPow=v;changed()}));
   chip($("fState"),"Todos",!fFree,()=>{fFree=false;changed()});
   chip($("fState"),`<i style="display:inline-block;width:9px;height:9px;border-radius:50%;background:${STATE_COLOR.available}"></i>Só com tomada livre agora`,fFree,()=>{fFree=true;changed()});
@@ -239,7 +259,7 @@ function renderList(){
       <div class="top"><div><h3>${esc(s.address||s.name)}</h3>
         <span class="addr">${me?`<span class="dist">${km(distKm(me,s))}</span> · `:""}${esc(s.municipality||"")} · ${esc(s.operator||"")} · <span style="font-family:var(--mono)">${esc(s.name)}</span></span></div>
         <span class="state s-${st}">${st==="available"?`${free} ${free===1?"livre":"livres"}`:STATE_LABEL[st]}</span></div>
-      <div class="sockets">${groupSockets(socks).map(g=>`<span class="sock"><i style="background:${g.free?STATE_COLOR.available:STATE_COLOR.inUse}"></i>${g.n}× ${esc(CONN_LABEL[g.c]||g.c||"?")} <b>${kw(g.kw)}</b> · ${g.free} ${g.free===1?"livre":"livres"}</span>`).join("")}</div>
+      <div class="sockets">${groupSockets(socks).map(g=>`<span class="sock"><i style="background:${g.free?STATE_COLOR.available:STATE_COLOR.inUse}"></i>${connIcon(g.c)}${g.n}× ${esc(CONN_LABEL[g.c]||g.c||"?")} <b>${kw(g.kw)}</b> · ${g.free} ${g.free===1?"livre":"livres"}</span>`).join("")}</div>
       <div class="links"><button type="button" data-open="${esc(s.id)}">${openId===s.id?"Esconder tomadas ▴":"Ver tomadas e preços ▾"}</button>
         <a href="https://www.google.com/maps/dir/?api=1&destination=${s.lat},${s.lng}&travelmode=driving" target="_blank" rel="noopener">Navegar até aqui ↗</a>
         <a href="https://www.google.com/maps/search/?api=1&query=${s.lat},${s.lng}" target="_blank" rel="noopener">Ver no Google Maps ↗</a></div>
@@ -259,7 +279,7 @@ async function loadDetail(s){
     const d=ds[String(i+1)]||ds[String(Number(/(\d+)$/.exec(k.evse)?.[1]))]||null;
     const st=(d&&d.status)||sockState(k);
     const pr=d&&d.prices?(Array.isArray(d.prices)?d.prices.map(p=>esc(typeof p==="object"?Object.values(p).join(" "):p)).join("; "):esc(JSON.stringify(d.prices))):"—";
-    return `<tr><td style="font-family:var(--mono)">${esc(k.evse)}</td><td>${esc(CONN_LABEL[k.connector]||k.connector||"?")}</td><td class="num">${kw(k.kw||0)}</td><td><span class="state s-${st}">${STATE_LABEL[st]}</span></td><td>${pr}</td></tr>`}).join("");
+    return `<tr><td style="font-family:var(--mono)">${esc(k.evse)}</td><td><span style="display:inline-flex;align-items:center;gap:6px"><span style="display:inline-flex;width:18px;height:18px">${connIcon(k.connector)}</span>${esc(CONN_LABEL[k.connector]||k.connector||"?")}</span></td><td class="num">${kw(k.kw||0)}</td><td><span class="state s-${st}">${STATE_LABEL[st]}</span></td><td>${pr}</td></tr>`}).join("");
   box2.innerHTML=`<div class="tablewrap"><table><thead><tr><th>Tomada</th><th>Ficha</th><th>Potência</th><th>Estado</th><th>Preço</th></tr></thead><tbody>${rows}</tbody></table></div>
     <p class="count" style="margin:6px 0 0">${det&&det.asOf?`Estado de ${hhmm(new Date(det.asOf))}.`:"Estado da última atualização geral."} A MOBI.E só publica preços de alguns operadores; quando aparece —, consulte o preço na aplicação do seu comercializador.</p>`;
 }
