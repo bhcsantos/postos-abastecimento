@@ -157,7 +157,9 @@ const A = {
     if (!box && nav) {
       const bar = document.createElement("div"); bar.className = "topbar";
       nav.parentNode.insertBefore(bar, nav); bar.appendChild(nav);
-      box = document.createElement("div"); box.id = "acctBox"; box.className = "acct"; bar.appendChild(box);
+      const right = document.createElement("div"); right.className = "topright"; bar.appendChild(right);
+      const disc = document.getElementById("discBtn"); if (disc) right.appendChild(disc); // cartões de desconto, junto à conta
+      box = document.createElement("div"); box.id = "acctBox"; box.className = "acct"; right.appendChild(box);
     }
     if (!box) return;
     const u = this.user, p = this.profile();
@@ -173,7 +175,9 @@ const A = {
 /* Estilos do botão da conta (comuns a todas as páginas) */
 const css = document.createElement("style");
 css.textContent = `.topbar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px}
-.acct{display:flex;align-items:center;gap:8px;margin-left:auto}
+.topright{display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:8px;margin-left:auto}
+.topright .discbtn{border-radius:10px;padding:9px 14px}
+.acct{display:flex;align-items:center;gap:8px}
 .acctbtn{display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--fg);font-weight:600;text-decoration:none}
 .acctbtn:hover{border-color:var(--accent)}
 .acctbtn.me{padding:5px 12px 5px 5px}
