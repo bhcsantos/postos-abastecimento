@@ -79,6 +79,27 @@ const DISTRITOS={"Aveiro":1,"Beja":2,"Braga":3,"Bragança":4,"Castelo Branco":5,
 const BRAND_COLORS={"GALP":"#e2591d","BP":"#0b8a3a","REPSOL":"#c99a00","PRIO":"#2f6db5","CEPSA":"#b8202e","MOEVE":"#00857c","SHELL":"#d8a400","AUCHAN":"#d6001c","REDE ENERGIA":"#6a4fb3","INTERMARCHÉ":"#c4161c","ALVES BANDEIRA":"#1b3f8b","FREITAS":"#7a3e9d","PINGO DOCE":"#4c8c2b","OZ Energia":"#0098c7","Genérico":"#6f7b8a"};
 const PALETTE=["#8a5a2b","#2b7a8a","#8a2b6e","#5a8a2b","#3d4f9e","#9e6a3d","#3d9e7f","#9e3d4f"];
 function colorOf(b){if(BRAND_COLORS[b])return BRAND_COLORS[b];let h=0;for(const c of b)h=(h*31+c.charCodeAt(0))|0;return PALETTE[Math.abs(h)%PALETTE.length]}
+
+/* Identificação dos combustíveis: forma da norma EN 16942 (círculo = gasolina, quadrado = gasóleo, losango = gás) e a cor habitual em Portugal (verde = gasolina, preto = gasóleo) */
+const FUEL_STYLE={
+  "Gasóleo simples":{c:"#1d1f23",s:"sq",t:"D"},
+  "Gasóleo especial":{c:"#1d1f23",s:"sq",t:"D+",ring:"#e0b400"},
+  "Gasóleo colorido":{c:"#7a2f8f",s:"sq",t:"D"},
+  "Biodiesel B15":{c:"#1d1f23",s:"sq",t:"B15"},
+  "Gasolina simples 95":{c:"#2e9e4f",s:"ci",t:"95"},"Gasolina 95 simples":{c:"#2e9e4f",s:"ci",t:"95"},
+  "Gasolina especial 95":{c:"#1d7a3c",s:"ci",t:"95+",ring:"#e0b400"},"Gasolina 95 especial":{c:"#1d7a3c",s:"ci",t:"95+",ring:"#e0b400"},
+  "Gasolina 98":{c:"#0f5a2c",s:"ci",t:"98"},
+  "Gasolina especial 98":{c:"#0f5a2c",s:"ci",t:"98+",ring:"#e0b400"},"Gasolina 98 especial":{c:"#0f5a2c",s:"ci",t:"98+",ring:"#e0b400"},
+  "GPL Auto":{c:"#1f6fb5",s:"di",t:"GPL"}
+};
+function fuelBadge(name,size=26){
+  const f=FUEL_STYLE[name]||(/gas[óo]leo|diesel/i.test(name)?{c:"#1d1f23",s:"sq",t:"D"}:/gasolina/i.test(name)?{c:"#2e9e4f",s:"ci",t:"G"}:{c:"#1f6fb5",s:"di",t:"Gás"});
+  const ring=f.ring?`stroke="${f.ring}" stroke-width="2.5"`:`stroke="#fff" stroke-opacity=".55" stroke-width="1"`;
+  const shape=f.s==="ci"?`<circle cx="16" cy="16" r="14" fill="${f.c}" ${ring}/>`:f.s==="sq"?`<rect x="2.5" y="2.5" width="27" height="27" rx="3" fill="${f.c}" ${ring}/>`:`<path d="M16 1.5 30.5 16 16 30.5 1.5 16Z" fill="${f.c}" ${ring}/>`;
+  const fs=f.t.length>=3?9.5:f.t.length===2?12:14;
+  return `<svg class="fb" viewBox="0 0 32 32" width="${size}" height="${size}" aria-hidden="true">${shape}<text x="16" y="16" dy=".35em" text-anchor="middle" font-family="Barlow Condensed,Arial Narrow,sans-serif" font-weight="700" font-size="${fs}" fill="#fff">${f.t}</text></svg>`;
+}
+const fuelColor=name=>(FUEL_STYLE[name]||{c:"#1f4fa8"}).c;
 const esc=t=>String(t??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const num=p=>parseFloat(String(p).replace(/[^\d,.-]/g,"").replace(",","."));
 const eur=v=>v.toFixed(3).replace(".",",")+" €";
@@ -131,7 +152,7 @@ async function main(){
       <h2>Combustíveis e preços</h2>
       <div class="tablewrap"><table>
         <thead><tr><th>Combustível</th><th class="num">Preço por litro</th><th class="num">Média no concelho</th><th class="num">Posição no concelho</th><th>Atualizado</th></tr></thead>
-        <tbody>${fuels.map((c,i)=>`<tr><td>${esc(c.name)}</td><td class="num price">${eur(c.price)}</td><td class="num" id="avg${i}"><span class="skel">…</span></td><td class="num" id="rank${i}"><span class="skel">…</span></td><td>${fmtDate(c.date)}</td></tr>`).join("")
+        <tbody>${fuels.map((c,i)=>`<tr><td><span style="display:inline-flex;align-items:center;gap:8px">${fuelBadge(c.name,26)}${esc(c.name)}</span></td><td class="num price">${eur(c.price)}</td><td class="num" id="avg${i}"><span class="skel">…</span></td><td class="num" id="rank${i}"><span class="skel">…</span></td><td>${fmtDate(c.date)}</td></tr>`).join("")
           || `<tr><td colspan="5">Este posto não tem preços publicados.</td></tr>`}</tbody>
       </table></div>
       <p class="note" style="margin:10px 0 0">A média e a posição comparam com os postos do mesmo concelho que vendem esse combustível (1.º = o mais barato).</p>

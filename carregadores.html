@@ -309,6 +309,7 @@ function renderList(){
   if(sortBy==="dist"&&me)list.sort((a,b)=>distKm(me,a.s)-distKm(me,b.s));
   else if(sortBy==="free")list.sort((a,b)=>b.free-a.free||b.maxKw-a.maxKw);
   else list.sort((a,b)=>b.maxKw-a.maxKw||b.free-a.free);
+  if(openId)list.sort((a,b)=>(b.s.id===openId)-(a.s.id===openId)); // posto escolhido no mapa vai para o topo
   const freeSt=list.filter(x=>x.free>0).length;
   $("count").textContent=list.length?`${list.length} ${list.length===1?"posto":"postos"} nesta zona do mapa, ${freeSt} com tomada livre agora (${visible.length} no total com estes filtros)`:"";
   $("items").innerHTML=list.length?list.slice(0,shown).map(({s,socks,st,free})=>`
