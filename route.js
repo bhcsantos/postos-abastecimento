@@ -34,6 +34,14 @@
     remove(i){this.list.splice(i,1);this.save()},
     move(i,d){const j=i+d;if(j<0||j>=this.list.length)return;[this.list[i],this.list[j]]=[this.list[j],this.list[i]];this.save()},
     clear(){this.list=[];this.save()},
+    /* Vizinho mais próximo: parte da localização (ou da 1.ª paragem) e vai sempre para a paragem mais perto da anterior */
+    sortByDistance(){
+      const rest=[...this.list]; if(rest.length<2)return;
+      const out=[]; let cur=this.me||rest.shift(); if(!this.me)out.push(cur);
+      while(rest.length){let bi=0,bd=Infinity;rest.forEach((s,i)=>{const d=distKm(cur,s);if(d<bd){bd=d;bi=i}});cur=rest.splice(bi,1)[0];out.push(cur)}
+      this.list=out;this.save();
+    },
+    reverse(){this.list.reverse();this.save()},
     url(){
       const L=this.list.slice(0,MAX_STOPS); if(!L.length)return "#";
       const c=s=>`${s.lat},${s.lng}`, dest=L[L.length-1], wp=L.slice(0,-1).map(c).join("|");
@@ -52,6 +60,7 @@
       $("trayBody").innerHTML=n?`
         <p class="routeinfo">${this.me?"Partida: <strong>a sua localização</strong>.":"Partida: onde estiver quando abrir o Google Maps. Ligue <strong>a minha localização</strong> no mapa para ver a distância desde aí."}
           ${tot!=null&&(n>1||this.me)?` Distância em linha reta: <strong>${km(tot)}</strong> (de carro é mais).`:""}</p>
+        ${n>1?`<div class="routetools"><button type="button" class="btn ghost" data-sortd>Ordenar por proximidade</button><button type="button" class="btn ghost" data-rev>Inverter ordem</button><span class="routehint">${this.me?"Começa no posto mais perto de si e segue sempre para o mais próximo.":"Mantém a 1.ª paragem e segue sempre para a mais próxima. Ligue a sua localização para começar no posto mais perto de si."}</span></div>`:""}
         <ol class="stops">${L.map((s,i)=>{const live=this.liveInfo?this.liveInfo(s):null;
           return `<li><span class="stopicon k-${s.k}">${ICON[s.k]||""}</span><span class="stoptxt"><strong>${esc(s.t)}</strong>${s.b?` · ${esc(s.b)}`:""}<br><span class="stopsub">${esc(s.sub)}${s.info?` · <span class="mono">${esc(s.info)}</span>`:""}${live?` · <span class="mono">${esc(live)}</span>`:""}${i>0?` · ${km(distKm(L[i-1],s))} desde a anterior`:(this.me?` · ${km(distKm(this.me,s))} desde si`:"")}</span></span>
             <span class="stopbtns"><button type="button" data-mv="${i}" data-d="-1" ${i===0?"disabled":""} aria-label="Subir">↑</button><button type="button" data-mv="${i}" data-d="1" ${i===n-1?"disabled":""} aria-label="Descer">↓</button><button type="button" data-rmi="${i}" aria-label="Remover">✕</button></span></li>`}).join("")}</ol>
@@ -59,6 +68,8 @@
         :`<p class="count" style="margin:0">Ainda não há paragens. Toque num posto ou carregador no mapa, ou na caixa ✓ da lista. Pode juntar postos de combustível e carregadores no mesmo percurso.</p>`;
       $("trayBody").querySelectorAll("[data-mv]").forEach(b=>b.onclick=()=>this.move(+b.dataset.mv,+b.dataset.d));
       $("trayBody").querySelectorAll("[data-rmi]").forEach(b=>b.onclick=()=>this.remove(+b.dataset.rmi));
+      const sd=$("trayBody").querySelector("[data-sortd]"); if(sd)sd.onclick=()=>this.sortByDistance();
+      const rv=$("trayBody").querySelector("[data-rev]"); if(rv)rv.onclick=()=>this.reverse();
       const r=$("route"); r.href=this.url(); n?r.removeAttribute("aria-disabled"):r.setAttribute("aria-disabled","true");
       $("copy").disabled=$("clear").disabled=!n;
     },
