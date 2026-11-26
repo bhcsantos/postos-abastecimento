@@ -184,10 +184,11 @@ dialog.dlg::backdrop{background:rgba(10,16,26,.55)}
 .toast{font-size:.82rem;color:var(--accent);min-height:1.2em}
 @media (prefers-reduced-motion:reduce){.leaflet-zoom-anim .leaflet-zoom-animated{transition:none!important}}
 </style>
+<link rel="stylesheet" href="mobile.css">
 </head>
 <body>
 <div class="wrap">
-  <nav class="tabs" aria-label="Secções"><a href="./" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 21V5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v16"/><path d="M3 21h12"/><path d="M7 7h4v4H7z"/><path d="M14 10h2a2 2 0 0 1 2 2v4a1.5 1.5 0 0 0 3 0V8l-3-3"/></svg>Combustíveis</a><a href="carregadores.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg>Carregadores elétricos</a></nav>
+  <nav class="tabs" aria-label="Secções"><a href="./" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 21V5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v16"/><path d="M3 21h12"/><path d="M7 7h4v4H7z"/><path d="M14 10h2a2 2 0 0 1 2 2v4a1.5 1.5 0 0 0 3 0V8l-3-3"/></svg>Combustíveis</a><a href="carregadores.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg>Carregadores<span class="tl-x"> elétricos</span></a></nav>
   <header>
     <div>
       <h1 id="h1">Postos de <span>Portugal</span></h1>
@@ -335,11 +336,13 @@ const LocCtl=L.Control.extend({options:{position:"topleft"},onAdd(){
 new LocCtl().addTo(map);
 map.on("moveend",()=>{shown=50;renderList()});
 
+/* Pedido com limite de tempo: se o servidor não responder em 15 s, tenta mais uma vez e depois desiste (em vez de ficar "A carregar…" para sempre) */
+async function fetchT(u,o={},ms=15000,tries=2){for(let i=0;;i++){const c=new AbortController(),t=setTimeout(()=>c.abort(),ms);try{const r=await fetch(u,{...o,signal:c.signal});clearTimeout(t);return r}catch(e){clearTimeout(t);if(i+1>=tries)throw e}}}
 async function fetchScope(sc,fid){
   const key=sc+"|"+fid; if(cache.has(key))return cache.get(key);
   let q=`idsTiposComb=${fid}&qtdPorPagina=5000&pagina=1`;
   if(sc[0]==="d")q+="&idDistrito="+sc.slice(1);
-  const r=await fetch(`${API}?${q}`,{cache:"no-store"}); if(!r.ok)throw new Error(r.status);
+  const r=await fetchT(`${API}?${q}`,{cache:"no-store"}); if(!r.ok)throw new Error(r.status);
   const j=await r.json();
   const rows=(j.resultado||[]).map(x=>({id:x.Id,n:String(x.Nome).trim(),b:brandOf(x.Marca),a:String(x.Morada||"").trim(),cp:x.CodPostal,loc:[x.Localidade,x.Municipio].filter(Boolean).join(", "),mun:String(x.Municipio||"").trim(),locn:String(x.Localidade||"").trim(),lat:+x.Latitude,lon:+x.Longitude,price:parseFloat(String(x.Preco).replace("€","").replace(",",".").trim()),d:x.DataAtualizacao}))
     .filter(s=>isFinite(s.price)&&s.lat&&s.lon);
@@ -443,9 +446,9 @@ function renderList(){
       :`<span class="price${diff<0.0005?" best":""}"><span class="pv">${fuelBadge(FUEL_NAME[fuelId],20)}${eur(dc.final)}</span><small>${diff<0.0005?"o mais barato aqui":"+"+(diff*100).toFixed(1).replace(".",",")+" cênt. que o mais barato"}</small></span>`}
       <span class="check" aria-hidden="true">✓</span></button>
       ${has?`<details class="discd"><summary>Como obter este desconto</summary>${Discounts.explain(dc)}</details>`:""}
-      <div class="gm"><a class="enter" href="posto.html?id=${s.id}">Entrar no posto →</a><button type="button" class="favbtn${window.Account?.isFav("fuel",s.id)?" on":""}" data-fav="${s.id}">${window.Account?.isFav("fuel",s.id)?"★ Favorito":"☆ Favorito"}</button><a href="${gmView(s)}" target="_blank" rel="noopener">Ver no Google Maps ↗</a><a href="${gmGo(s)}" target="_blank" rel="noopener">Navegar até aqui ↗</a></div></div>`}).join("")
+      <div class="gm"><a class="enter" href="posto.html?id=${s.id}">Entrar no posto →</a><button type="button" class="favbtn${window.Account?.isFav("fuel",s.id)?" on":""}" data-fav="${s.id}">${window.Account?.isFav("fuel",s.id)?"★ Favorito":"☆ Favorito"}</button><a href="${gmView(s)}" target="_blank" rel="noopener" class="gmview">Ver no Google Maps ↗</a><a href="${gmGo(s)}" target="_blank" rel="noopener">Navegar até aqui ↗</a></div></div>`}).join("")
     +(vis.length>shown?`<button type="button" class="more" id="more">Mostrar mais ${Math.min(50,vis.length-shown)} de ${vis.length-shown} postos</button>`:"")
-    :`<div class="empty">${data.length?"Não há postos com estes filtros nesta zona do mapa. Afaste o mapa, retire uma marca ou mude a pesquisa.":"Sem postos para mostrar."}</div>`;
+    :`<div class="empty">${data.length?"Não há postos com estes filtros nesta zona do mapa. Afaste o mapa, retire uma marca ou mude a pesquisa.":`A DGEG não respondeu a tempo. <button type="button" class="more" onclick="load(true)">Tentar de novo</button>`}</div>`;
   document.querySelectorAll(".st").forEach(el=>{const s=data.find(x=>x.id===+el.dataset.id);el.onclick=()=>toggle(s)});
   document.querySelectorAll("[data-fav]").forEach(b=>b.onclick=()=>{const s=data.find(x=>x.id===+b.dataset.fav);if(!s)return;if(!window.Account){location.href="conta.html";return}Account.toggleFav({k:"fuel",id:s.id,t:s.n,sub:[s.b,s.a,s.loc].filter(Boolean).join(" · "),lat:s.lat,lng:s.lon})});
   if($("more"))$("more").onclick=()=>{shown+=50;renderList()};
@@ -509,6 +512,7 @@ Discounts.load().then(()=>{if(data.length)renderList()});
 new ResizeObserver(()=>map.invalidateSize()).observe(document.getElementById("map"));
 load(true);
 </script>
+<script src="mobile.js"></script>
 <script>if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));</script>
 </body>
 </html>

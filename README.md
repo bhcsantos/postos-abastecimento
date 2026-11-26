@@ -28,6 +28,7 @@ Site para encontrar e comparar postos de abastecimento em Portugal continental, 
 | `posto.html` | Ficha de um posto, aberta como `posto.html?id=<número do posto na DGEG>`. |
 | `carregadores.html` | Carregadores elétricos da MOBI.E, com estado em direto e preços do operador. |
 | `dropdown.js` | Caixas de filtro (combustível, concelho, localidade, marca, ficha, potência, estado, operador), com escolha múltipla e pesquisa nas listas grandes. |
+| `mobile.css`, `mobile.js` | Ajustes para telemóvel (topo mais compacto, mapa a meio ecrã, postos mais baixos) e o botão flutuante "Ver lista / Ver mapa". |
 | `route.js` | O percurso partilhado pelas três páginas (guardado no navegador). |
 | `worker/mobie-proxy.js` | Código do intermediário (Cloudflare Worker) que corre em `https://mobie-proxy.bhcsantos.workers.dev`. Está no repositório para consulta; não corre no GitHub Pages. |
 | `descontos.js`, `data/descontos.json` | Cartões de desconto: o utilizador acrescenta o que tem (pesquisa por nome), o site aplica a melhor combinação em cada posto e explica o que é preciso. Regras com fonte, validade e estado. Repsol: planos My Repsol e 35 cartões de parceiro, a partir de repsol.pt/particulares/beneficios e /parceiros. BP: campanha Litro a Litro, Poupa Mais, ACP, BP Bonus, Via Verde e EDP. Alves Bandeira: Pontos AB. Moeve: Poupe a Dobrar (saldo Gow) e preço único nos carregadores. Há descontos que só valem em certos dias (campos `diasSemana` e `diaMes`). |

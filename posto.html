@@ -109,6 +109,7 @@ dt{color:var(--muted)} dd{margin:0;font-weight:500}
 .err{color:var(--bad)}
 .skel{color:var(--muted)}
 </style>
+<link rel="stylesheet" href="mobile.css">
 </head>
 <body>
 <div class="wrap">
@@ -158,14 +159,16 @@ const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v)
 const $=id=>document.getElementById(id);
 
 const id=+new URLSearchParams(location.search).get("id");
-async function getJSON(u){const r=await fetch(u,{cache:"no-store"});if(!r.ok)throw new Error(r.status);const j=await r.json();if(!j.status)throw new Error(j.mensagem||"erro");return j.resultado}
+/* Pedido com limite de tempo: se o servidor não responder em 15 s, tenta mais uma vez e depois desiste (em vez de ficar "A carregar…" para sempre) */
+async function fetchT(u,o={},ms=15000,tries=2){for(let i=0;;i++){const c=new AbortController(),t=setTimeout(()=>c.abort(),ms);try{const r=await fetch(u,{...o,signal:c.signal});clearTimeout(t);return r}catch(e){clearTimeout(t);if(i+1>=tries)throw e}}}
+async function getJSON(u){const r=await fetchT(u,{cache:"no-store"});if(!r.ok)throw new Error(r.status);const j=await r.json();if(!j.status)throw new Error(j.mensagem||"erro");return j.resultado}
 
 async function main(){
-  await Discounts.load();
+  const dl=Promise.race([Discounts.load(),new Promise(r=>setTimeout(r,8000))]); // os descontos não podem atrasar a ficha
   if(!id){$("content").innerHTML=`<p class="err">Falta o número do posto no endereço. Volte à lista e escolha um posto.</p>`;return}
   let p;
-  try{p=await getJSON(`${API}/GetDadosPosto?id=${id}`);if(/^cepsa$/i.test(String(p.Marca||"").trim()))p.Marca="MOEVE"/* Cepsa = Moeve */}
-  catch(e){$("content").innerHTML=`<p class="err">Não foi possível obter a ficha deste posto na DGEG. Tente de novo dentro de momentos.</p>`;return}
+  try{[p]=await Promise.all([getJSON(`${API}/GetDadosPosto?id=${id}`),dl]);if(/^cepsa$/i.test(String(p.Marca||"").trim()))p.Marca="MOEVE"/* Cepsa = Moeve */}
+  catch(e){$("content").innerHTML=`<p class="err">A DGEG não respondeu a tempo e não foi possível obter a ficha deste posto. <button type="button" class="btn" onclick="location.reload()">Tentar de novo</button></p>`;return}
   const m=p.Morada||{}, lat=+m.Latitude, lon=+m.Longitude;
   document.title=`${p.Nome} · Postos de Abastecimento`;
   const h=p.HorarioPosto||{};

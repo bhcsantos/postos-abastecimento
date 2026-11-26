@@ -1,0 +1,68 @@
+/* Ajustes para telemóvel, partilhados por todas as páginas.
+   Objetivo: o mapa e a lista aparecem cedo, cada posto ocupa menos altura e os botões são fáceis de tocar. */
+.tl-x{display:inline}
+.mjump{display:none}
+@media (max-width:600px){
+  body{font-size:15px}
+  body .wrap{padding-block:10px 88px;gap:12px}
+
+  /* Topo: separadores e botões mais baixos, sem a frase de apresentação */
+  body .tl-x{display:none}
+  body nav.tabs a{padding:8px 6px;font-size:.92rem;gap:6px}
+  body nav.tabs svg{width:18px;height:18px}
+  body .topbar{gap:8px}
+  body .topright{gap:6px}
+  body .topright .discbtn,body .topright .acct,body .topright button,body .topright a{padding:7px 10px;font-size:.86rem}
+  body header{gap:6px}
+  body h1{font-size:1.65rem}
+  body .sub{display:none}
+  body .note{font-size:.74rem;padding:6px 10px;line-height:1.35}
+  body .prevban{padding:8px 10px;gap:8px;font-size:.88rem}
+
+  /* Filtros */
+  body .row{gap:8px}
+  body .scope,body .search{padding:9px 10px;flex-basis:100%}
+  body .filters{gap:6px}
+  body .dd-btn{min-height:44px;padding:5px 8px 5px 10px}
+  body .dd-v{font-size:.88rem}
+
+  /* Mapa: ocupa metade do ecrã; o texto de ajuda por baixo fica escondido */
+  body #map,body .leftcol #map{height:52vh;min-height:300px}
+  body .mapbox{padding:4px}
+  body .cap>span:first-child{display:none}
+
+  /* Percurso: sem o texto de explicação (fica só o título e as paragens) */
+  body .traydesc{display:none}
+  body .tray{padding:10px}
+
+  /* Lista de postos de combustível */
+  body .st{gap:8px;padding:10px 10px 4px}
+  body .brand{min-width:44px;max-width:72px;font-size:.7rem;padding:3px 5px}
+  body .st h3{font-size:.95rem}
+  body .addr{font-size:.8rem}
+  body .st .disc{display:none}             /* o resumo do desconto já está no preço e em "Como obter" */
+  body .ps-l{font-size:.62rem}
+  body .ps-pay .pv{font-size:1.05rem}
+  body .discd{margin:0 10px 6px}
+  body .gm{padding:2px 10px 10px;gap:4px 14px}
+  body .gm a.gmview{display:none}            /* "Navegar até aqui" chega no telemóvel */
+  body .gm a,body .gm .favbtn,body .links a,body .links button{padding:6px 0}
+  body .gm a.enter{padding:7px 12px}
+
+  /* Lista de carregadores */
+  body .pricesum{font-family:var(--body);font-size:.8rem}
+  body .sock{font-size:.74rem;padding:2px 6px}
+  body .links a.gmview{display:none}
+
+  /* Botão flutuante para saltar entre o mapa e a lista */
+  body .mjump{display:inline-flex;align-items:center;gap:6px;position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:1100;
+    font:inherit;font-weight:600;font-size:.9rem;padding:11px 16px;border-radius:999px;border:0;background:var(--accent);color:var(--surface);
+    box-shadow:0 6px 18px rgba(0,0,0,.25);cursor:pointer}
+  body .mjump[hidden]{display:none}
+
+  /* Ficha do posto: botões em grelha de duas colunas */
+  body .card{padding:12px}
+  body .actions{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+  body .actions>*{justify-content:center;text-align:center;padding:9px 6px;font-size:.84rem}
+  body .actions>.btn:not(.ghost){grid-column:1/-1}
+}
