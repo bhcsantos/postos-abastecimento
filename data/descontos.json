@@ -5,6 +5,7 @@
   "Galp",
   "BP",
   "Alves Bandeira",
+  "Moeve",
   "Operadoras de telecomunicações",
   "Seguros e bancos",
   "Lojas e supermercados",
@@ -722,6 +723,32 @@
     "bluemarket"
    ],
    "fonte": "https://www.alvesbandeira.pt/pt/pontos-ab/"
+  },
+  {
+   "id": "moeve-gow",
+   "nome": "Moeve — programa Moeve Gow (app ou cartão)",
+   "grupo": "Moeve",
+   "marca": "MOEVE",
+   "pesquisa": [
+    "moeve",
+    "gow",
+    "cepsa"
+   ],
+   "fonte": "https://pt.moeveglobal.com/stfls/cepsa-pt/Ficheros/poupe-a-dobrar-bases-legais.pdf"
+  },
+  {
+   "id": "moeve-gow-deco",
+   "nome": "Moeve — Moeve Gow DECO (sócios DECO PROteste)",
+   "grupo": "Moeve",
+   "marca": "MOEVE",
+   "pesquisa": [
+    "moeve",
+    "gow",
+    "deco",
+    "proteste",
+    "cepsa"
+   ],
+   "fonte": "https://pt.moeveglobal.com/stfls/cepsa-pt/Ficheros/condicoes-gerais-da-promocao-opc-ceme-moeve-260831.pdf"
   }
  ],
  "descontos": [
@@ -5614,6 +5641,131 @@
    "fontes": [
     "https://www.alvesbandeira.pt/pt/pontos-ab/"
    ]
+  },
+  {
+   "id": "moeve-dobrar-simples",
+   "titulo": "Moeve Gow — Poupe a Dobrar",
+   "marcas": [
+    "MOEVE",
+    "CEPSA"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "combustiveis": [
+    "Gasóleo simples",
+    "Gasolina 95 simples"
+   ],
+   "requer": [
+    "moeve-gow"
+   ],
+   "exclui": [],
+   "direto": 0,
+   "saldo": 0.05,
+   "saldoOnde": "saldo Gow",
+   "cumulativo": false,
+   "inicio": "2026-11-02",
+   "fim": "2026-11-30",
+   "condicoes": "De 2 a 30 de novembro de 2026: 5 cênt./litro adicionais em saldo Gow nos combustíveis simples, sem consumo mínimo, nos postos Moeve e Cepsa aderentes. Não acumula com cartões de frota (Moeve Pro, StarRessa), cartões Táxi, Coletivos, DECO PROteste, Cartão de Crédito Moeve Gow nem outros descontos do posto.",
+   "comoUsar": "Identifique-se como participante Moeve Gow (app ou cartão) ao pagar. O saldo aparece na conta Gow até 72 horas depois.",
+   "limite": "Termina a 30/11/2026 (a Moeve pode terminá-la antes).",
+   "fonte": "https://pt.moeveglobal.com/stfls/cepsa-pt/Ficheros/poupe-a-dobrar-bases-legais.pdf",
+   "fontes": [
+    "https://pt.moeveglobal.com/stfls/cepsa-pt/Ficheros/poupe-a-dobrar-bases-legais.pdf"
+   ],
+   "verificado": "2026-11-26",
+   "estado": "confirmado"
+  },
+  {
+   "id": "moeve-dobrar-max",
+   "titulo": "Moeve Gow — Poupe a Dobrar (Max/Óptima)",
+   "marcas": [
+    "MOEVE",
+    "CEPSA"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "combustiveis": [
+    "Gasóleo especial",
+    "Gasolina 95 especial",
+    "Gasolina 98 especial"
+   ],
+   "requer": [
+    "moeve-gow"
+   ],
+   "exclui": [],
+   "direto": 0,
+   "saldo": 0.06,
+   "saldoOnde": "saldo Gow",
+   "cumulativo": false,
+   "inicio": "2026-11-02",
+   "fim": "2026-11-30",
+   "condicoes": "De 2 a 30 de novembro de 2026: 6 cênt./litro adicionais em saldo Gow na gama Moeve Max/Óptima, sem consumo mínimo, nos postos Moeve e Cepsa aderentes. Não acumula com cartões de frota (Moeve Pro, StarRessa), cartões Táxi, Coletivos, DECO PROteste, Cartão de Crédito Moeve Gow nem outros descontos do posto.",
+   "comoUsar": "Identifique-se como participante Moeve Gow (app ou cartão) ao pagar. O saldo aparece na conta Gow até 72 horas depois.",
+   "limite": "Termina a 30/11/2026 (a Moeve pode terminá-la antes).",
+   "fonte": "https://pt.moeveglobal.com/stfls/cepsa-pt/Ficheros/poupe-a-dobrar-bases-legais.pdf",
+   "fontes": [
+    "https://pt.moeveglobal.com/stfls/cepsa-pt/Ficheros/poupe-a-dobrar-bases-legais.pdf"
+   ],
+   "verificado": "2026-11-26",
+   "estado": "confirmado"
+  },
+  {
+   "id": "moeve-ev-gow",
+   "titulo": "Moeve — preço único nos carregadores (Gow)",
+   "carregamento": true,
+   "marcas": [
+    "CEPSA",
+    "MOEVE"
+   ],
+   "requer": [
+    "moeve-gow"
+   ],
+   "exclui": [
+    "moeve-gow-deco"
+   ],
+   "percSaldo": 0.04,
+   "saldoOnde": "saldo Gow",
+   "cumulativo": false,
+   "fim": "2026-12-31",
+   "condicoes": "Até 31/12/2026, nos carregadores da própria Moeve (Party ID CEPS) em Portugal continental, o preço final é de até 0,50 €/kWh a partir do 2.º kWh, já com operador, comercializador (CEME), taxas e impostos. Com Moeve Gow recebe 2 cênt./kWh em saldo: preço efetivo 0,48 €/kWh. O site aplica estes 2 cênt. como 4% de saldo sobre o custo estimado.",
+   "comoUsar": "Carregue nos postos Moeve com a Moeve como comercializador (CEME) e identifique-se com a app Moeve Gow.",
+   "limite": "Só nos carregadores operados pela Moeve; a Moeve pode alterar ou terminar a campanha.",
+   "fonte": "https://pt.moeveglobal.com/stfls/cepsa-pt/Ficheros/condicoes-gerais-da-promocao-opc-ceme-moeve-260831.pdf",
+   "fontes": [
+    "https://pt.moeveglobal.com/stfls/cepsa-pt/Ficheros/condicoes-gerais-da-promocao-opc-ceme-moeve-260831.pdf"
+   ],
+   "verificado": "2026-11-26",
+   "estado": "confirmado"
+  },
+  {
+   "id": "moeve-ev-deco",
+   "titulo": "Moeve — preço único nos carregadores (Gow DECO)",
+   "carregamento": true,
+   "marcas": [
+    "CEPSA",
+    "MOEVE"
+   ],
+   "requer": [
+    "moeve-gow-deco"
+   ],
+   "exclui": [],
+   "percSaldo": 0.08,
+   "saldoOnde": "saldo Gow",
+   "cumulativo": false,
+   "fim": "2026-12-31",
+   "condicoes": "Até 31/12/2026, nos carregadores da própria Moeve (Party ID CEPS) em Portugal continental, o preço final é de até 0,50 €/kWh a partir do 2.º kWh, já com operador, comercializador (CEME), taxas e impostos. Com Moeve Gow DECO recebe 4 cênt./kWh em saldo: preço efetivo 0,46 €/kWh. O site aplica estes 4 cênt. como 8% de saldo sobre o custo estimado.",
+   "comoUsar": "Carregue nos postos Moeve com a Moeve como comercializador (CEME) e identifique-se com a app Moeve Gow (conta DECO).",
+   "limite": "Só nos carregadores operados pela Moeve; a Moeve pode alterar ou terminar a campanha.",
+   "fonte": "https://pt.moeveglobal.com/stfls/cepsa-pt/Ficheros/condicoes-gerais-da-promocao-opc-ceme-moeve-260831.pdf",
+   "fontes": [
+    "https://pt.moeveglobal.com/stfls/cepsa-pt/Ficheros/condicoes-gerais-da-promocao-opc-ceme-moeve-260831.pdf"
+   ],
+   "verificado": "2026-11-26",
+   "estado": "confirmado"
   }
  ],
  "fontesGerais": [
