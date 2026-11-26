@@ -33,7 +33,13 @@
     rules(){
       if(!this.data)return[];
       const has=new Set(this.prefs.programas), t=today();
-      return this.data.descontos.filter(r=>(r.requer||[]).every(x=>has.has(x))&&!(r.exclui||[]).some(x=>has.has(x))&&(!r.fim||r.fim>=t)&&(!r.inicio||r.inicio<=t));
+      return this.data.descontos.filter(r=>(r.requer||[]).every(x=>has.has(x))&&!(r.exclui||[]).some(x=>has.has(x))&&(!r.fim||r.fim>=t)&&(!r.inicio||r.inicio<=t)&&this.hoje(r));
+    },
+    /* Descontos só em certos dias: diasSemana [0=domingo … 6=sábado] e/ou diaMes (ex.: 15) */
+    hoje(r,d=new Date()){
+      if(r.diasSemana&&!r.diasSemana.includes(d.getDay()))return false;
+      if(r.diaMes&&r.diaMes!==d.getDate())return false;
+      return true;
     },
     /* Melhor cenário: final = na bomba − desconto imediato; efetivo = final − saldo */
     apply(brand,fuel,price){
@@ -72,7 +78,7 @@
     },
     /* Explicação completa: o que é preciso, como usar, limites e fonte */
     explain(a){
-      return a.regras.map(r=>`<div class="dexp"><div><strong>${esc(r.titulo)}</strong>${r.estado&&r.estado!=="confirmado"?` <span class="dst warn">a confirmar</span>`:""}</div>
+      return a.regras.map(r=>`<div class="dexp"><div><strong>${esc(r.titulo)}</strong>${r.estado&&r.estado!=="confirmado"?` <span class="dst warn">a confirmar</span>`:""}${r.diasSemana||r.diaMes?` <span class="dst">só ${esc(r.quando||"hoje")}</span>`:""}</div>
         <div>${esc(r.condicoes||"")}</div>
         ${r.carregamento?"":""}<div><b>O que precisa:</b> ${(r.requer||[]).map(id=>esc(this.prog(id)?.nome||id)).join(" + ")}${(r.exclui||[]).length?` (sem ${(r.exclui||[]).filter(id=>this.prog(id)).map(id=>esc(this.prog(id).nome)).join(" nem ")})`.replace(/\(sem \)/,""):""}.</div>
         ${r.comoUsar?`<div><b>Como usar:</b> ${esc(r.comoUsar)}</div>`:""}
@@ -174,7 +180,7 @@ dialog.dlg::backdrop{background:rgba(10,16,26,.55)}
 .dexp{display:grid;gap:3px;font-size:.86rem}
 .dexp a{color:var(--accent)}
 .dlim{color:var(--muted);font-size:.8rem}
-.dst{font-size:.7rem;border-radius:999px;padding:1px 8px}.dst.warn{background:#d97a00;color:#fff}
+.dst{font-size:.7rem;border-radius:999px;padding:1px 8px;background:var(--accent-soft);color:var(--accent)}.dst.warn{background:#d97a00;color:#fff}
 .dlgact{display:flex;gap:8px}
 details.discd{margin:0 12px 8px 82px;font-size:.84rem}
 details.discd summary{cursor:pointer;color:var(--good);font-weight:600}

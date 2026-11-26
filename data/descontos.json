@@ -4,6 +4,7 @@
   "Repsol",
   "Galp",
   "BP",
+  "Alves Bandeira",
   "Operadoras de telecomunicações",
   "Seguros e bancos",
   "Lojas e supermercados",
@@ -678,6 +679,49 @@
     "poupa mais"
    ],
    "fonte": "https://www.bp.com/pt_pt/portugal/home/campanhas/feitas-as-contas--a-bp-compensa.html"
+  },
+  {
+   "id": "bp-acp",
+   "nome": "BP — cartão ACP (sócio ACP)",
+   "grupo": "BP",
+   "marca": "BP",
+   "exclusivo": "bp-bonus",
+   "pesquisa": [
+    "bp",
+    "acp",
+    "automovel club",
+    "socio",
+    "bonus"
+   ],
+   "fonte": "https://www.bp.com/pt_pt/portugal/home/produtos-e-servicos/solucoes-particulares/parcerias-e-descontos.html"
+  },
+  {
+   "id": "bp-bonus",
+   "nome": "BP — cartão BP Bonus (grupos e associações)",
+   "grupo": "BP",
+   "marca": "BP",
+   "exclusivo": "bp-bonus",
+   "pesquisa": [
+    "bp",
+    "bonus",
+    "associacao",
+    "grupo",
+    "castrol"
+   ],
+   "fonte": "https://www.bp.com/pt_pt/portugal/home/produtos-e-servicos/solucoes-particulares/parcerias-e-descontos.html"
+  },
+  {
+   "id": "ab-pontos",
+   "nome": "Alves Bandeira — cartão Pontos AB",
+   "grupo": "Alves Bandeira",
+   "marca": "ALVES BANDEIRA",
+   "pesquisa": [
+    "alves bandeira",
+    "pontos ab",
+    "ab",
+    "bluemarket"
+   ],
+   "fonte": "https://www.alvesbandeira.pt/pt/pontos-ab/"
   }
  ],
  "descontos": [
@@ -4920,13 +4964,18 @@
    "saldo": 0.1,
    "saldoOnde": "saldo Cartão Continente",
    "cumulativo": false,
-   "condicoes": "Cupão de 10 cênt./litro recebido em compras de 30 € ou mais nas lojas Continente de Portugal continental com o Cartão Continente. Usado num posto Galp aderente, o desconto acumula em saldo no Cartão Continente.",
+   "condicoes": "Cupão de 10 cênt./litro recebido em compras de 30 € ou mais no Continente ou Continente Modelo (25 € no Continente Bom Dia), com o Cartão Continente. Usado num posto Galp aderente, o desconto acumula em saldo no Cartão Continente.",
    "comoUsar": "Faça compras de 30 € ou mais no Continente com o Cartão Continente; depois abasteça num posto Galp aderente e apresente o cupão (ou o Cartão Continente com o cupão ativo).",
    "limite": "Só quando tem um cupão ativo (depende das compras no Continente). O saldo pode pagar abastecimentos na Galp até 50 €, exceto gasóleo agrícola e de aquecimento. Não confirmado se acumula com o Plano COMBINA; aqui conta-se o melhor dos dois.",
    "fonte": "https://cartaocontinente.pt/ParceiroDetalhe.aspx?InsigniaId=2",
    "origem": "Página do Cartão Continente (cópia em PDF enviada pelo dono do site, 25/11/2026)",
-   "verificado": "2026-11-25",
-   "estado": "confirmado"
+   "verificado": "2026-11-26",
+   "estado": "confirmado",
+   "nota": "A Galp confirma que não se aplica a quem tem o Plano COMBINA.",
+   "fontes": [
+    "https://cartaocontinente.pt/ParceiroDetalhe.aspx?InsigniaId=2",
+    "https://www.galp.com/pt/pt/particulares/estrada/galp-continente"
+   ]
   },
   {
    "id": "continente-cupao-luz",
@@ -4946,13 +4995,18 @@
    "saldo": 0.14,
    "saldoOnde": "saldo Cartão Continente",
    "cumulativo": false,
-   "condicoes": "Cupão de 14 cênt./litro (cliente de eletricidade Galp) recebido em compras de 30 € ou mais nas lojas Continente de Portugal continental com o Cartão Continente. Usado num posto Galp aderente, o desconto acumula em saldo no Cartão Continente.",
+   "condicoes": "Cupão de 14 cênt./litro (cliente de eletricidade Galp) recebido em compras de 30 € ou mais no Continente ou Continente Modelo (25 € no Continente Bom Dia), com o Cartão Continente. Usado num posto Galp aderente, o desconto acumula em saldo no Cartão Continente.",
    "comoUsar": "Faça compras de 30 € ou mais no Continente com o Cartão Continente; depois abasteça num posto Galp aderente e apresente o cupão (ou o Cartão Continente com o cupão ativo).",
    "limite": "Só quando tem um cupão ativo (depende das compras no Continente). O saldo pode pagar abastecimentos na Galp até 50 €, exceto gasóleo agrícola e de aquecimento. Não confirmado se acumula com o Plano COMBINA; aqui conta-se o melhor dos dois.",
    "fonte": "https://cartaocontinente.pt/ParceiroDetalhe.aspx?InsigniaId=2",
    "origem": "Página do Cartão Continente (cópia em PDF enviada pelo dono do site, 25/11/2026)",
-   "verificado": "2026-11-25",
-   "estado": "confirmado"
+   "verificado": "2026-11-26",
+   "estado": "confirmado",
+   "nota": "A Galp confirma que não se aplica a quem tem o Plano COMBINA.",
+   "fontes": [
+    "https://cartaocontinente.pt/ParceiroDetalhe.aspx?InsigniaId=2",
+    "https://www.galp.com/pt/pt/particulares/estrada/galp-continente"
+   ]
   },
   {
    "marcas": [
@@ -5110,8 +5164,8 @@
    ],
    "exclui": [],
    "direto": 0.2,
-   "saldo": 0.05,
-   "cumulativo": true,
+   "saldo": 0.04,
+   "cumulativo": false,
    "verificado": "2026-11-26",
    "estado": "confirmado",
    "id": "bp-poupamais",
@@ -5120,13 +5174,14 @@
     "bp-poupamais"
    ],
    "saldoOnde": "saldo Pingo Doce",
-   "condicoes": "Por cada 30 € de compras no Pingo Doce acumula 3 € de saldo para combustível bp. Ao abastecer, desconta esse saldo (no exemplo da bp, 4 € em 20 litros = 20 cênt./l) e ganha saldo para o Pingo Doce (1 € em 20 litros = 5 cênt./l). A bp indica até 30 cênt./l no total em abastecimentos de 60 litros (12 € de desconto + 6 € para o Pingo Doce).",
+   "condicoes": "Por cada 30 € de compras no Pingo Doce acumula 3 € de saldo para combustível bp. Ao abastecer, desconta esse saldo (cerca de 20 cênt./l: no simulador do Pingo Doce, 5 € em 25 litros) e ganha saldo Pingo Doce (1 € em 25 litros, 4 cênt./l). Os valores variam com os litros, segundo a tabela da bp; o máximo anunciado é 30 cênt./l em 60 litros (12 € + 6 €).",
    "comoUsar": "Use o cartão Poupa Mais (ou a app O Meu Pingo Doce) nas compras do Pingo Doce e ao pagar na bp.",
-   "limite": "O desconto na hora depende de ter saldo acumulado em compras no Pingo Doce (3 € por cada 30 €). Os valores exatos seguem a tabela da bp em vigor.",
+   "limite": "Mínimo 16 litros. Só há desconto (e saldo Pingo Doce) se tiver saldo bp ganho em compras no Pingo Doce. Não acumula com os cartões Bónus (incluindo o ACP) nem com o Routex: o site escolhe o melhor.",
    "fonte": "https://www.bp.com/pt_pt/portugal/home/campanhas/feitas-as-contas--a-bp-compensa.html",
    "fontes": [
     "https://www.bp.com/pt_pt/portugal/home/campanhas/feitas-as-contas--a-bp-compensa.html",
-    "https://www.bp.com/pt_pt/portugal/home/campanhas/campanha-litro-a-litro.html"
+    "https://www.pingodoce.pt/parcerias/desconto-poupa-mais-bp/",
+    "https://www.bp.com/pt_pt/portugal/home/produtos-e-servicos/solucoes-particulares/parcerias-e-descontos.html"
    ]
   },
   {
@@ -5323,6 +5378,241 @@
    "fonte": "https://www.bp.com/pt_pt/portugal/home/campanhas/feitas-as-contas--a-bp-compensa.html",
    "fontes": [
     "https://www.bp.com/pt_pt/portugal/home/campanhas/feitas-as-contas--a-bp-compensa.html"
+   ]
+  },
+  {
+   "marcas": [
+    "BP"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "exclui": [],
+   "direto": 0.06,
+   "saldo": 0,
+   "cumulativo": false,
+   "verificado": "2026-11-26",
+   "estado": "confirmado",
+   "id": "bp-acp-uteis-simples",
+   "titulo": "Cartão ACP na bp (dias úteis)",
+   "combustiveis": [
+    "Gasóleo simples",
+    "Gasolina 95 simples"
+   ],
+   "requer": [
+    "bp-acp"
+   ],
+   "diasSemana": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "quando": "em dias úteis",
+   "condicoes": "Sócios ACP: 6 cênt./litro nos combustíveis simples (também gasóleo agrícola e autogás) em dias úteis. Acumula com a campanha Litro a Litro, o saldo Via Verde e o saldo EDP. Não acumula com o Poupa Mais (o site escolhe o melhor dos dois).",
+   "comoUsar": "Mostre o cartão ACP ao pagar.",
+   "limite": "Desconto direto na hora.",
+   "fonte": "https://www.bp.com/pt_pt/portugal/home/produtos-e-servicos/solucoes-particulares/parcerias-e-descontos.html",
+   "fontes": [
+    "https://www.bp.com/pt_pt/portugal/home/produtos-e-servicos/solucoes-particulares/parcerias-e-descontos.html"
+   ]
+  },
+  {
+   "marcas": [
+    "BP"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "exclui": [],
+   "direto": 0.09,
+   "saldo": 0,
+   "cumulativo": false,
+   "verificado": "2026-11-26",
+   "estado": "confirmado",
+   "id": "bp-acp-uteis-ultimate",
+   "titulo": "Cartão ACP na bp (dias úteis, bp Ultimate)",
+   "combustiveis": [
+    "Gasóleo especial",
+    "Gasolina 95 especial",
+    "Gasolina 98 especial"
+   ],
+   "requer": [
+    "bp-acp"
+   ],
+   "diasSemana": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "quando": "em dias úteis",
+   "condicoes": "Sócios ACP: 9 cênt./litro nos combustíveis bp Ultimate em dias úteis. Acumula com a campanha Litro a Litro, o saldo Via Verde e o saldo EDP. Não acumula com o Poupa Mais (o site escolhe o melhor dos dois).",
+   "comoUsar": "Mostre o cartão ACP ao pagar.",
+   "limite": "Desconto direto na hora.",
+   "fonte": "https://www.bp.com/pt_pt/portugal/home/produtos-e-servicos/solucoes-particulares/parcerias-e-descontos.html",
+   "fontes": [
+    "https://www.bp.com/pt_pt/portugal/home/produtos-e-servicos/solucoes-particulares/parcerias-e-descontos.html"
+   ]
+  },
+  {
+   "marcas": [
+    "BP"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "exclui": [],
+   "direto": 0.1,
+   "saldo": 0,
+   "cumulativo": false,
+   "verificado": "2026-11-26",
+   "estado": "confirmado",
+   "id": "bp-acp-fds",
+   "titulo": "Cartão ACP na bp (fim de semana)",
+   "requer": [
+    "bp-acp"
+   ],
+   "diasSemana": [
+    0,
+    6
+   ],
+   "quando": "ao fim de semana",
+   "condicoes": "Sócios ACP: 10 cênt./litro em todos os combustíveis ao sábado e ao domingo. Acumula com a campanha Litro a Litro, o saldo Via Verde e o saldo EDP. Não acumula com o Poupa Mais (o site escolhe o melhor dos dois).",
+   "comoUsar": "Mostre o cartão ACP ao pagar.",
+   "limite": "Desconto direto na hora.",
+   "fonte": "https://www.bp.com/pt_pt/portugal/home/produtos-e-servicos/solucoes-particulares/parcerias-e-descontos.html",
+   "fontes": [
+    "https://www.bp.com/pt_pt/portugal/home/produtos-e-servicos/solucoes-particulares/parcerias-e-descontos.html"
+   ]
+  },
+  {
+   "marcas": [
+    "BP"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "exclui": [],
+   "direto": 0.15,
+   "saldo": 0,
+   "cumulativo": false,
+   "verificado": "2026-11-26",
+   "estado": "confirmado",
+   "id": "bp-acp-dia15",
+   "titulo": "Cartão ACP na bp (dia 15, bp Ultimate)",
+   "combustiveis": [
+    "Gasóleo especial",
+    "Gasolina 95 especial",
+    "Gasolina 98 especial"
+   ],
+   "requer": [
+    "bp-acp"
+   ],
+   "diaMes": 15,
+   "quando": "no dia 15",
+   "condicoes": "Sócios ACP: 15 cênt./litro nos combustíveis bp Ultimate no dia 15 de cada mês. Acumula com a campanha Litro a Litro, o saldo Via Verde e o saldo EDP. Não acumula com o Poupa Mais (o site escolhe o melhor dos dois).",
+   "comoUsar": "Mostre o cartão ACP ao pagar.",
+   "limite": "Desconto direto na hora.",
+   "fonte": "https://www.bp.com/pt_pt/portugal/home/produtos-e-servicos/solucoes-particulares/parcerias-e-descontos.html",
+   "fontes": [
+    "https://www.bp.com/pt_pt/portugal/home/produtos-e-servicos/solucoes-particulares/parcerias-e-descontos.html"
+   ]
+  },
+  {
+   "marcas": [
+    "BP"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "exclui": [],
+   "direto": 0.06,
+   "saldo": 0,
+   "cumulativo": false,
+   "verificado": "2026-11-26",
+   "estado": "confirmado",
+   "id": "bp-bonus",
+   "titulo": "Cartão BP Bonus",
+   "requer": [
+    "bp-bonus"
+   ],
+   "condicoes": "Cartão para grupos e associações: 6 cênt./litro de desconto imediato. Acumula com a campanha Litro a Litro, o saldo Via Verde e o saldo EDP. Não acumula com o Poupa Mais (o site escolhe o melhor dos dois).",
+   "comoUsar": "Mostre o cartão BP Bonus ao pagar. Pergunte no posto se o desconto local desse dia é maior: não se somam.",
+   "limite": "Não acumula com o desconto local do posto.",
+   "fonte": "https://www.bp.com/pt_pt/portugal/home/produtos-e-servicos/solucoes-particulares/parcerias-e-descontos.html",
+   "fontes": [
+    "https://www.bp.com/pt_pt/portugal/home/produtos-e-servicos/solucoes-particulares/parcerias-e-descontos.html"
+   ]
+  },
+  {
+   "marcas": [
+    "ALVES BANDEIRA"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "exclui": [],
+   "direto": 0.12,
+   "saldo": 0,
+   "cumulativo": false,
+   "verificado": "2026-11-26",
+   "estado": "a confirmar",
+   "id": "ab-quarta",
+   "titulo": "Pontos AB à quarta-feira",
+   "requer": [
+    "ab-pontos"
+   ],
+   "diasSemana": [
+    3
+   ],
+   "quando": "à quarta-feira",
+   "condicoes": "Às quartas-feiras, até 12 cênt./litro num único abastecimento a partir de 40 €. O site usa o valor máximo (12 cênt.); a página não diz se é na hora ou em pontos.",
+   "comoUsar": "Mostre o cartão Pontos AB (ou a app Alves Bandeira) ao pagar.",
+   "limite": "Um abastecimento por quarta-feira, de 40 € ou mais.",
+   "fonte": "https://www.alvesbandeira.pt/pt/pontos-ab/",
+   "fontes": [
+    "https://www.alvesbandeira.pt/pt/pontos-ab/"
+   ]
+  },
+  {
+   "marcas": [
+    "ALVES BANDEIRA"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "exclui": [],
+   "direto": 0.06,
+   "saldo": 0,
+   "cumulativo": false,
+   "verificado": "2026-11-26",
+   "estado": "a confirmar",
+   "id": "ab-fds",
+   "titulo": "Pontos AB ao fim de semana",
+   "requer": [
+    "ab-pontos"
+   ],
+   "diasSemana": [
+    0,
+    6
+   ],
+   "quando": "ao fim de semana",
+   "condicoes": "Aos sábados e domingos, até 6 cênt./litro em todos os abastecimentos. O site usa o valor máximo (6 cênt.).",
+   "comoUsar": "Mostre o cartão Pontos AB (ou a app Alves Bandeira) ao pagar.",
+   "limite": "Valor \"até\": o desconto real pode ser menor.",
+   "fonte": "https://www.alvesbandeira.pt/pt/pontos-ab/",
+   "fontes": [
+    "https://www.alvesbandeira.pt/pt/pontos-ab/"
    ]
   }
  ],
