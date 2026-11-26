@@ -13,6 +13,7 @@
   const today=()=>new Date().toISOString().slice(0,10);
   /* Tipo de combustível a partir do nome da DGEG: "gasolina", "gasoleo" ou "gas" (GPL, GNC, GNL) */
   const fuelType=f=>/gpl|gnc|gnl|g[áa]s natural/i.test(f)?"gas":/gas[óo]leo|biodiesel/i.test(f)?"gasoleo":/gasolina/i.test(f)?"gasolina":"outro";
+  const canon=f=>norm(f).replace(/gasolina (simples|especial) (95|98)/,"gasolina $2 $1");
   const nice=b=>b.length<=2?b:b.charAt(0)+b.slice(1).toLowerCase();
 
   const D={
@@ -29,6 +30,7 @@
       if(p.exclusivo)l=l.filter(x=>this.prog(x)?.exclusivo!==p.exclusivo); // ex.: só um plano Repsol de cada vez
       this.prefs.programas=[...l,id]; this.save();
     },
+    addMany(ids){for(const id of ids){const p=this.prog(id);if(!p||this.has(id))continue;let l=this.prefs.programas;if(p.exclusivo)l=l.filter(x=>this.prog(x)?.exclusivo!==p.exclusivo);this.prefs.programas=[...l,id]}this.save()},
     remove(id){this.prefs.programas=this.prefs.programas.filter(x=>x!==id);this.save()},
     rules(){
       if(!this.data)return[];
@@ -36,7 +38,7 @@
       return this.data.descontos.filter(r=>(r.requer||[]).every(x=>has.has(x))&&!(r.exclui||[]).some(x=>has.has(x))&&(!r.fim||r.fim>=t)&&(!r.inicio||r.inicio<=t)&&this.hoje(r));
     },
     /* Descontos só em certos dias: diasSemana [0=domingo … 6=sábado] e/ou diaMes (ex.: 15) */
-    hoje(r,d=new Date()){
+    hoje(r,d=this._dia||new Date()){
       if(r.diasSemana&&!r.diasSemana.includes(d.getDay()))return false;
       if(r.diaMes&&r.diaMes!==d.getDate())return false;
       return true;
@@ -44,7 +46,7 @@
     /* Melhor cenário: final = na bomba − desconto imediato; efetivo = final − saldo */
     apply(brand,fuel,price){
       const b=norm(brand), ft=fuelType(fuel||"");
-      const rs=this.rules().filter(r=>!r.carregamento&&(r.marcas||[]).map(norm).includes(b)&&(!r.tipos||r.tipos.includes(ft))&&(!r.combustiveis||r.combustiveis.includes(fuel)));
+      const rs=this.rules().filter(r=>!r.carregamento&&(r.marcas||[]).map(norm).includes(b)&&(!r.tipos||r.tipos.includes(ft))&&(!r.combustiveis||r.combustiveis.map(canon).includes(canon(fuel))));
       if(!rs.length)return{price,final:price,efetivo:price,direto:0,saldo:0,regras:[]};
       const cum=rs.filter(r=>r.cumulativo);
       /* Melhor = maior total; depois mais desconto na hora; depois os confirmados antes dos "a confirmar" */
@@ -57,6 +59,40 @@
       const use=[...(best?[best]:[]),...cum];
       const direto=use.reduce((a,r)=>a+(r.direto||0),0), saldo=use.reduce((a,r)=>a+(r.saldo||0),0);
       return{price,final:price-direto,efetivo:price-direto-saldo,direto,saldo,regras:use,alternativas};
+    },
+    /* Faz contas com outros cartões (e outro dia), sem gravar nada */
+    simular(progs,dia,fn){const op=this.prefs,od=this._dia;this.prefs={programas:progs,condicoes:[]};this._dia=dia||null;try{return fn()}finally{this.prefs=op;this._dia=od}},
+    juntar(lista,ids){let l=[...lista];for(const id of ids){const p=this.prog(id);if(!p||l.includes(id))continue;if(p.exclusivo)l=l.filter(x=>this.prog(x)?.exclusivo!==p.exclusivo);l.push(id)}return l},
+    /* Próximo dia (até 31) em que um desconto com dias marcados vale */
+    proximoDia(r){const d=new Date();for(let i=0;i<32;i++){const x=new Date(d.getFullYear(),d.getMonth(),d.getDate()+i,12);if(this.hoje(r,x))return x}return null},
+    /* O que mais pode poupar nesta marca: cartões que ainda não tem, e os seus descontos que só valem noutros dias */
+    mais(brand,fuel,price,ev){
+      if(!this.data)return{extra:[],outrosDias:[]};
+      const b=norm(brand), ft=ev?null:fuelType(fuel||""), t=today();
+      const serve=r=>!!r.carregamento===!!ev&&(r.marcas||[]).map(norm).includes(b)&&(ev||((!r.tipos||r.tipos.includes(ft))&&(!r.combustiveis||r.combustiveis.map(canon).includes(canon(fuel)))))&&(!r.fim||r.fim>=t)&&(!r.inicio||r.inicio<=t);
+      const val=a=>ev?(a.perc||0):(a.direto+a.saldo);
+      const calc=(progs,dia)=>this.simular(progs,dia,()=>ev?this.applyEv(brand,1):this.apply(brand,fuel,price));
+      const meus=this.prefs.programas, has=new Set(meus), extra=new Map(), outrosDias=[];
+      for(const r of this.data.descontos.filter(serve)){
+        const falta=(r.requer||[]).filter(x=>!has.has(x));
+        const dia=this.hoje(r)?null:this.proximoDia(r);
+        if(!falta.length){if(dia)outrosDias.push(r);continue}
+        if((r.exclui||[]).some(x=>has.has(x)))continue;
+        const key=[...falta].sort().join("+")+"|"+(dia?r.quando:"");
+        const ganho=val(calc(this.juntar(meus,falta),dia))-val(calc(meus,dia));
+        if(ganho>1e-9&&(!extra.has(key)||extra.get(key).ganho<ganho))extra.set(key,{ids:falta,ganho,regra:r,quando:dia?r.quando:null});
+      }
+      return{extra:[...extra.values()].sort((x,y)=>y.ganho-x.ganho).slice(0,8),outrosDias};
+    },
+    renderMais(brand,fuel,price,ev){
+      const m=this.mais(brand,fuel,price,ev);
+      if(!m.extra.length&&!m.outrosDias.length)return"";
+      const fmt=v=>ev?`+${Math.round(v*100)}% em saldo`:`+${cent(v)}/litro`;
+      const own=r=>ev?`${Math.round((r.percSaldo||0)*100)}% em saldo`:[r.direto?`${cent(r.direto)} na hora`:"",r.saldo?`${cent(r.saldo)} em ${esc(r.saldoOnde||"saldo")}`:""].filter(Boolean).join(" + ");
+      return `<div class="dmore">`
+        +(m.outrosDias.length?`<div class="dmh">Os seus descontos noutros dias</div>${m.outrosDias.map(r=>`<div class="dmi"><div><strong>${esc(r.titulo)}</strong> <span class="dst">só ${esc(r.quando||"noutros dias")}</span></div><div>${own(r)}</div></div>`).join("")}`:"")
+        +(m.extra.length?`<div class="dmh">${this.prefs.programas.length?"Como poupar mais aqui":"Descontos que pode ter aqui"}</div><p class="dlim" style="margin:0">O que ganharia, por cima do que já tem, se acrescentasse:</p>${m.extra.map(x=>`<div class="dmi"><div><strong class="dgain">${fmt(x.ganho)}</strong>${x.quando?` <span class="dst">só ${esc(x.quando)}</span>`:""} com ${x.ids.map(id=>`<b>${esc(this.prog(id)?.nome||id)}</b>`).join(" + ")}</div><div class="dlim">${esc(x.regra.condicoes||"")}</div><div><button type="button" class="dadd" data-dadd="${esc(x.ids.join(","))}">Já tenho, acrescentar</button>${x.regra.fonte?` <a href="${esc(x.regra.fonte)}" target="_blank" rel="noopener">Ver a campanha ↗</a>`:""}</div></div>`).join("")}`:"")
+        +`</div>`;
     },
     /* Carregamentos elétricos: percentagem devolvida em saldo no operador (ex.: Repsol) */
     applyEv(operator,cost){
@@ -71,6 +107,8 @@
       return a.regras.map(r=>esc(r.titulo)).join(" + ")+": "+
         [a.direto?`−${cent(a.direto)} na hora`:"",...this.saldos(a).map(([o,v])=>`${cent(v)} em ${esc(o)}`)].filter(Boolean).join(" + ");
     },
+    /* Só os valores, sem os nomes dos cartões: "−6 cênt. na hora + 12,5 cênt. em vale bp" */
+    resumo(a){return[a.direto?`−${cent(a.direto)} na hora`:"",...this.saldos(a).map(([o,v])=>`${cent(v)} em ${esc(o)}`)].filter(Boolean).join(" + ")},
     /* Saldos agrupados por destino: [["saldo Via Verde",0.05],["vale para o próximo abastecimento bp",0.125]] */
     saldos(a){
       const m=new Map();a.regras.filter(r=>r.saldo).forEach(r=>{const o=r.saldoOnde||"saldo";m.set(o,(m.get(o)||0)+r.saldo)});
@@ -178,6 +216,12 @@ dialog.dlg::backdrop{background:rgba(10,16,26,.55)}
 .dbest{border:1px solid var(--line);border-radius:8px;padding:10px 12px;display:grid;gap:6px;background:var(--bg)}
 .dbt{font-size:.95rem}
 .dexp{display:grid;gap:3px;font-size:.86rem}
+.dmore{display:grid;gap:8px;margin-top:8px;font-size:.86rem}
+.dmh{font-weight:700;font-size:.8rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-top:4px}
+.dmi{display:grid;gap:3px;border-left:3px solid var(--good,#1d8a4a);padding:2px 0 2px 10px}
+.dgain{color:var(--good,#1d8a4a)}
+.dadd{font:inherit;font-size:.8rem;font-weight:600;border:1px solid var(--line);background:var(--surface);color:var(--accent);border-radius:999px;padding:3px 10px;cursor:pointer}
+.dmi a{color:var(--accent);font-size:.8rem}
 .dexp a{color:var(--accent)}
 .dlim{color:var(--muted);font-size:.8rem}
 .dst{font-size:.7rem;border-radius:999px;padding:1px 8px;background:var(--accent-soft);color:var(--accent)}.dst.warn{background:#d97a00;color:#fff}
@@ -189,5 +233,6 @@ details.discd .dexp{margin-top:6px;padding:8px 10px;border:1px solid var(--line)
       document.head.appendChild(s);
     }
   };
+  document.addEventListener("click",e=>{const b=e.target.closest("[data-dadd]");if(b){e.preventDefault();D.addMany(b.dataset.dadd.split(","))}});
   window.Discounts=D;
 })();

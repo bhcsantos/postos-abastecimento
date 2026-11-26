@@ -452,7 +452,9 @@ function renderList(){
         <span class="right"><span class="state s-${st}">${st==="available"?`${free} ${free===1?"livre":"livres"}`:STATE_LABEL[st]}</span><button type="button" class="check" data-sel="${esc(s.id)}" aria-pressed="${isSel(s.id)}" aria-label="${isSel(s.id)?"Retirar da seleção":"Selecionar este posto"}" title="${isSel(s.id)?"Retirar da seleção":"Selecionar"}">✓</button></span></div>
       <div class="sockets">${groupSockets(socks).map(g=>`<span class="sock"><i style="background:${g.free?STATE_COLOR.available:STATE_COLOR.inUse}"></i>${connIcon(g.c)}${g.n}× ${esc(CONN_LABEL[g.c]||g.c||"?")} <b>${kw(g.kw)}</b> · ${g.free} ${g.free===1?"livre":"livres"}</span>`).join("")}</div>
       ${(()=>{const ps=priceSummary(s,socks);return ps?`<div class="pricesum">${esc(ps)}</div>`:""})()}
-      ${(()=>{const dv=window.Discounts?Discounts.applyEv(s.operator,1):null;return dv&&dv.regras.length?`<details class="discd" style="margin:0"><summary>Como obter este desconto</summary>${Discounts.explain(dv)}</details>`:""})()}
+      ${(()=>{if(!window.Discounts)return"";const dv=Discounts.applyEv(s.operator,1),more=Discounts.renderMais(s.operator,null,null,true);
+        return (dv.regras.length?`<details class="discd" style="margin:0"><summary>Como obter este desconto</summary>${Discounts.explain(dv)}</details>`:"")
+          +(more?`<details class="discd" style="margin:0"><summary>Como poupar mais neste operador</summary>${more}</details>`:"")})()}
       <div class="links"><button type="button" class="favbtn${window.Account?.isFav("ev",s.id)?" on":""}" data-fav="${esc(s.id)}">${window.Account?.isFav("ev",s.id)?"★ Favorito":"☆ Favorito"}</button><button type="button" data-open="${esc(s.id)}">${openId===s.id?"Esconder tomadas ▴":"Ver tomadas e preços ▾"}</button>
         <a href="https://www.google.com/maps/dir/?api=1&destination=${s.lat},${s.lng}&travelmode=driving" target="_blank" rel="noopener">Navegar até aqui ↗</a>
         <a href="https://www.google.com/maps/search/?api=1&query=${s.lat},${s.lng}" target="_blank" rel="noopener">Ver no Google Maps ↗</a></div>
