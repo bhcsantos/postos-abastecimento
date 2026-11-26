@@ -6,6 +6,7 @@
   "BP",
   "Alves Bandeira",
   "Moeve",
+  "Meios de pagamento",
   "Operadoras de telecomunicações",
   "Seguros e bancos",
   "Lojas e supermercados",
@@ -749,6 +750,19 @@
     "cepsa"
    ],
    "fonte": "https://pt.moeveglobal.com/stfls/cepsa-pt/Ficheros/condicoes-gerais-da-promocao-opc-ceme-moeve-260831.pdf"
+  },
+  {
+   "id": "mbway-up",
+   "nome": "MB WAY — programa MB WAY UP! (pagar com MB WAY)",
+   "grupo": "Meios de pagamento",
+   "pesquisa": [
+    "mb way",
+    "mbway",
+    "up",
+    "cashback",
+    "sibs"
+   ],
+   "fonte": "https://www.mbway.pt/mb-way-up/cashback-e-desafios/"
   }
  ],
  "descontos": [
@@ -5762,6 +5776,33 @@
    ],
    "verificado": "2026-11-26",
    "estado": "confirmado"
+  },
+  {
+   "id": "mbway-bp",
+   "titulo": "MB WAY UP! — cashback na bp",
+   "marcas": [
+    "BP"
+   ],
+   "requer": [
+    "mbway-up"
+   ],
+   "exclui": [],
+   "direto": 0,
+   "saldo": 0,
+   "percSaldo": 0.05,
+   "saldoOnde": "cashback MB WAY",
+   "cumulativo": true,
+   "condicoes": "5% de cashback ao pagar com MB WAY nos postos bp aderentes (campanha 'Cashback Imediato' do MB WAY UP!). O valor volta para a conta associada ao MB WAY. Como é um meio de pagamento, o site soma-o aos cartões bp.",
+   "comoUsar": "Adira ao MB WAY UP! na app MB WAY e confirme que a campanha bp aparece em 'Cashbacks Imediatos'. Pague o abastecimento com MB WAY (QR Code, NFC ou número de telemóvel).",
+   "limite": "Numa edição anterior havia um mínimo de 30 € por abastecimento. O máximo por pessoa e a data de fim estão só na app: confirme lá antes de abastecer.",
+   "fonte": "https://www.mbway.pt/mb-way-up/cashback-e-desafios/",
+   "fontes": [
+    "https://www.mbway.pt/mb-way-up/cashback-e-desafios/",
+    "https://www.mbway.pt/mais-do-que-descontos-na-bp-o-mb-way-da-te-dinheiro-de-volta/"
+   ],
+   "verificado": "2026-11-26",
+   "estado": "a confirmar",
+   "nota": "Não consegui abrir a página do MB WAY (bloqueia acessos automáticos); a percentagem vem dos resultados de pesquisa dessa página."
   }
  ],
  "fontesGerais": [

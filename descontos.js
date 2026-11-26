@@ -46,8 +46,10 @@
     /* Melhor cenário: final = na bomba − desconto imediato; efetivo = final − saldo */
     apply(brand,fuel,price){
       const b=norm(brand), ft=fuelType(fuel||"");
-      const rs=this.rules().filter(r=>!r.carregamento&&(r.marcas||[]).map(norm).includes(b)&&(!r.tipos||r.tipos.includes(ft))&&(!r.combustiveis||r.combustiveis.map(canon).includes(canon(fuel))));
+      let rs=this.rules().filter(r=>!r.carregamento&&(r.marcas||[]).map(norm).includes(b)&&(!r.tipos||r.tipos.includes(ft))&&(!r.combustiveis||r.combustiveis.map(canon).includes(canon(fuel))));
       if(!rs.length)return{price,final:price,efetivo:price,direto:0,saldo:0,regras:[]};
+      /* Cashback em percentagem (ex.: 5% ao pagar com MB WAY): passa a cêntimos por litro com o preço deste posto */
+      rs=rs.map(r=>r.percSaldo?{...r,saldo:(r.saldo||0)+price*r.percSaldo}:r);
       const cum=rs.filter(r=>r.cumulativo);
       /* Melhor = maior total; depois mais desconto na hora; depois os confirmados antes dos "a confirmar" */
       const conf=r=>r.estado&&r.estado!=="confirmado"?1:0;
