@@ -38,6 +38,7 @@ Site para encontrar e comparar postos de abastecimento em Portugal continental, 
 | `account.js`, `conta.html`, `admin.html`, `privacidade.html` | Contas (Firebase): login Google ou email, perfis, favoritos, casa/trabalho, alertas, pedidos de funcionalidades, exportar/apagar dados; administração dos pedidos; política de privacidade. |
 | `data/carros.json`, `data/carros-manual.json`, `scripts/carros.py` | Catálogo de carros para preencher os perfis. Elétricos da [OpenEV Data](https://open-ev-data.github.io) (licença [CDLA-Permissive-2.0](https://cdla.dev/permissive-2-0/)); combustível e híbridos plug-in acrescentados à mão em `carros-manual.json`, cada um com fontes. Gerar com `python scripts/carros.py <pasta do open-ev-data-dataset>`. |
 | `firestore.rules` | Regras de acesso à base de dados. Publicar à mão em Firebase → Firestore Database → Regras. |
+| `PENDENTES.md` | Lista do que ficou combinado para mais tarde (sai da lista quando fica feito). |
 | `.nojekyll` | Faz o GitHub Pages publicar os ficheiros tal como estão. |
 
 Não há passo de compilação: são páginas HTML com JavaScript, publicadas pelo GitHub Pages a partir do ramo `main`. Qualquer alteração enviada para `main` fica online em 1 a 2 minutos.
