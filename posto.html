@@ -164,7 +164,7 @@ async function main(){
   await Discounts.load();
   if(!id){$("content").innerHTML=`<p class="err">Falta o número do posto no endereço. Volte à lista e escolha um posto.</p>`;return}
   let p;
-  try{p=await getJSON(`${API}/GetDadosPosto?id=${id}`)}
+  try{p=await getJSON(`${API}/GetDadosPosto?id=${id}`);if(/^cepsa$/i.test(String(p.Marca||"").trim()))p.Marca="MOEVE"/* Cepsa = Moeve */}
   catch(e){$("content").innerHTML=`<p class="err">Não foi possível obter a ficha deste posto na DGEG. Tente de novo dentro de momentos.</p>`;return}
   const m=p.Morada||{}, lat=+m.Latitude, lon=+m.Longitude;
   document.title=`${p.Nome} · Postos de Abastecimento`;

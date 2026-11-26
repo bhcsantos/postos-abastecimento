@@ -5646,8 +5646,7 @@
    "id": "moeve-dobrar-simples",
    "titulo": "Moeve Gow — Poupe a Dobrar",
    "marcas": [
-    "MOEVE",
-    "CEPSA"
+    "MOEVE"
    ],
    "tipos": [
     "gasolina",
@@ -5681,8 +5680,7 @@
    "id": "moeve-dobrar-max",
    "titulo": "Moeve Gow — Poupe a Dobrar (Max/Óptima)",
    "marcas": [
-    "MOEVE",
-    "CEPSA"
+    "MOEVE"
    ],
    "tipos": [
     "gasolina",
@@ -5718,7 +5716,6 @@
    "titulo": "Moeve — preço único nos carregadores (Gow)",
    "carregamento": true,
    "marcas": [
-    "CEPSA",
     "MOEVE"
    ],
    "requer": [
@@ -5746,7 +5743,6 @@
    "titulo": "Moeve — preço único nos carregadores (Gow DECO)",
    "carregamento": true,
    "marcas": [
-    "CEPSA",
     "MOEVE"
    ],
    "requer": [

@@ -278,6 +278,9 @@ const SCOPES=[...DISTRITOS.map(([id,n])=>{const pr=DPREP[n]||"de";return ["d"+id
 /* Preposição dos concelhos que não usam "de" */
 const CPREP={"Porto":"do","Maia":"da","Trofa":"da","Póvoa de Varzim":"da","Póvoa de Lanhoso":"da","Lousã":"da","Nazaré":"da","Figueira da Foz":"da","Amadora":"da","Guarda":"da","Golegã":"da","Mealhada":"da","Batalha":"da","Moita":"da","Marinha Grande":"da","Murtosa":"da","Sertã":"da","Chamusca":"da","Azambuja":"da","Lourinhã":"da","Mêda":"da","Covilhã":"da","Anadia":"da","Mealhada":"da","Entroncamento":"do","Cartaxo":"do","Barreiro":"do","Seixal":"do","Montijo":"do","Bombarral":"do","Cadaval":"do","Crato":"do","Fundão":"do","Sabugal":"do","Redondo":"do","Alandroal":"do","Gavião":"do","Sardoal":"do","Alvito":"do","Peso da Régua":"do","Marco de Canaveses":"do","Bombarral":"do","Cartaxo":"do","Barreiro":"do","Seixal":"do"};
 const norm=s=>String(s||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim();
+/* A Cepsa passou a chamar-se Moeve: a DGEG ainda tem postos com os dois nomes, aqui contam como uma só marca */
+const BRAND_ALIAS={"CEPSA":"MOEVE"};
+const brandOf=b=>{b=String(b||"").trim();return BRAND_ALIAS[b.toUpperCase()]||b||"Sem marca"};
 const BRAND_COLORS={"GALP":"#e2591d","BP":"#0b8a3a","REPSOL":"#c99a00","PRIO":"#2f6db5","CEPSA":"#b8202e","MOEVE":"#00857c","SHELL":"#d8a400","AUCHAN":"#d6001c","REDE ENERGIA":"#6a4fb3","INTERMARCHÉ":"#c4161c","ALVES BANDEIRA":"#1b3f8b","FREITAS":"#7a3e9d","PINGO DOCE":"#4c8c2b","OZ Energia":"#0098c7","Genérico":"#6f7b8a"};
 const PALETTE=["#8a5a2b","#2b7a8a","#8a2b6e","#5a8a2b","#3d4f9e","#9e6a3d","#3d9e7f","#9e3d4f"];
 function colorOf(b){if(BRAND_COLORS[b])return BRAND_COLORS[b];let h=0;for(const c of b)h=(h*31+c.charCodeAt(0))|0;return PALETTE[Math.abs(h)%PALETTE.length]}
@@ -338,7 +341,7 @@ async function fetchScope(sc,fid){
   if(sc[0]==="d")q+="&idDistrito="+sc.slice(1);
   const r=await fetch(`${API}?${q}`,{cache:"no-store"}); if(!r.ok)throw new Error(r.status);
   const j=await r.json();
-  const rows=(j.resultado||[]).map(x=>({id:x.Id,n:String(x.Nome).trim(),b:String(x.Marca||"").trim()||"Sem marca",a:String(x.Morada||"").trim(),cp:x.CodPostal,loc:[x.Localidade,x.Municipio].filter(Boolean).join(", "),mun:String(x.Municipio||"").trim(),locn:String(x.Localidade||"").trim(),lat:+x.Latitude,lon:+x.Longitude,price:parseFloat(String(x.Preco).replace("€","").replace(",",".").trim()),d:x.DataAtualizacao}))
+  const rows=(j.resultado||[]).map(x=>({id:x.Id,n:String(x.Nome).trim(),b:brandOf(x.Marca),a:String(x.Morada||"").trim(),cp:x.CodPostal,loc:[x.Localidade,x.Municipio].filter(Boolean).join(", "),mun:String(x.Municipio||"").trim(),locn:String(x.Localidade||"").trim(),lat:+x.Latitude,lon:+x.Longitude,price:parseFloat(String(x.Preco).replace("€","").replace(",",".").trim()),d:x.DataAtualizacao}))
     .filter(s=>isFinite(s.price)&&s.lat&&s.lon);
   cache.set(key,rows); return rows;
 }
@@ -351,7 +354,7 @@ async function load(fit){
     $("srcinfo").textContent=`Preços em direto, atualizados às ${t.toLocaleTimeString("pt-PT",{hour:"2-digit",minute:"2-digit"})} de ${t.toLocaleDateString("pt-PT")}.`;
   }catch(e){
     if(scope==="d13"){
-      data=SNAP.filter(s=>s.p[name]!=null).map(s=>({id:s.id,n:s.n,b:s.b,a:s.a,cp:s.cp,loc:"Porto",mun:"Porto",locn:"Porto",lat:s.lat,lon:s.lon,price:s.p[name],d:s.d}));
+      data=SNAP.filter(s=>s.p[name]!=null).map(s=>({id:s.id,n:s.n,b:brandOf(s.b),a:s.a,cp:s.cp,loc:"Porto",mun:"Porto",locn:"Porto",lat:s.lat,lon:s.lon,price:s.p[name],d:s.d}));
       $("srcinfo").textContent=`Preços guardados a ${SNAP_DATE}, só do concelho do Porto (não foi possível ligar à DGEG).`;
     }else{
       data=[];$("srcinfo").textContent="Não foi possível ligar à DGEG. Tente de novo dentro de momentos.";

@@ -497,7 +497,7 @@ async function loadStations(){
   try{
     const r=await fetch(`${PROXY}/stations`); if(!r.ok)throw new Error(r.status);
     const j=await r.json();
-    stations=(j.stations||[]).filter(s=>isFinite(s.lat)&&isFinite(s.lng)&&s.sockets&&s.sockets.length).map(s=>({...s,sockets:s.sockets.filter(k=>k.evse)}));
+    stations=(j.stations||[]).filter(s=>isFinite(s.lat)&&isFinite(s.lng)&&s.sockets&&s.sockets.length).map(s=>({...s,operator:/^cepsa$/i.test(String(s.operator||"").trim())?"Moeve":s.operator,sockets:s.sockets.filter(k=>k.evse)})); // Cepsa = Moeve
     stations.forEach(assignArea);
   }catch(e){$("loading").hidden=true;$("srcinfo").innerHTML=`<span class="err">Não foi possível obter os carregadores da MOBI.E. Tente de novo dentro de momentos.</span>`;return false}
   return true;
