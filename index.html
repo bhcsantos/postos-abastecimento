@@ -492,7 +492,7 @@ let curProfile=null;
 /* Perfil ativo da conta: escolhe o combustível e mostra o custo de atestar */
 window.onProfile=p=>{
   curProfile=p&&(p.tipo==="combustivel"||p.tipo==="hibrido")?p:null;
-  if(curProfile&&curProfile.combustivel&&curProfile.combustivel!==fuelId){setFuel(+curProfile.combustivel);return}
+  if(curProfile&&curProfile.combustivel&&+curProfile.combustivel!==+fuelId){setFuel(+curProfile.combustivel);return}
   Route.places=window.Account?.data?.locais||{};Route.render();
   if(data.length)renderList();
 };
