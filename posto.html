@@ -207,6 +207,7 @@ async function main(){
   $("content").innerHTML=`
   <div style="display:grid;gap:16px">
     <p id="pstat" style="margin:0;font-size:.8rem;color:var(--muted)"${pstat?"":" hidden"}>${esc(pstat)}</p>
+    ${(()=>{const last=fuels.map(c=>String(c.date||"")).sort().pop()||"";return last&&Date.now()-new Date(last.replace(" ","T"))>10*864e5?`<p style="margin:0;padding:8px 12px;border-radius:8px;background:#fff4e5;color:#8a4500;font-size:.88rem">⚠ Este posto não atualiza os preços na DGEG desde ${esc(last.slice(0,10).split("-").reverse().join("/"))}. Por isso a DGEG deixou de o mostrar na pesquisa. Os preços abaixo podem já não ser os do posto: confirme no local.</p>`:""})()}
     <div class="head">
       <span class="brand" style="background:${colorOf(p.Marca||"")}" title="${esc(p.Marca)}">${esc(p.Marca||"Sem marca")}</span>
       <div>

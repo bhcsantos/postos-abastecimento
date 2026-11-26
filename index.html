@@ -57,6 +57,8 @@ h1 span{color:var(--accent)}
 .dot{width:9px;height:9px;border-radius:50%;flex:none}
 .discbtn{font:inherit;font-weight:600;display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border:1px solid var(--line);border-radius:6px;background:var(--surface);color:var(--fg);cursor:pointer}
 .discbtn[aria-pressed="true"]{border-color:var(--good);color:var(--good);box-shadow:inset 0 0 0 1px var(--good)}
+.stale{display:block;font-size:.78rem;color:#b35c00;margin-top:3px}
+@media (prefers-color-scheme:dark){.stale{color:#f0a35a}}
 .disc{display:block;font-size:.8rem;color:var(--good);margin-top:3px}
 .price .pump{display:block;font-size:.72rem;color:var(--muted);font-family:var(--body);text-decoration:line-through}
 dialog.dlg{border:1px solid var(--line);border-radius:12px;padding:0;max-width:min(560px,calc(100vw - 32px));width:100%;background:var(--surface);color:var(--fg);box-shadow:0 20px 60px rgba(0,0,0,.3)}
@@ -352,7 +354,10 @@ function lsPut(k,v){
   const put=()=>{localStorage.setItem(LS+k,JSON.stringify(v));const idx=(lsGet("idx")||[]).filter(x=>x!==k);idx.unshift(k);idx.slice(4).forEach(x=>localStorage.removeItem(LS+x));localStorage.setItem(LS+"idx",JSON.stringify(idx.slice(0,4)))};
   try{put()}catch(e){try{Object.keys(localStorage).filter(x=>x.startsWith(LS)).forEach(x=>localStorage.removeItem(x));put()}catch(e2){}}
 }
+const fmtD=d=>String(d||"").slice(0,10).split("-").reverse().join("/");
 const hhmm=t=>new Date(t).toLocaleTimeString("pt-PT",{hour:"2-digit",minute:"2-digit"});
+let escP=null;
+const escondidos=()=>escP||(escP=fetchT("data/escondidos.json",{},8000,1).then(r=>r.ok?r.json():{postos:[]}).then(j=>j.postos||[]).catch(()=>{escP=null;return[]}));
 async function fetchScope(sc,fid){
   const key=sc+"|"+fid, mem=cache.get(key); if(mem&&Date.now()-mem.t<15*60e3)return mem;
   let q=`idsTiposComb=${fid}&qtdPorPagina=5000&pagina=1`;
@@ -360,6 +365,11 @@ async function fetchScope(sc,fid){
   const {j,antiga}=await fetchDgeg(q);
   const rows=(j.resultado||[]).map(x=>({id:x.Id,n:String(x.Nome).trim(),b:brandOf(x.Marca),a:String(x.Morada||"").trim(),cp:x.CodPostal,loc:[x.Localidade,x.Municipio].filter(Boolean).join(", "),mun:String(x.Municipio||"").trim(),locn:String(x.Localidade||"").trim(),lat:+x.Latitude,lon:+x.Longitude,price:parseFloat(String(x.Preco).replace("€","").replace(",",".").trim()),d:x.DataAtualizacao}))
     .filter(s=>isFinite(s.price)&&s.lat&&s.lon);
+  /* Postos que a DGEG esconde da pesquisa por não atualizarem o preço há 10 dias (ex.: Repsol Antas); vêm de data/escondidos.json */
+  try{
+    const e=await escondidos(), ids=new Set(rows.map(r=>r.id)), dist=sc[0]==="d"?+sc.slice(1):null;
+    e.filter(x=>x.p[fid]!=null&&!ids.has(x.id)&&(dist==null||x.dist===dist)).forEach(x=>rows.push({id:x.id,n:x.n,b:brandOf(x.b),a:x.a,cp:x.cp,loc:[x.locn,x.mun].filter(Boolean).join(", "),mun:x.mun,locn:x.locn,lat:x.lat,lon:x.lon,price:x.p[fid],d:x.d,velho:true}));
+  }catch(e){}
   const out={rows,t:Date.now(),antiga};
   cache.set(key,out); if(!antiga)lsPut(key,{rows,t:out.t}); return out;
 }
@@ -457,7 +467,7 @@ function renderList(){
   const all=data.filter(matches);
   const name0=FUEL_NAME[fuelId], D=new Map(all.map(s=>[s.id,Discounts.apply(s.b,name0,s.price)]));
   const vis=all.filter(s=>bounds.contains([s.lat,s.lon])).sort((a,b)=>D.get(a.id).efetivo-D.get(b.id).efetivo);
-  const best=vis.length?D.get(vis[0].id).efetivo:null;
+  const fresh=vis.filter(s=>!s.velho), best=fresh.length?D.get(fresh[0].id).efetivo:vis.length?D.get(vis[0].id).efetivo:null; // preços desatualizados não contam como "o mais barato"
   if(me&&sortBy==="dist")vis.sort((a,b)=>distKm(me,a)-distKm(me,b));
   vis.sort((a,b)=>isSel(b.id)-isSel(a.id)); // selecionados primeiro, pela ordem atual
   const name=FUEL_NAME[fuelId];
@@ -466,13 +476,13 @@ function renderList(){
     const dc=D.get(s.id), diff=dc.efetivo-best, on=isSel(s.id), has=dc.regras.length>0;
     return `<div class="item${on?" on":""}"><button type="button" class="st" data-id="${s.id}" aria-pressed="${on}">
       <span class="brand" style="background:${colorOf(s.b)}" title="${esc(s.b)}">${esc(s.b)}</span>
-      <span><h3>${esc(s.n)}</h3><span class="addr">${me?`<span class="dist">${km(distKm(me,s))}</span> · `:""}${esc(s.a)} · ${esc(s.cp)}${s.loc?" · "+esc(s.loc):""}</span>${curProfile&&curProfile.deposito?`<span class="fill">Atestar ${curProfile.deposito} L: <strong>${(dc.final*curProfile.deposito).toFixed(2).replace(".",",")} €</strong>${curProfile.consumo?` · ${(dc.final*curProfile.consumo/100).toFixed(2).replace(".",",")} € por 100 km`:""}</span>`:""}${has?`<span class="disc">${Discounts.describe(dc)}</span>`:""}</span>
-      ${has?`<span class="price ps${diff<0.0005?" best":""}">
+      <span><h3>${esc(s.n)}</h3><span class="addr">${me?`<span class="dist">${km(distKm(me,s))}</span> · `:""}${esc(s.a)} · ${esc(s.cp)}${s.loc?" · "+esc(s.loc):""}</span>${curProfile&&curProfile.deposito?`<span class="fill">Atestar ${curProfile.deposito} L: <strong>${(dc.final*curProfile.deposito).toFixed(2).replace(".",",")} €</strong>${curProfile.consumo?` · ${(dc.final*curProfile.consumo/100).toFixed(2).replace(".",",")} € por 100 km`:""}</span>`:""}${has?`<span class="disc">${Discounts.describe(dc)}</span>`:""}${s.velho?`<span class="stale">⚠ Preço de ${esc(fmtD(s.d))}: o posto não atualiza o preço na DGEG há mais de 10 dias, por isso a DGEG deixou de o mostrar. Confirme no local.</span>`:""}</span>
+      ${has?`<span class="price ps${!s.velho&&diff<0.0005?" best":""}">
         <span class="ps-row ps-pump" title="Preço afixado no posto"><span class="ps-l">Na bomba</span><span class="ps-v">${eur(s.price)}</span></span>
         <span class="ps-row ps-pay" title="O que paga no momento, já com o desconto imediato"><span class="ps-l">Paga</span><span class="pv">${fuelBadge(FUEL_NAME[fuelId],20)}${eur(dc.final)}</span></span>
         ${dc.saldo?`<span class="ps-row ps-real" title="Descontando também o saldo que recebe para usar mais tarde"><span class="ps-l">Custo real</span><span class="ps-v">${eur(dc.efetivo)}</span></span>`:""}
-        <small>${diff<0.0005?"o mais barato aqui":"+"+(diff*100).toFixed(1).replace(".",",")+" cênt. que o mais barato"}</small></span>`
-      :`<span class="price${diff<0.0005?" best":""}"><span class="pv">${fuelBadge(FUEL_NAME[fuelId],20)}${eur(dc.final)}</span><small>${diff<0.0005?"o mais barato aqui":"+"+(diff*100).toFixed(1).replace(".",",")+" cênt. que o mais barato"}</small></span>`}
+        <small>${s.velho?"preço desatualizado":diff<0.0005?"o mais barato aqui":"+"+(diff*100).toFixed(1).replace(".",",")+" cênt. que o mais barato"}</small></span>`
+      :`<span class="price${!s.velho&&diff<0.0005?" best":""}"><span class="pv">${fuelBadge(FUEL_NAME[fuelId],20)}${eur(dc.final)}</span><small>${s.velho?"preço desatualizado":diff<0.0005?"o mais barato aqui":"+"+(diff*100).toFixed(1).replace(".",",")+" cênt. que o mais barato"}</small></span>`}
       <span class="check" aria-hidden="true">✓</span></button>
       ${has?`<details class="discd"><summary>Como obter este desconto</summary>${Discounts.explain(dc)}</details>`:""}
       <div class="gm"><a class="enter" href="posto.html?id=${s.id}">Entrar no posto →</a><button type="button" class="favbtn${window.Account?.isFav("fuel",s.id)?" on":""}" data-fav="${s.id}">${window.Account?.isFav("fuel",s.id)?"★ Favorito":"☆ Favorito"}</button><a href="${gmView(s)}" target="_blank" rel="noopener" class="gmview">Ver no Google Maps ↗</a><a href="${gmGo(s)}" target="_blank" rel="noopener">Navegar até aqui ↗</a></div></div>`}).join("")
