@@ -338,24 +338,58 @@ map.on("moveend",()=>{shown=50;renderList()});
 
 /* Pedido com limite de tempo: se o servidor não responder em 15 s, tenta mais uma vez e depois desiste (em vez de ficar "A carregar…" para sempre) */
 async function fetchT(u,o={},ms=15000,tries=2){for(let i=0;;i++){const c=new AbortController(),t=setTimeout(()=>c.abort(),ms);try{const r=await fetch(u,{...o,signal:c.signal});clearTimeout(t);return r}catch(e){clearTimeout(t);if(i+1>=tries)throw e}}}
+/* Preços: primeiro pelo Worker (cache de 15 min partilhada e cópia de reserva se a DGEG falhar); se o Worker falhar, diretamente à DGEG */
+const DGEG_CACHE="https://mobie-proxy.bhcsantos.workers.dev/dgeg/PesquisarPostos";
+async function fetchDgeg(q){
+  try{const r=await fetchT(`${DGEG_CACHE}?${q}`,{},12000,1);if(r.ok){const j=await r.json();if(j.status)return{j,antiga:r.headers.get("X-Copia")==="antiga"}}}catch(e){}
+  const r=await fetchT(`${API}?${q}`,{cache:"no-store"}); if(!r.ok)throw new Error(r.status);
+  return{j:await r.json(),antiga:false};
+}
+/* Cópia no próprio telemóvel: ao abrir, mostra logo os últimos preços vistos e atualiza por trás (guarda as 4 zonas mais recentes) */
+const LS="pp-c1:";
+function lsGet(k){try{return JSON.parse(localStorage.getItem(LS+k))}catch(e){return null}}
+function lsPut(k,v){
+  const put=()=>{localStorage.setItem(LS+k,JSON.stringify(v));const idx=(lsGet("idx")||[]).filter(x=>x!==k);idx.unshift(k);idx.slice(4).forEach(x=>localStorage.removeItem(LS+x));localStorage.setItem(LS+"idx",JSON.stringify(idx.slice(0,4)))};
+  try{put()}catch(e){try{Object.keys(localStorage).filter(x=>x.startsWith(LS)).forEach(x=>localStorage.removeItem(x));put()}catch(e2){}}
+}
+const hhmm=t=>new Date(t).toLocaleTimeString("pt-PT",{hour:"2-digit",minute:"2-digit"});
 async function fetchScope(sc,fid){
-  const key=sc+"|"+fid; if(cache.has(key))return cache.get(key);
+  const key=sc+"|"+fid, mem=cache.get(key); if(mem&&Date.now()-mem.t<15*60e3)return mem;
   let q=`idsTiposComb=${fid}&qtdPorPagina=5000&pagina=1`;
   if(sc[0]==="d")q+="&idDistrito="+sc.slice(1);
-  const r=await fetchT(`${API}?${q}`,{cache:"no-store"}); if(!r.ok)throw new Error(r.status);
-  const j=await r.json();
+  const {j,antiga}=await fetchDgeg(q);
   const rows=(j.resultado||[]).map(x=>({id:x.Id,n:String(x.Nome).trim(),b:brandOf(x.Marca),a:String(x.Morada||"").trim(),cp:x.CodPostal,loc:[x.Localidade,x.Municipio].filter(Boolean).join(", "),mun:String(x.Municipio||"").trim(),locn:String(x.Localidade||"").trim(),lat:+x.Latitude,lon:+x.Longitude,price:parseFloat(String(x.Preco).replace("€","").replace(",",".").trim()),d:x.DataAtualizacao}))
     .filter(s=>isFinite(s.price)&&s.lat&&s.lon);
-  cache.set(key,rows); return rows;
+  const out={rows,t:Date.now(),antiga};
+  cache.set(key,out); if(!antiga)lsPut(key,{rows,t:out.t}); return out;
+}
+let loadSeq=0;
+function show(fit){
+  $("loading").hidden=true;
+  const muns=new Set(data.map(s=>s.mun));
+  for(const c of [...activeConc]) if(!muns.has(c)) activeConc.delete(c);
+  buildAreas(); updateTitle(); buildBrands();
+  if(fit)fitArea();
+  drawPins(); renderList();
 }
 async function load(fit){
+  const seq=++loadSeq, key=scope+"|"+fuelId, name=FUEL_NAME[fuelId]; shown=50;
+  /* 1) mostra já a cópia guardada, se houver */
+  const saved=!cache.has(key)&&lsGet(key);
+  if(saved&&saved.rows&&saved.rows.length){
+    data=saved.rows;
+    $("srcinfo").textContent=`A mostrar os preços guardados às ${hhmm(saved.t)} de ${new Date(saved.t).toLocaleDateString("pt-PT")}; a atualizar…`;
+    show(fit); fit=false;
+  }
   $("loading").hidden=false;
-  const name=FUEL_NAME[fuelId];
+  /* 2) pede os preços atuais */
   try{
-    data=await fetchScope(scope,fuelId);
-    const t=new Date();
-    $("srcinfo").textContent=`Preços em direto, atualizados às ${t.toLocaleTimeString("pt-PT",{hour:"2-digit",minute:"2-digit"})} de ${t.toLocaleDateString("pt-PT")}.`;
+    const r=await fetchScope(scope,fuelId); if(seq!==loadSeq)return;
+    data=r.rows;
+    $("srcinfo").textContent=r.antiga?"A DGEG não está a responder: a mostrar a última cópia guardada (pode ter até 7 dias).":`Preços da DGEG obtidos às ${hhmm(r.t)} de ${new Date(r.t).toLocaleDateString("pt-PT")}.`;
   }catch(e){
+    if(seq!==loadSeq)return;
+    if(saved&&saved.rows&&saved.rows.length){$("loading").hidden=true;$("srcinfo").textContent=`Não foi possível ligar à DGEG: a mostrar os preços guardados às ${hhmm(saved.t)} de ${new Date(saved.t).toLocaleDateString("pt-PT")}.`;return}
     if(scope==="d13"){
       data=SNAP.filter(s=>s.p[name]!=null).map(s=>({id:s.id,n:s.n,b:brandOf(s.b),a:s.a,cp:s.cp,loc:"Porto",mun:"Porto",locn:"Porto",lat:s.lat,lon:s.lon,price:s.p[name],d:s.d}));
       $("srcinfo").textContent=`Preços guardados a ${SNAP_DATE}, só do concelho do Porto (não foi possível ligar à DGEG).`;
@@ -363,12 +397,7 @@ async function load(fit){
       data=[];$("srcinfo").textContent="Não foi possível ligar à DGEG. Tente de novo dentro de momentos.";
     }
   }
-  $("loading").hidden=true;
-  const muns=new Set(data.map(s=>s.mun));
-  for(const c of [...activeConc]) if(!muns.has(c)) activeConc.delete(c);
-  buildAreas(); updateTitle(); buildBrands();
-  if(fit)fitArea();
-  shown=50; drawPins(); renderList();
+  show(fit);
 }
 /* Concelhos e localidades */
 const inArea=s=>(!activeConc.size||activeConc.has(s.mun))&&(!activeLoc.size||activeLoc.has(norm(s.locn)));

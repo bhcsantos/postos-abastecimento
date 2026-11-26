@@ -6,7 +6,7 @@ Site para encontrar e comparar postos de abastecimento em Portugal continental, 
 
 ## O que faz
 
-- **Preços em direto.** Sempre que a página abre, o navegador pede os preços à [DGEG — Preços dos Combustíveis](https://precoscombustiveis.dgeg.gov.pt/). Não há servidor nem base de dados próprios.
+- **Preços em direto.** Os preços vêm da [DGEG — Preços dos Combustíveis](https://precoscombustiveis.dgeg.gov.pt/), através do Worker da Cloudflare, que guarda cada resposta durante 15 minutos (partilhada por todos os visitantes) e uma cópia de reserva de 7 dias para quando a DGEG não responde. Se o Worker falhar, o navegador pede diretamente à DGEG. O telemóvel guarda ainda as 4 últimas zonas e as 30 últimas fichas abertas: ao voltar, mostra-as logo e atualiza os preços por trás.
 - **Zonas.** Portugal continental (a zona inicial), qualquer um dos 18 distritos e, dentro de cada distrito, filtros por concelho e por localidade (por exemplo: distrito do Porto → Gondomar → Rio Tinto). Os filtros são caixas de seleção onde se podem marcar várias opções (vários concelhos, várias marcas, várias fichas…).
 - **Combustíveis.** Gasóleo simples e especial, gasolina 95 simples e especial, gasolina 98 especial e GPL Auto.
 - **Mapa interativo** com os postos agrupados: cada bolinha mostra quantos postos tem e vai-se dividindo à medida que se aproxima o mapa.
@@ -30,7 +30,7 @@ Site para encontrar e comparar postos de abastecimento em Portugal continental, 
 | `dropdown.js` | Caixas de filtro (combustível, concelho, localidade, marca, ficha, potência, estado, operador), com escolha múltipla e pesquisa nas listas grandes. |
 | `mobile.css`, `mobile.js` | Ajustes para telemóvel (topo mais compacto, mapa a meio ecrã, postos mais baixos) e o botão flutuante "Ver lista / Ver mapa". |
 | `route.js` | O percurso partilhado pelas três páginas (guardado no navegador). |
-| `worker/mobie-proxy.js` | Código do intermediário (Cloudflare Worker) que corre em `https://mobie-proxy.bhcsantos.workers.dev`. Está no repositório para consulta; não corre no GitHub Pages. |
+| `worker/mobie-proxy.js` | Código do intermediário (Cloudflare Worker) para a MOBI.E e cache da DGEG (`/dgeg/PesquisarPostos`, `/dgeg/GetDadosPosto`, 15 min) que corre em `https://mobie-proxy.bhcsantos.workers.dev`. Está no repositório para consulta; não corre no GitHub Pages. |
 | `descontos.js`, `data/descontos.json` | Cartões de desconto: o utilizador acrescenta o que tem (pesquisa por nome), o site aplica a melhor combinação em cada posto e explica o que é preciso. Regras com fonte, validade e estado. Repsol: planos My Repsol e 35 cartões de parceiro, a partir de repsol.pt/particulares/beneficios e /parceiros. BP: campanha Litro a Litro, Poupa Mais, ACP, BP Bonus, Via Verde e EDP. Alves Bandeira: Pontos AB. Moeve: Poupe a Dobrar (saldo Gow) e preço único nos carregadores. Há descontos que só valem em certos dias (campos `diasSemana` e `diaMes`). |
 | `scripts/historico.py`, `.github/workflows/historico.yml` | Recolha diária dos preços da DGEG (GitHub Actions, 09:17 UTC) para `data/historico/`. |
 | `previsao.js`, `scripts/previsao.py`, `.github/workflows/previsao.yml`, `data/previsao.json` | Previsão de preços da semana seguinte (estimativa do setor das sextas-feiras, recolhida do Ativos.pt), mostrada num aviso no topo da página dos combustíveis. A tarefa corre à sexta à tarde e ao sábado de manhã. |

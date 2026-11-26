@@ -162,14 +162,38 @@ const id=+new URLSearchParams(location.search).get("id");
 /* Pedido com limite de tempo: se o servidor não responder em 15 s, tenta mais uma vez e depois desiste (em vez de ficar "A carregar…" para sempre) */
 async function fetchT(u,o={},ms=15000,tries=2){for(let i=0;;i++){const c=new AbortController(),t=setTimeout(()=>c.abort(),ms);try{const r=await fetch(u,{...o,signal:c.signal});clearTimeout(t);return r}catch(e){clearTimeout(t);if(i+1>=tries)throw e}}}
 async function getJSON(u){const r=await fetchT(u,{cache:"no-store"});if(!r.ok)throw new Error(r.status);const j=await r.json();if(!j.status)throw new Error(j.mensagem||"erro");return j.resultado}
+/* Ficha: primeiro pelo Worker (cache de 15 min e cópia de reserva), senão diretamente à DGEG */
+async function getPosto(){
+  let p=null;
+  try{const r=await fetchT(`https://mobie-proxy.bhcsantos.workers.dev/dgeg/GetDadosPosto?id=${id}`,{},10000,1);if(r.ok){const j=await r.json();if(j.status)p=j.resultado}}catch(e){}
+  if(!p)p=await getJSON(`${API}/GetDadosPosto?id=${id}`);
+  if(/^cepsa$/i.test(String(p.Marca||"").trim()))p.Marca="MOEVE"; // Cepsa = Moeve
+  return p;
+}
+/* Cópia no telemóvel das últimas 30 fichas abertas: mostra-se logo e atualiza-se por trás */
+const PLS="pp-p1:";
+function savePosto(){try{localStorage.setItem(PLS+id,JSON.stringify({p:P,t:PT}));const idx=(JSON.parse(localStorage.getItem(PLS+"idx")||"[]")).filter(x=>x!==id);idx.unshift(id);idx.slice(30).forEach(x=>localStorage.removeItem(PLS+x));localStorage.setItem(PLS+"idx",JSON.stringify(idx.slice(0,30)))}catch(e){}}
+function loadSaved(){try{return JSON.parse(localStorage.getItem(PLS+id))}catch(e){return null}}
+let PT=0, pstat="";
+const hm=t=>`${new Date(t).toLocaleTimeString("pt-PT",{hour:"2-digit",minute:"2-digit"})} de ${new Date(t).toLocaleDateString("pt-PT")}`;
+function updStat(){const el=$("pstat");if(el){el.textContent=pstat;el.hidden=!pstat}}
+async function refreshPosto(){
+  try{const p=await getPosto();const mudou=JSON.stringify(p)!==JSON.stringify(P);P=p;PT=Date.now();savePosto();pstat="";
+    if(mudou){const y=scrollY;await main();scrollTo(0,y)}else updStat()}
+  catch(e){pstat=`Não foi possível atualizar: a mostrar a ficha guardada às ${hm(PT)}.`;updStat()}
+}
 
 let P=null; // ficha já obtida: ao mudar os cartões, volta a desenhar sem pedir de novo à DGEG
 async function main(){
   const dl=Promise.race([Discounts.load(),new Promise(r=>setTimeout(r,8000))]); // os descontos não podem atrasar a ficha
   if(!id){$("content").innerHTML=`<p class="err">Falta o número do posto no endereço. Volte à lista e escolha um posto.</p>`;return}
-  let p=P;
-  if(!p)try{[p]=await Promise.all([getJSON(`${API}/GetDadosPosto?id=${id}`),dl]);if(/^cepsa$/i.test(String(p.Marca||"").trim()))p.Marca="MOEVE"/* Cepsa = Moeve */;P=p}
+  if(!P){
+    const saved=loadSaved();
+    if(saved&&saved.p){P=saved.p;PT=saved.t;pstat=`A mostrar a ficha guardada às ${hm(PT)}; a atualizar os preços…`;await dl;setTimeout(refreshPosto,0)}
+    else try{[P]=await Promise.all([getPosto(),dl]);PT=Date.now();savePosto()}
   catch(e){$("content").innerHTML=`<p class="err">A DGEG não respondeu a tempo e não foi possível obter a ficha deste posto. <button type="button" class="btn" onclick="location.reload()">Tentar de novo</button></p>`;return}
+  }
+  const p=P;
   const m=p.Morada||{}, lat=+m.Latitude, lon=+m.Longitude;
   document.title=`${p.Nome} · Postos de Abastecimento`;
   const h=p.HorarioPosto||{};
@@ -182,6 +206,7 @@ async function main(){
 
   $("content").innerHTML=`
   <div style="display:grid;gap:16px">
+    <p id="pstat" style="margin:0;font-size:.8rem;color:var(--muted)"${pstat?"":" hidden"}>${esc(pstat)}</p>
     <div class="head">
       <span class="brand" style="background:${colorOf(p.Marca||"")}" title="${esc(p.Marca)}">${esc(p.Marca||"Sem marca")}</span>
       <div>
