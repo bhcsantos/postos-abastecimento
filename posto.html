@@ -163,11 +163,12 @@ const id=+new URLSearchParams(location.search).get("id");
 async function fetchT(u,o={},ms=15000,tries=2){for(let i=0;;i++){const c=new AbortController(),t=setTimeout(()=>c.abort(),ms);try{const r=await fetch(u,{...o,signal:c.signal});clearTimeout(t);return r}catch(e){clearTimeout(t);if(i+1>=tries)throw e}}}
 async function getJSON(u){const r=await fetchT(u,{cache:"no-store"});if(!r.ok)throw new Error(r.status);const j=await r.json();if(!j.status)throw new Error(j.mensagem||"erro");return j.resultado}
 
+let P=null; // ficha já obtida: ao mudar os cartões, volta a desenhar sem pedir de novo à DGEG
 async function main(){
   const dl=Promise.race([Discounts.load(),new Promise(r=>setTimeout(r,8000))]); // os descontos não podem atrasar a ficha
   if(!id){$("content").innerHTML=`<p class="err">Falta o número do posto no endereço. Volte à lista e escolha um posto.</p>`;return}
-  let p;
-  try{[p]=await Promise.all([getJSON(`${API}/GetDadosPosto?id=${id}`),dl]);if(/^cepsa$/i.test(String(p.Marca||"").trim()))p.Marca="MOEVE"/* Cepsa = Moeve */}
+  let p=P;
+  if(!p)try{[p]=await Promise.all([getJSON(`${API}/GetDadosPosto?id=${id}`),dl]);if(/^cepsa$/i.test(String(p.Marca||"").trim()))p.Marca="MOEVE"/* Cepsa = Moeve */;P=p}
   catch(e){$("content").innerHTML=`<p class="err">A DGEG não respondeu a tempo e não foi possível obter a ficha deste posto. <button type="button" class="btn" onclick="location.reload()">Tentar de novo</button></p>`;return}
   const m=p.Morada||{}, lat=+m.Latitude, lon=+m.Longitude;
   document.title=`${p.Nome} · Postos de Abastecimento`;
@@ -263,7 +264,7 @@ async function main(){
     <p class="note">Fonte: <a href="https://precoscombustiveis.dgeg.gov.pt/" target="_blank" rel="noopener">DGEG, Preços dos Combustíveis</a>, consultado agora. Mapa © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">colaboradores do OpenStreetMap</a>.</p>
   </div>`;
 
-  Discounts.renderButton(); $("discBtn").onclick=()=>Discounts.openPanel(); Discounts.onchange=()=>location.reload();
+  Discounts.renderButton(); $("discBtn").onclick=()=>Discounts.openPanel(); Discounts.onchange=()=>{const y=scrollY;main().then(()=>scrollTo(0,y))};
   /* Mapa */
   if(isFinite(lat)&&isFinite(lon)){
     const map=L.map("map",{scrollWheelZoom:false}).setView([lat,lon],16);

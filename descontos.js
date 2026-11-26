@@ -167,10 +167,28 @@
     },
     renderMine(dlg){
       const l=this.prefs.programas.map(id=>this.prog(id)).filter(Boolean);
-      dlg.querySelector("[data-mine]").innerHTML=l.length?l.map(p=>`<span class="dchip">${esc(p.nome)}<button type="button" data-rm="${esc(p.id)}" aria-label="Retirar ${esc(p.nome)}">✕</button></span>`).join("")
-        :`<p class="dempty">Ainda não acrescentou nada. Use a pesquisa abaixo.</p>`;
+      dlg.querySelector("[data-mine]").innerHTML=l.length?l.map(p=>this.item(p)).join(""):`<p class="dempty">Ainda não acrescentou nenhum cartão. Procure abaixo pelo nome (ex.: vodafone, continente, poupa mais).</p>`;
     },
-    item(p){const on=this.has(p.id);return `<button type="button" class="ditem${on?" on":""}" ${on?`data-rm="${esc(p.id)}"`:`data-add="${esc(p.id)}"`}><span>${esc(p.nome)}</span><span class="dact">${on?"✓ Tenho · retirar":"+ Adicionar"}</span></button>`},
+    item(p){const on=this.has(p.id);return `<div class="ditemw"><button type="button" class="ditem${on?" on":""}" ${on?`data-rm="${esc(p.id)}"`:`data-add="${esc(p.id)}"`}><span>${esc(p.nome)}</span><span class="dact">${on?"✓ Tenho · retirar":"+ Adicionar"}</span></button>${this.offerBox(p)}</div>`},
+    /* Valor de uma regra em texto: "12,5 cênt./l em vale bp", "5% em cashback MB WAY", "10% em saldo (carregamentos)" */
+    valor(r){
+      if(r.carregamento)return `${Math.round((r.percSaldo||0)*100)}% em ${esc(r.saldoOnde||"saldo")} nos carregamentos`;
+      return [r.direto?`${cent(r.direto)}/l na hora`:"",r.saldo?`${cent(r.saldo)}/l em ${esc(r.saldoOnde||"saldo")}`:"",r.percSaldo?`${Math.round(r.percSaldo*100)}% em ${esc(r.saldoOnde||"saldo")}`:""].filter(Boolean).join(" + ")||"vantagem sem valor fixo";
+    },
+    /* "O que dá": todas as regras em que este cartão entra, com marca, valor, dias, o que mais é preciso e a campanha */
+    offerBox(p){
+      const t=today(), rs=(this.data?.descontos||[]).filter(r=>(r.requer||[]).includes(p.id)&&(!r.fim||r.fim>=t));
+      if(!rs.length)return"";
+      const li=rs.map(r=>{
+        const outros=(r.requer||[]).filter(x=>x!==p.id).map(x=>this.prog(x)?.nome).filter(Boolean);
+        const marcas=(r.marcas||[]).map(nice).join(", ");
+        return `<li><div><strong>${esc(marcas)}</strong> · ${this.valor(r)}${r.diasSemana||r.diaMes?` <span class="dst">só ${esc(r.quando||"em certos dias")}</span>`:""}${r.estado&&r.estado!=="confirmado"?` <span class="dst warn">a confirmar</span>`:""}${r.inicio&&r.inicio>t?` <span class="dst">a partir de ${esc(r.inicio)}</span>`:""}${r.fim?` <span class="dlim">até ${esc(r.fim.split("-").reverse().join("/"))}</span>`:""}</div>
+          <div class="dlim">${esc(r.condicoes||"")}</div>
+          ${outros.length?`<div class="dlim"><b>Também precisa de:</b> ${outros.map(esc).join(" + ")}</div>`:""}
+          ${r.cumulativo?`<div class="dlim">Soma-se aos outros descontos desta marca.</div>`:""}
+          ${r.fonte?`<a href="${esc(r.fonte)}" target="_blank" rel="noopener">Ver a campanha ↗</a>`:""}</li>`}).join("");
+      return `<details class="doffer"><summary>O que dá (${rs.length})</summary><ul>${li}</ul></details>`;
+    },
     renderResults(dlg,qv){
       const box=dlg.querySelector("[data-res]"), q=norm(qv);
       if(!q){box.innerHTML="";return}
@@ -202,7 +220,7 @@ dialog.dlg::backdrop{background:rgba(10,16,26,.55)}
 .dlgbox h3{font-size:.75rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:0 0 6px}
 .dlgx{border:0;background:none;color:var(--muted);font-size:1.2rem;cursor:pointer}
 .dlgsub{margin:0;color:var(--muted);font-size:.88rem}
-.mine{display:flex;flex-wrap:wrap;gap:6px}
+.mine{display:grid;gap:0}
 .dchip{display:inline-flex;align-items:center;gap:6px;background:var(--accent);color:var(--surface);border-radius:999px;padding:5px 6px 5px 12px;font-size:.86rem;font-weight:600}
 .dchip button{border:0;background:rgba(255,255,255,.25);color:inherit;border-radius:50%;width:22px;height:22px;cursor:pointer;font-size:.75rem}
 .dsearch{width:100%;font:inherit;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--fg)}
@@ -218,6 +236,12 @@ dialog.dlg::backdrop{background:rgba(10,16,26,.55)}
 .dbest{border:1px solid var(--line);border-radius:8px;padding:10px 12px;display:grid;gap:6px;background:var(--bg)}
 .dbt{font-size:.95rem}
 .dexp{display:grid;gap:3px;font-size:.86rem}
+.ditemw{display:grid;gap:2px;margin-bottom:6px}
+.doffer{margin:-2px 0 6px 10px;font-size:.84rem}
+.doffer summary{cursor:pointer;color:var(--accent);font-weight:600;font-size:.8rem}
+.doffer ul{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:8px}
+.doffer li{display:grid;gap:2px;border-left:3px solid var(--line);padding-left:8px}
+.doffer a{color:var(--accent);font-size:.8rem}
 .dmore{display:grid;gap:8px;margin-top:8px;font-size:.86rem}
 .dmh{font-weight:700;font-size:.8rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-top:4px}
 .dmi{display:grid;gap:3px;border-left:3px solid var(--good,#1d8a4a);padding:2px 0 2px 10px}
