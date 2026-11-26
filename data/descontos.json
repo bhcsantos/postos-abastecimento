@@ -1,8 +1,9 @@
 {
- "atualizado": "2026-11-25",
+ "atualizado": "2026-11-26",
  "grupos": [
   "Repsol",
   "Galp",
+  "BP",
   "Operadoras de telecomunicações",
   "Seguros e bancos",
   "Lojas e supermercados",
@@ -607,6 +608,76 @@
     "luz"
    ],
    "fonte": "https://cartaocontinente.pt/ParceiroDetalhe.aspx?InsigniaId=2"
+  },
+  {
+   "id": "bp-premierplus",
+   "nome": "BP — cartão BP premierplus",
+   "grupo": "BP",
+   "marca": "BP",
+   "pesquisa": [
+    "bp",
+    "premierplus",
+    "premier plus",
+    "cartao bp"
+   ],
+   "fonte": "https://www.bp.com/pt_pt/portugal/home/campanhas/feitas-as-contas--a-bp-compensa.html"
+  },
+  {
+   "id": "bp-poupamais",
+   "nome": "BP — cartão Poupa Mais (Pingo Doce)",
+   "grupo": "BP",
+   "marca": "BP",
+   "pesquisa": [
+    "bp",
+    "poupa mais",
+    "pingo doce",
+    "cartao pingo doce"
+   ],
+   "fonte": "https://www.bp.com/pt_pt/portugal/home/campanhas/feitas-as-contas--a-bp-compensa.html"
+  },
+  {
+   "id": "bp-viaverde",
+   "nome": "Via Verde Mobilidade associada ao cartão bp (premierplus ou Poupa Mais)",
+   "grupo": "BP",
+   "marca": "BP",
+   "pesquisa": [
+    "bp",
+    "via verde",
+    "portagens",
+    "mobilidade"
+   ],
+   "fonte": "https://www.bp.com/pt_pt/portugal/home/campanhas/feitas-as-contas--a-bp-compensa.html"
+  },
+  {
+   "id": "bp-edp",
+   "nome": "EDP Comercial associada ao cartão Poupa Mais",
+   "grupo": "BP",
+   "marca": "BP",
+   "exclusivo": "bp-edp",
+   "pesquisa": [
+    "bp",
+    "edp",
+    "eletricidade",
+    "luz",
+    "poupa mais"
+   ],
+   "fonte": "https://www.bp.com/pt_pt/portugal/home/campanhas/feitas-as-contas--a-bp-compensa.html"
+  },
+  {
+   "id": "bp-edp-pack",
+   "nome": "Pack EDP associado ao cartão Poupa Mais",
+   "grupo": "BP",
+   "marca": "BP",
+   "exclusivo": "bp-edp",
+   "pesquisa": [
+    "bp",
+    "edp",
+    "pack edp",
+    "eletricidade",
+    "gas",
+    "poupa mais"
+   ],
+   "fonte": "https://www.bp.com/pt_pt/portugal/home/campanhas/feitas-as-contas--a-bp-compensa.html"
   }
  ],
  "descontos": [
@@ -4882,6 +4953,377 @@
    "origem": "Página do Cartão Continente (cópia em PDF enviada pelo dono do site, 25/11/2026)",
    "verificado": "2026-11-25",
    "estado": "confirmado"
+  },
+  {
+   "marcas": [
+    "BP"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "exclui": [],
+   "direto": 0,
+   "saldo": 0.125,
+   "cumulativo": true,
+   "verificado": "2026-11-26",
+   "estado": "confirmado",
+   "id": "bp-litro-simples-bp-premierplus",
+   "titulo": "Campanha bp Litro a Litro",
+   "combustiveis": [
+    "Gasóleo simples",
+    "Gasolina 95 simples"
+   ],
+   "requer": [
+    "bp-premierplus"
+   ],
+   "saldoOnde": "vale para o próximo abastecimento bp",
+   "inicio": "2026-11-16",
+   "fim": "2026-12-31",
+   "condicoes": "Abastecimentos de 20 litros ou mais com o cartão BP premierplus dão um vale para o próximo abastecimento bp: 1 € (20 L), 3 € (30 L) ou 5 € (40 L ou mais) com combustível simples. O valor por litro mostrado aqui (12.5 cênt.) é para um abastecimento de 40 litros; com 30 L são 10 cênt./l e com 20 L 5 cênt./l.",
+   "comoUsar": "Mostre o cartão BP premierplus (ou a app BP premierplus / O Meu Pingo Doce) ao pagar; o vale sai no talão. Use-o no abastecimento seguinte com o mesmo cartão, até ao fim do mês seguinte (último prazo: 31/01/2027). Acumula com o saldo Poupa Mais, o saldo EDP, o saldo Via Verde, os pontos premierplus e os cartões BP Bónus.",
+   "limite": "Um vale por dia e por cartão, emitido no primeiro abastecimento do dia que cumpra as condições. Não vale com cartões de frota (bp Plus, Routex) nem nos postos Pingo Doce e Recheio. Não acumula com outras campanhas bp.",
+   "fonte": "https://www.bp.com/pt_pt/portugal/home/campanhas/campanha-litro-a-litro.html",
+   "fontes": [
+    "https://www.bp.com/pt_pt/portugal/home/campanhas/campanha-litro-a-litro.html",
+    "https://www.bp.com/content/dam/bp/country-sites/pt_pt/portugal/home/products-and-services/campanhas/litro-a-litro/Termos%20e%20Condi%C3%A7%C3%B5es_campanha%20Litro%20a%20Litro%20Q4%202026.pdf"
+   ]
+  },
+  {
+   "marcas": [
+    "BP"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "exclui": [],
+   "direto": 0,
+   "saldo": 0.15,
+   "cumulativo": true,
+   "verificado": "2026-11-26",
+   "estado": "confirmado",
+   "id": "bp-litro-ultimate-bp-premierplus",
+   "titulo": "Campanha bp Litro a Litro (bp Ultimate)",
+   "combustiveis": [
+    "Gasóleo especial",
+    "Gasolina 95 especial",
+    "Gasolina 98 especial"
+   ],
+   "requer": [
+    "bp-premierplus"
+   ],
+   "saldoOnde": "vale para o próximo abastecimento bp",
+   "inicio": "2026-11-16",
+   "fim": "2026-12-31",
+   "condicoes": "Abastecimentos de 20 litros ou mais com o cartão BP premierplus dão um vale para o próximo abastecimento bp: 2 € (20 L), 4 € (30 L) ou 6 € (40 L ou mais) com bp Ultimate. O valor por litro mostrado aqui (15.0 cênt.) é para um abastecimento de 40 litros; com 30 L são 13,3 cênt./l e com 20 L 10 cênt./l.",
+   "comoUsar": "Mostre o cartão BP premierplus (ou a app BP premierplus / O Meu Pingo Doce) ao pagar; o vale sai no talão. Use-o no abastecimento seguinte com o mesmo cartão, até ao fim do mês seguinte (último prazo: 31/01/2027). Acumula com o saldo Poupa Mais, o saldo EDP, o saldo Via Verde, os pontos premierplus e os cartões BP Bónus.",
+   "limite": "Um vale por dia e por cartão, emitido no primeiro abastecimento do dia que cumpra as condições. Não vale com cartões de frota (bp Plus, Routex) nem nos postos Pingo Doce e Recheio. Não acumula com outras campanhas bp.",
+   "fonte": "https://www.bp.com/pt_pt/portugal/home/campanhas/campanha-litro-a-litro.html",
+   "fontes": [
+    "https://www.bp.com/pt_pt/portugal/home/campanhas/campanha-litro-a-litro.html",
+    "https://www.bp.com/content/dam/bp/country-sites/pt_pt/portugal/home/products-and-services/campanhas/litro-a-litro/Termos%20e%20Condi%C3%A7%C3%B5es_campanha%20Litro%20a%20Litro%20Q4%202026.pdf"
+   ]
+  },
+  {
+   "marcas": [
+    "BP"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "exclui": [
+    "bp-premierplus"
+   ],
+   "direto": 0,
+   "saldo": 0.125,
+   "cumulativo": true,
+   "verificado": "2026-11-26",
+   "estado": "confirmado",
+   "id": "bp-litro-simples-bp-poupamais",
+   "titulo": "Campanha bp Litro a Litro",
+   "combustiveis": [
+    "Gasóleo simples",
+    "Gasolina 95 simples"
+   ],
+   "requer": [
+    "bp-poupamais"
+   ],
+   "saldoOnde": "vale para o próximo abastecimento bp",
+   "inicio": "2026-11-16",
+   "fim": "2026-12-31",
+   "condicoes": "Abastecimentos de 20 litros ou mais com o cartão Poupa Mais dão um vale para o próximo abastecimento bp: 1 € (20 L), 3 € (30 L) ou 5 € (40 L ou mais) com combustível simples. O valor por litro mostrado aqui (12.5 cênt.) é para um abastecimento de 40 litros; com 30 L são 10 cênt./l e com 20 L 5 cênt./l.",
+   "comoUsar": "Mostre o cartão Poupa Mais (ou a app BP premierplus / O Meu Pingo Doce) ao pagar; o vale sai no talão. Use-o no abastecimento seguinte com o mesmo cartão, até ao fim do mês seguinte (último prazo: 31/01/2027). Acumula com o saldo Poupa Mais, o saldo EDP, o saldo Via Verde, os pontos premierplus e os cartões BP Bónus.",
+   "limite": "Um vale por dia e por cartão, emitido no primeiro abastecimento do dia que cumpra as condições. Não vale com cartões de frota (bp Plus, Routex) nem nos postos Pingo Doce e Recheio. Não acumula com outras campanhas bp.",
+   "fonte": "https://www.bp.com/pt_pt/portugal/home/campanhas/campanha-litro-a-litro.html",
+   "fontes": [
+    "https://www.bp.com/pt_pt/portugal/home/campanhas/campanha-litro-a-litro.html",
+    "https://www.bp.com/content/dam/bp/country-sites/pt_pt/portugal/home/products-and-services/campanhas/litro-a-litro/Termos%20e%20Condi%C3%A7%C3%B5es_campanha%20Litro%20a%20Litro%20Q4%202026.pdf"
+   ]
+  },
+  {
+   "marcas": [
+    "BP"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "exclui": [
+    "bp-premierplus"
+   ],
+   "direto": 0,
+   "saldo": 0.15,
+   "cumulativo": true,
+   "verificado": "2026-11-26",
+   "estado": "confirmado",
+   "id": "bp-litro-ultimate-bp-poupamais",
+   "titulo": "Campanha bp Litro a Litro (bp Ultimate)",
+   "combustiveis": [
+    "Gasóleo especial",
+    "Gasolina 95 especial",
+    "Gasolina 98 especial"
+   ],
+   "requer": [
+    "bp-poupamais"
+   ],
+   "saldoOnde": "vale para o próximo abastecimento bp",
+   "inicio": "2026-11-16",
+   "fim": "2026-12-31",
+   "condicoes": "Abastecimentos de 20 litros ou mais com o cartão Poupa Mais dão um vale para o próximo abastecimento bp: 2 € (20 L), 4 € (30 L) ou 6 € (40 L ou mais) com bp Ultimate. O valor por litro mostrado aqui (15.0 cênt.) é para um abastecimento de 40 litros; com 30 L são 13,3 cênt./l e com 20 L 10 cênt./l.",
+   "comoUsar": "Mostre o cartão Poupa Mais (ou a app BP premierplus / O Meu Pingo Doce) ao pagar; o vale sai no talão. Use-o no abastecimento seguinte com o mesmo cartão, até ao fim do mês seguinte (último prazo: 31/01/2027). Acumula com o saldo Poupa Mais, o saldo EDP, o saldo Via Verde, os pontos premierplus e os cartões BP Bónus.",
+   "limite": "Um vale por dia e por cartão, emitido no primeiro abastecimento do dia que cumpra as condições. Não vale com cartões de frota (bp Plus, Routex) nem nos postos Pingo Doce e Recheio. Não acumula com outras campanhas bp.",
+   "fonte": "https://www.bp.com/pt_pt/portugal/home/campanhas/campanha-litro-a-litro.html",
+   "fontes": [
+    "https://www.bp.com/pt_pt/portugal/home/campanhas/campanha-litro-a-litro.html",
+    "https://www.bp.com/content/dam/bp/country-sites/pt_pt/portugal/home/products-and-services/campanhas/litro-a-litro/Termos%20e%20Condi%C3%A7%C3%B5es_campanha%20Litro%20a%20Litro%20Q4%202026.pdf"
+   ]
+  },
+  {
+   "marcas": [
+    "BP"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "exclui": [],
+   "direto": 0.2,
+   "saldo": 0.05,
+   "cumulativo": true,
+   "verificado": "2026-11-26",
+   "estado": "confirmado",
+   "id": "bp-poupamais",
+   "titulo": "Poupa Mais (Pingo Doce ↔ bp)",
+   "requer": [
+    "bp-poupamais"
+   ],
+   "saldoOnde": "saldo Pingo Doce",
+   "condicoes": "Por cada 30 € de compras no Pingo Doce acumula 3 € de saldo para combustível bp. Ao abastecer, desconta esse saldo (no exemplo da bp, 4 € em 20 litros = 20 cênt./l) e ganha saldo para o Pingo Doce (1 € em 20 litros = 5 cênt./l). A bp indica até 30 cênt./l no total em abastecimentos de 60 litros (12 € de desconto + 6 € para o Pingo Doce).",
+   "comoUsar": "Use o cartão Poupa Mais (ou a app O Meu Pingo Doce) nas compras do Pingo Doce e ao pagar na bp.",
+   "limite": "O desconto na hora depende de ter saldo acumulado em compras no Pingo Doce (3 € por cada 30 €). Os valores exatos seguem a tabela da bp em vigor.",
+   "fonte": "https://www.bp.com/pt_pt/portugal/home/campanhas/feitas-as-contas--a-bp-compensa.html",
+   "fontes": [
+    "https://www.bp.com/pt_pt/portugal/home/campanhas/feitas-as-contas--a-bp-compensa.html",
+    "https://www.bp.com/pt_pt/portugal/home/campanhas/campanha-litro-a-litro.html"
+   ]
+  },
+  {
+   "marcas": [
+    "BP"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "exclui": [],
+   "direto": 0,
+   "saldo": 0.05,
+   "cumulativo": true,
+   "verificado": "2026-11-26",
+   "estado": "confirmado",
+   "id": "bp-viaverde-simples-bp-premierplus",
+   "titulo": "Saldo Via Verde",
+   "combustiveis": [
+    "Gasóleo simples",
+    "Gasolina 95 simples"
+   ],
+   "requer": [
+    "bp-viaverde",
+    "bp-premierplus"
+   ],
+   "saldoOnde": "saldo Via Verde",
+   "condicoes": "Por cada 20 litros de combustível simples acumula 1 € em saldo Via Verde, para descontar nas portagens.",
+   "comoUsar": "Associe o contrato Via Verde Mobilidade ou Mobilidade Leve ao cartão BP premierplus (ponto 41 das perguntas frequentes da bp) e mostre o cartão ao pagar.",
+   "limite": "Só para clientes Via Verde Mobilidade ou Mobilidade Leve.",
+   "fonte": "https://www.bp.com/pt_pt/portugal/home/campanhas/feitas-as-contas--a-bp-compensa.html",
+   "fontes": [
+    "https://www.bp.com/pt_pt/portugal/home/campanhas/feitas-as-contas--a-bp-compensa.html"
+   ]
+  },
+  {
+   "marcas": [
+    "BP"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "exclui": [],
+   "direto": 0,
+   "saldo": 0.1,
+   "cumulativo": true,
+   "verificado": "2026-11-26",
+   "estado": "confirmado",
+   "id": "bp-viaverde-ultimate-bp-premierplus",
+   "titulo": "Saldo Via Verde (bp Ultimate)",
+   "combustiveis": [
+    "Gasóleo especial",
+    "Gasolina 95 especial",
+    "Gasolina 98 especial"
+   ],
+   "requer": [
+    "bp-viaverde",
+    "bp-premierplus"
+   ],
+   "saldoOnde": "saldo Via Verde",
+   "condicoes": "Por cada 20 litros de bp Ultimate acumula 2 € em saldo Via Verde, para descontar nas portagens.",
+   "comoUsar": "Associe o contrato Via Verde Mobilidade ou Mobilidade Leve ao cartão BP premierplus (ponto 41 das perguntas frequentes da bp) e mostre o cartão ao pagar.",
+   "limite": "Só para clientes Via Verde Mobilidade ou Mobilidade Leve.",
+   "fonte": "https://www.bp.com/pt_pt/portugal/home/campanhas/feitas-as-contas--a-bp-compensa.html",
+   "fontes": [
+    "https://www.bp.com/pt_pt/portugal/home/campanhas/feitas-as-contas--a-bp-compensa.html"
+   ]
+  },
+  {
+   "marcas": [
+    "BP"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "exclui": [
+    "bp-premierplus"
+   ],
+   "direto": 0,
+   "saldo": 0.05,
+   "cumulativo": true,
+   "verificado": "2026-11-26",
+   "estado": "confirmado",
+   "id": "bp-viaverde-simples-bp-poupamais",
+   "titulo": "Saldo Via Verde",
+   "combustiveis": [
+    "Gasóleo simples",
+    "Gasolina 95 simples"
+   ],
+   "requer": [
+    "bp-viaverde",
+    "bp-poupamais"
+   ],
+   "saldoOnde": "saldo Via Verde",
+   "condicoes": "Por cada 20 litros de combustível simples acumula 1 € em saldo Via Verde, para descontar nas portagens.",
+   "comoUsar": "Associe o contrato Via Verde Mobilidade ou Mobilidade Leve ao cartão Poupa Mais (ponto 41 das perguntas frequentes da bp) e mostre o cartão ao pagar.",
+   "limite": "Só para clientes Via Verde Mobilidade ou Mobilidade Leve.",
+   "fonte": "https://www.bp.com/pt_pt/portugal/home/campanhas/feitas-as-contas--a-bp-compensa.html",
+   "fontes": [
+    "https://www.bp.com/pt_pt/portugal/home/campanhas/feitas-as-contas--a-bp-compensa.html"
+   ]
+  },
+  {
+   "marcas": [
+    "BP"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "exclui": [
+    "bp-premierplus"
+   ],
+   "direto": 0,
+   "saldo": 0.1,
+   "cumulativo": true,
+   "verificado": "2026-11-26",
+   "estado": "confirmado",
+   "id": "bp-viaverde-ultimate-bp-poupamais",
+   "titulo": "Saldo Via Verde (bp Ultimate)",
+   "combustiveis": [
+    "Gasóleo especial",
+    "Gasolina 95 especial",
+    "Gasolina 98 especial"
+   ],
+   "requer": [
+    "bp-viaverde",
+    "bp-poupamais"
+   ],
+   "saldoOnde": "saldo Via Verde",
+   "condicoes": "Por cada 20 litros de bp Ultimate acumula 2 € em saldo Via Verde, para descontar nas portagens.",
+   "comoUsar": "Associe o contrato Via Verde Mobilidade ou Mobilidade Leve ao cartão Poupa Mais (ponto 41 das perguntas frequentes da bp) e mostre o cartão ao pagar.",
+   "limite": "Só para clientes Via Verde Mobilidade ou Mobilidade Leve.",
+   "fonte": "https://www.bp.com/pt_pt/portugal/home/campanhas/feitas-as-contas--a-bp-compensa.html",
+   "fontes": [
+    "https://www.bp.com/pt_pt/portugal/home/campanhas/feitas-as-contas--a-bp-compensa.html"
+   ]
+  },
+  {
+   "marcas": [
+    "BP"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "exclui": [],
+   "direto": 0,
+   "saldo": 0.05,
+   "cumulativo": true,
+   "verificado": "2026-11-26",
+   "estado": "confirmado",
+   "id": "bp-edp",
+   "titulo": "Desconto na fatura EDP Comercial",
+   "requer": [
+    "bp-edp",
+    "bp-poupamais"
+   ],
+   "saldoOnde": "fatura EDP Comercial",
+   "condicoes": "Por cada 40 litros de combustível bp recebe 2 € de desconto na fatura da EDP Comercial.",
+   "comoUsar": "Registe o cartão Poupa Mais e associe-o ao contrato EDP Comercial (ou pela Linha Poupa Mais 210 547 860). O desconto é calculado no fim de cada mês e aparece na fatura seguinte.",
+   "limite": "Até 10 € por mês.",
+   "fonte": "https://www.bp.com/pt_pt/portugal/home/campanhas/feitas-as-contas--a-bp-compensa.html",
+   "fontes": [
+    "https://www.bp.com/pt_pt/portugal/home/campanhas/feitas-as-contas--a-bp-compensa.html"
+   ]
+  },
+  {
+   "marcas": [
+    "BP"
+   ],
+   "tipos": [
+    "gasolina",
+    "gasoleo"
+   ],
+   "exclui": [],
+   "direto": 0,
+   "saldo": 0.1,
+   "cumulativo": true,
+   "verificado": "2026-11-26",
+   "estado": "confirmado",
+   "id": "bp-edp-pack",
+   "titulo": "Desconto na fatura EDP Comercial (Pack EDP)",
+   "requer": [
+    "bp-edp-pack",
+    "bp-poupamais"
+   ],
+   "saldoOnde": "fatura EDP Comercial",
+   "condicoes": "Clientes Pack EDP: por cada 40 litros de combustível bp com o cartão Poupa Mais recebem 4 € de desconto na fatura da EDP Comercial.",
+   "comoUsar": "Registe o cartão Poupa Mais e associe-o ao contrato EDP Comercial (ou pela Linha Poupa Mais 210 547 860). O desconto é calculado no fim de cada mês e aparece na fatura seguinte.",
+   "limite": "Até 20 € por mês.",
+   "fonte": "https://www.bp.com/pt_pt/portugal/home/campanhas/feitas-as-contas--a-bp-compensa.html",
+   "fontes": [
+    "https://www.bp.com/pt_pt/portugal/home/campanhas/feitas-as-contas--a-bp-compensa.html"
+   ]
   }
  ],
  "fontesGerais": [

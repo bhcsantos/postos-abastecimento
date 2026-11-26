@@ -63,7 +63,12 @@
     describe(a){
       if(!a.regras.length)return"";
       return a.regras.map(r=>esc(r.titulo)).join(" + ")+": "+
-        [a.direto?`−${cent(a.direto)} na hora`:"",a.saldo?`${cent(a.saldo)} em ${esc(a.regras.find(r=>r.saldo)?.saldoOnde||"saldo")}`:""].filter(Boolean).join(" + ");
+        [a.direto?`−${cent(a.direto)} na hora`:"",...this.saldos(a).map(([o,v])=>`${cent(v)} em ${esc(o)}`)].filter(Boolean).join(" + ");
+    },
+    /* Saldos agrupados por destino: [["saldo Via Verde",0.05],["vale para o próximo abastecimento bp",0.125]] */
+    saldos(a){
+      const m=new Map();a.regras.filter(r=>r.saldo).forEach(r=>{const o=r.saldoOnde||"saldo";m.set(o,(m.get(o)||0)+r.saldo)});
+      return[...m];
     },
     /* Explicação completa: o que é preciso, como usar, limites e fonte */
     explain(a){
