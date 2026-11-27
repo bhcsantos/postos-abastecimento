@@ -24,7 +24,6 @@ Lista do que ficou combinado para mais tarde.
 
 ## Descontos por confirmar ou acrescentar
 
-5. **Moeve Gow:** o saldo Gow normal, fora das promoções.
 6. **Moeve Gow:** o desconto do cartão DECO PROteste no combustível.
 7. **Alves Bandeira (Pontos AB):** os valores são "até 12 / até 6 cênt."; confirmar se são na hora ou em pontos.
 8. **Vodafone na Repsol:** confirmar a divisão entre o desconto imediato e o saldo.

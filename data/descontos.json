@@ -1,5 +1,5 @@
 {
- "atualizado": "2026-11-26",
+ "atualizado": "2026-11-27",
  "grupos": [
   "Repsol",
   "Galp",
@@ -5657,8 +5657,68 @@
    ]
   },
   {
+   "id": "moeve-gow-simples",
+   "titulo": "Moeve Gow — saldo por litro",
+   "marcas": [
+    "MOEVE"
+   ],
+   "combustiveis": [
+    "Gasóleo simples",
+    "Gasolina 95 simples",
+    "GPL Auto"
+   ],
+   "requer": [
+    "moeve-gow"
+   ],
+   "exclui": [],
+   "direto": 0,
+   "saldo": 0.05,
+   "saldoOnde": "saldo Gow",
+   "cumulativo": false,
+   "fim": "2026-12-31",
+   "condicoes": "5 cênt./litro em saldo Gow na gasolina simples, gasóleo simples e GPL, nos postos Moeve (e antigos Cepsa) aderentes. Sem consumo mínimo. Não acumula com outros cartões nem descontos do posto (exceto os cartões Moeve Clube Grupo e Coletivos); acumula com as promoções que dão saldo Gow adicional, como a Poupe a Dobrar.",
+   "comoUsar": "Identifique-se com a app Moeve Gow (ou o cartão) ao pagar. A parte paga com saldo Gow ou com cartões profissionais não acumula saldo.",
+   "limite": "Até 90 litros por abastecimento, 270 litros e 3 abastecimentos por dia. Campanha válida até 31/12/2026.",
+   "fonte": "https://pt.moeveglobal.com/stfls/cepsa-pt/Ficheros/condicoes-gerais-campanha-saldo-gow.pdf",
+   "fontes": [
+    "https://pt.moeveglobal.com/stfls/cepsa-pt/Ficheros/condicoes-gerais-campanha-saldo-gow.pdf"
+   ],
+   "verificado": "2026-11-27",
+   "estado": "confirmado"
+  },
+  {
+   "id": "moeve-gow-max",
+   "titulo": "Moeve Gow — saldo por litro (Max/Óptima)",
+   "marcas": [
+    "MOEVE"
+   ],
+   "combustiveis": [
+    "Gasóleo especial",
+    "Gasolina 95 especial",
+    "Gasolina 98 especial"
+   ],
+   "requer": [
+    "moeve-gow"
+   ],
+   "exclui": [],
+   "direto": 0,
+   "saldo": 0.06,
+   "saldoOnde": "saldo Gow",
+   "cumulativo": false,
+   "fim": "2026-12-31",
+   "condicoes": "6 cênt./litro em saldo Gow na gama Max/Óptima (gasolina e gasóleo), nos postos Moeve (e antigos Cepsa) aderentes. Sem consumo mínimo. Não acumula com outros cartões nem descontos do posto (exceto os cartões Moeve Clube Grupo e Coletivos); acumula com as promoções que dão saldo Gow adicional, como a Poupe a Dobrar.",
+   "comoUsar": "Identifique-se com a app Moeve Gow (ou o cartão) ao pagar. A parte paga com saldo Gow ou com cartões profissionais não acumula saldo.",
+   "limite": "Até 90 litros por abastecimento, 270 litros e 3 abastecimentos por dia. Campanha válida até 31/12/2026.",
+   "fonte": "https://pt.moeveglobal.com/stfls/cepsa-pt/Ficheros/condicoes-gerais-campanha-saldo-gow.pdf",
+   "fontes": [
+    "https://pt.moeveglobal.com/stfls/cepsa-pt/Ficheros/condicoes-gerais-campanha-saldo-gow.pdf"
+   ],
+   "verificado": "2026-11-27",
+   "estado": "confirmado"
+  },
+  {
    "id": "moeve-dobrar-simples",
-   "titulo": "Moeve Gow — Poupe a Dobrar",
+   "titulo": "Moeve Gow — Poupe a Dobrar (saldo extra)",
    "marcas": [
     "MOEVE"
    ],
@@ -5677,7 +5737,7 @@
    "direto": 0,
    "saldo": 0.05,
    "saldoOnde": "saldo Gow",
-   "cumulativo": false,
+   "cumulativo": true,
    "inicio": "2026-11-02",
    "fim": "2026-11-30",
    "condicoes": "De 2 a 30 de novembro de 2026: 5 cênt./litro adicionais em saldo Gow nos combustíveis simples, sem consumo mínimo, nos postos Moeve e Cepsa aderentes. Não acumula com cartões de frota (Moeve Pro, StarRessa), cartões Táxi, Coletivos, DECO PROteste, Cartão de Crédito Moeve Gow nem outros descontos do posto.",
@@ -5688,11 +5748,12 @@
     "https://pt.moeveglobal.com/stfls/cepsa-pt/Ficheros/poupe-a-dobrar-bases-legais.pdf"
    ],
    "verificado": "2026-11-26",
-   "estado": "confirmado"
+   "estado": "confirmado",
+   "nota": "Soma-se ao saldo Gow normal (5 ou 6 cênt./l): durante a promoção o saldo fica a dobrar."
   },
   {
    "id": "moeve-dobrar-max",
-   "titulo": "Moeve Gow — Poupe a Dobrar (Max/Óptima)",
+   "titulo": "Moeve Gow — Poupe a Dobrar (saldo extra, Max/Óptima)",
    "marcas": [
     "MOEVE"
    ],
@@ -5712,7 +5773,7 @@
    "direto": 0,
    "saldo": 0.06,
    "saldoOnde": "saldo Gow",
-   "cumulativo": false,
+   "cumulativo": true,
    "inicio": "2026-11-02",
    "fim": "2026-11-30",
    "condicoes": "De 2 a 30 de novembro de 2026: 6 cênt./litro adicionais em saldo Gow na gama Moeve Max/Óptima, sem consumo mínimo, nos postos Moeve e Cepsa aderentes. Não acumula com cartões de frota (Moeve Pro, StarRessa), cartões Táxi, Coletivos, DECO PROteste, Cartão de Crédito Moeve Gow nem outros descontos do posto.",
@@ -5723,7 +5784,8 @@
     "https://pt.moeveglobal.com/stfls/cepsa-pt/Ficheros/poupe-a-dobrar-bases-legais.pdf"
    ],
    "verificado": "2026-11-26",
-   "estado": "confirmado"
+   "estado": "confirmado",
+   "nota": "Soma-se ao saldo Gow normal (5 ou 6 cênt./l): durante a promoção o saldo fica a dobrar."
   },
   {
    "id": "moeve-ev-gow",
@@ -5747,10 +5809,12 @@
    "limite": "Só nos carregadores operados pela Moeve; a Moeve pode alterar ou terminar a campanha.",
    "fonte": "https://pt.moeveglobal.com/stfls/cepsa-pt/Ficheros/condicoes-gerais-da-promocao-opc-ceme-moeve-260831.pdf",
    "fontes": [
-    "https://pt.moeveglobal.com/stfls/cepsa-pt/Ficheros/condicoes-gerais-da-promocao-opc-ceme-moeve-260831.pdf"
+    "https://pt.moeveglobal.com/stfls/cepsa-pt/Ficheros/condicoes-gerais-da-promocao-opc-ceme-moeve-260831.pdf",
+    "https://pt.moeveglobal.com/stfls/cepsa-pt/Ficheros/condicoes-gerais-campanha-saldo-gow.pdf"
    ],
    "verificado": "2026-11-26",
-   "estado": "confirmado"
+   "estado": "confirmado",
+   "nota": "O saldo de 2 cênt./kWh é o mesmo do programa Moeve Gow em carregadores Moeve (condições gerais do saldo Gow)."
   },
   {
    "id": "moeve-ev-deco",
