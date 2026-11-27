@@ -205,8 +205,8 @@
     renderBest(dlg){
       const ds=this.data?.descontos||[];
       const brands=[...new Set(ds.filter(r=>!r.carregamento).flatMap(r=>r.marcas||[]))], evBrands=[...new Set(ds.filter(r=>r.carregamento).flatMap(r=>r.marcas||[]))];
-      const out=brands.map(b=>{const a=this.apply(b,"Gasolina 95 simples",2);return a.regras.length?`<div class="dbest"><div class="dbt">⛽ ${esc(nice(b))}: <strong>${cent(a.direto+a.saldo)}/litro</strong> (${[a.direto?`${cent(a.direto)} na hora`:"",a.saldo?`${cent(a.saldo)} em saldo`:""].filter(Boolean).join(" + ")})</div>${this.explain(a)}</div>`:""}).join("")
-        +evBrands.map(b=>{const a=this.applyEv(b,100);return a.regras.length?`<div class="dbest"><div class="dbt">⚡ ${esc(nice(b))} (carregamentos): <strong>${Math.round(a.perc*100)}% em saldo</strong></div>${this.explain(a)}</div>`:""}).join("");
+      const out=brands.map(b=>{const a=this.apply(b,"Gasolina 95 simples",2);return a.regras.length?`<details class="dbest"><summary class="dbt">⛽ ${esc(nice(b))}: <strong>${cent(a.direto+a.saldo)}/litro</strong> (${[a.direto?`${cent(a.direto)} na hora`:"",a.saldo?`${cent(a.saldo)} em saldo`:""].filter(Boolean).join(" + ")})</summary>${this.explain(a)}</details>`:""}).join("")
+        +evBrands.map(b=>{const a=this.applyEv(b,100);return a.regras.length?`<details class="dbest"><summary class="dbt">⚡ ${esc(nice(b))} (carregamentos): <strong>${Math.round(a.perc*100)}% em saldo</strong></summary>${this.explain(a)}</details>`:""}).join("");
       dlg.querySelector("[data-best]").innerHTML=out||`<p class="dempty">Com o que escolheu ainda não há descontos registados. Acrescente cartões ou programas acima.</p>`;
     },
     injectCss(){
@@ -236,6 +236,8 @@ dialog.dlg::backdrop{background:rgba(10,16,26,.55)}
 .dbest{border:1px solid var(--line);border-radius:8px;padding:10px 12px;display:grid;gap:6px;background:var(--bg)}
 .dbt{font-size:.95rem}
 .dexp{display:grid;gap:3px;font-size:.86rem}
+details.dbest>summary{cursor:pointer;list-style-position:inside}
+details.dbest[open]>summary{margin-bottom:6px}
 .ditemw{display:grid;gap:2px;margin-bottom:6px}
 .doffer{margin:-2px 0 6px 10px;font-size:.84rem}
 .doffer summary{cursor:pointer;color:var(--accent);font-weight:600;font-size:.8rem}
