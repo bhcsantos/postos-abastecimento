@@ -67,6 +67,22 @@ textarea{min-height:110px;resize:vertical}
 .muted{color:var(--muted);font-size:.86rem}
 .kind{font-size:.72rem;border-radius:4px;padding:1px 6px;color:#fff}
 .fp{display:block;margin-top:4px;font-size:.9rem;font-family:var(--mono)}.fp .best{font-family:var(--body);font-size:.72rem;font-weight:700;background:var(--good,#1d8a4a);color:#fff;border-radius:999px;padding:1px 8px;margin-right:4px}.fp .good{color:var(--good,#1d8a4a)}.fp .stale{font-family:var(--body);font-size:.78rem;color:#b35c00}
+.favd{border:1px solid var(--line);border-radius:8px;background:var(--bg)}
+.favd>summary{display:flex;align-items:center;gap:10px;padding:10px 12px;cursor:pointer;list-style:none}
+.favd>summary::-webkit-details-marker{display:none}
+.favd>summary::before{content:"▸";color:var(--muted);font-size:.8rem;transition:transform .15s}
+.favd[open]>summary::before{transform:rotate(90deg)}
+.favd .fn{flex:1;min-width:0;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.favd .fwarn{display:block;font-weight:500;font-size:.78rem;color:#b35c00;white-space:normal}
+@media (prefers-color-scheme:dark){.favd .fwarn,.favd.old .fv{color:#f0a35a}}
+.favd .fv{font-family:var(--mono);font-weight:600;font-size:1.05rem;white-space:nowrap}
+.favd.best .fv{color:var(--good)}
+.favd.best{border-color:var(--good)}
+.favd.old .fv{color:#b35c00}
+.fdet{display:grid;gap:4px;padding:0 12px 12px 30px;font-size:.88rem}
+.fdet .row{display:flex;gap:12px;align-items:center;margin-top:4px}
+.fdet .stale{color:#b35c00}
+@media (prefers-color-scheme:dark){.favd.old .fv{color:#f0a35a}}
 .kind.fuel{background:#1d1f23}.kind.ev{background:#1d8a4a}
 .state{font-size:.72rem;border-radius:999px;padding:1px 8px;background:var(--accent-soft);color:var(--accent)}
 a{color:var(--accent)}
@@ -326,7 +342,7 @@ async function ficha(id){
   if(p){if(/^cepsa$/i.test(String(p.Marca||"").trim()))p.Marca="MOEVE";fichas.set(id,{p,t:Date.now()})}
   return(fichas.get(id)||{}).p||null;
 }
-let favSeq=0;
+let favSeq=0; const favOpen=new Set();
 function favRow(x,i,extra=""){
   return `<div class="li${extra?" fav":""}"><span class="kind ${x.k}">${x.k==="ev"?"Carregador":"Combustível"}</span><span class="t"><strong>${esc(x.t)}</strong><br><span class="muted">${esc(x.sub||"")}</span>${extra}</span>
     ${x.k==="fuel"?`<a href="posto.html?id=${esc(x.id)}">Abrir ficha</a>`:`<a href="https://www.google.com/maps/search/?api=1&query=${x.lat},${x.lng}" target="_blank" rel="noopener">Google Maps ↗</a>`}
@@ -338,23 +354,29 @@ async function renderFavs(){
   const bind=()=>box.querySelectorAll("[data-rmf]").forEach(b=>b.onclick=()=>{const l=[...f];l.splice(+b.dataset.rmf,1);A.save({favoritos:l},true);A.emit()});
   if(!f.length){box.innerHTML=`<p class="muted">Ainda não tem favoritos.</p>`;$("favHead").textContent="";return}
   const fuels=f.map((x,i)=>({x,i})).filter(o=>o.x.k==="fuel"), evs=f.map((x,i)=>({x,i})).filter(o=>o.x.k!=="fuel");
-  $("favHead").textContent=fname&&fuels.length?`${fname} para ${prof.nome||"o perfil ativo"}${prof.matricula?" · "+prof.matricula:""}, do mais barato para o mais caro (com os seus cartões de desconto).`:fuels.length&&prof&&prof.tipo==="eletrico"?"O perfil ativo é elétrico: escolha um perfil a combustível ou híbrido para ver os preços dos postos.":"";
-  const draw=(rows)=>{box.innerHTML=rows.map(r=>r.html).join("")+evs.map(o=>favRow(o.x,o.i)).join("");bind()};
-  /* 1) desenha já, com o que houver guardado */
+  $("favHead").textContent=fname&&fuels.length?`Custo real de ${fname.toLowerCase()} (${prof.nome||"perfil ativo"}), do mais barato para o mais caro. Toque num posto para ver mais.`:fuels.length&&prof&&prof.tipo==="eletrico"?"O perfil ativo é elétrico: escolha um perfil a combustível ou híbrido para ver os preços dos postos.":"";
+  const draw=(rows)=>{box.innerHTML=rows.map(r=>r.html).join("")+evs.map(o=>favRow(o.x,o.i)).join("");bind();
+    box.querySelectorAll("details.favd").forEach(d=>d.ontoggle=()=>{d.open?favOpen.add(d.dataset.fid):favOpen.delete(d.dataset.fid)})};
+  /* Uma linha por posto: nome e custo real; ao tocar abre o resto (preço na bomba, atestar, morada, ficha, retirar) */
+  const row=(o,valor,detalhe,cls="",aviso="")=>`<details class="favd${cls}" data-fid="${esc(o.x.id)}"${favOpen.has(String(o.x.id))?" open":""}><summary><span class="fn">${esc(o.x.t)}${aviso?`<span class="fwarn">${aviso}</span>`:""}</span><span class="fv">${valor}</span></summary>
+    <div class="fdet"><span class="muted">${esc(o.x.sub||"")}</span>${detalhe}<div class="row"><a href="posto.html?id=${esc(o.x.id)}">Abrir ficha</a><button type="button" class="btn ghost" data-rmf="${o.i}">Retirar</button></div></div></details>`;
   const build=()=>{
     const rows=fuels.map(o=>{
       const p=(fichas.get(o.x.id)||{}).p, c=p&&fname?(p.Combustiveis||[]).find(c=>c.TipoCombustivel===fname):null;
-      if(!fname)return{v:1e9,html:favRow(o.x,o.i)};
-      if(!p)return{v:1e8,html:favRow(o.x,o.i,`<span class="fp muted">A obter o preço…</span>`)};
-      if(!c)return{v:1e7,html:favRow(o.x,o.i,`<span class="fp muted">Este posto não vende ${esc(fname)}.</span>`)};
+      if(!fname)return{v:1e9,html:row(o,"","")};
+      if(!p)return{v:1e8,html:row(o,`<span class="muted">…</span>`,"")};
+      if(!c)return{v:1e7,html:row(o,`<span class="muted">sem ${esc(fname.split(" ")[0].toLowerCase())}</span>`,`<span class="muted">Este posto não vende ${esc(fname)}.</span>`)};
       const price=pnum(c.Preco), a=window.Discounts&&Discounts.data?Discounts.apply(p.Marca,fname,price):{final:price,efetivo:price,regras:[]};
       const velho=Date.now()-new Date(String(c.DataAtualizacao||"").replace(" ","T"))>10*864e5;
-      const fill=prof.deposito?`<br><span class="muted">Atestar ${prof.deposito} L: ${(a.final*prof.deposito).toFixed(2).replace(".",",")} €</span>`:"";
-      const pay=a.final<price-1e-9?`Na bomba ${eur(price)} · paga <strong>${eur(a.final)}</strong>`:`Paga <strong>${eur(a.final)}</strong>`;
-      return{v:a.efetivo+(velho?0.5:0),ok:true,velho,html:favRow(o.x,o.i,`<span class="fp">${pay}${a.efetivo<a.final-1e-9?`<br>Custo real <strong class="good">${eur(a.efetivo)}</strong> <span class="muted">(com o saldo dos cartões)</span>`:""}${fill}${velho?`<br><span class="stale">⚠ Preço de ${esc(String(c.DataAtualizacao).slice(0,10).split("-").reverse().join("/"))}: o posto não atualiza o preço há mais de 10 dias.</span>`:""}</span>`)};
-    }).sort((a,b)=>a.v-b.v);
-    const comPreco=rows.filter(r=>r.ok), best=comPreco.find(r=>!r.velho);
-    if(best&&comPreco.length>1)best.html=best.html.replace('<span class="fp">','<span class="fp"><span class="best">Mais barato</span> ');
+      const det=[a.final<price-1e-9?`Na bomba ${eur(price)} · paga ${eur(a.final)}`:`Paga ${eur(a.final)}`,
+        a.efetivo<a.final-1e-9?`Custo real ${eur(a.efetivo)} (com o saldo dos cartões)`:"",
+        prof.deposito?`Atestar ${prof.deposito} L: ${(a.final*prof.deposito).toFixed(2).replace(".",",")} €`:"",
+""].filter(Boolean).map(t=>`<span>${t}</span>`).join("");
+      const aviso=velho?`⚠ Preço de ${esc(String(c.DataAtualizacao).slice(0,10).split("-").reverse().join("/"))}: não atualiza há mais de 10 dias`:"";
+      return{v:a.efetivo+(velho?0.5:0),ok:true,velho,o,a,det,aviso};
+    }).sort((x,y)=>x.v-y.v);
+    const best=rows.find(r=>r.ok&&!r.velho);
+    rows.forEach(r=>{if(r.ok)r.html=row(r.o,eur(r.a.efetivo),r.det,r===best&&rows.filter(x=>x.ok).length>1?" best":r.velho?" old":"",r.aviso)});
     return rows;
   };
   draw(build());
