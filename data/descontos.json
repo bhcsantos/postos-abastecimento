@@ -6,6 +6,7 @@
   "BP",
   "Alves Bandeira",
   "Moeve",
+  "Petroprix",
   "Meios de pagamento",
   "Operadoras de telecomunicações",
   "Seguros e bancos",
@@ -763,6 +764,19 @@
     "sibs"
    ],
    "fonte": "https://www.mbway.pt/mb-way-up/cashback-e-desafios/"
+  },
+  {
+   "id": "petroprix-app",
+   "nome": "Petroprix — app Petroprix (com a matrícula registada)",
+   "grupo": "Petroprix",
+   "marca": "PETROPRIX",
+   "pesquisa": [
+    "petroprix",
+    "app",
+    "matricula",
+    "black"
+   ],
+   "fonte": "https://petroprix.pt/black-weekend-2026/"
   }
  ],
  "descontos": [
@@ -5868,6 +5882,38 @@
    "estado": "confirmado",
    "nota": "Condições confirmadas numa captura da campanha na app MB WAY enviada pelo dono do site (27/11/2026).",
    "fim": "2026-11-30"
+  },
+  {
+   "id": "petroprix-black-2026",
+   "titulo": "Petroprix — Black Weekend",
+   "marcas": [
+    "PETROPRIX"
+   ],
+   "combustiveis": [
+    "Gasóleo simples",
+    "Gasóleo especial",
+    "Gasolina 95 simples",
+    "Gasolina 95 especial"
+   ],
+   "requer": [
+    "petroprix-app"
+   ],
+   "exclui": [],
+   "direto": 0.05,
+   "saldo": 0,
+   "cumulativo": false,
+   "inicio": "2026-11-27",
+   "fim": "2026-11-29",
+   "condicoes": "De sexta 27 a domingo 29 de novembro de 2026: 5 cênt./litro de desconto imediato na gasolina 95 e no gasóleo, em todos os 16 postos Petroprix em Portugal, para utilizadores registados na app.",
+   "comoUsar": "Instale a app Petroprix, registe-se e associe a matrícula (com o tipo de combustível certo). Na bomba, identifique-se pela matrícula (as câmaras leem-na, ou escreva-a). O desconto aparece logo no preço.",
+   "limite": "Até 70 litros por abastecimento e 4 abastecimentos por dia por matrícula. Só no combustível associado à matrícula. Não acumula com outros descontos em dinheiro da app; quem já tem um desconto fixo não pode usar este.",
+   "fonte": "https://petroprix.pt/black-weekend-2026/",
+   "fontes": [
+    "https://petroprix.pt/black-weekend-2026/",
+    "https://petroprix.pt/termos-e-condicoes-black-weekend-2026/"
+   ],
+   "verificado": "2026-11-27",
+   "estado": "confirmado"
   }
  ],
  "fontesGerais": [
