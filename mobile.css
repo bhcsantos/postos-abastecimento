@@ -1,6 +1,7 @@
 /* Ajustes para telemóvel, partilhados por todas as páginas.
    Objetivo: o mapa e a lista aparecem cedo, cada posto ocupa menos altura e os botões são fáceis de tocar. */
 .tl-x{display:inline}
+.tl-m{display:none}
 .mjump{display:none}
 @media (max-width:600px){
   body{font-size:15px}
@@ -10,9 +11,18 @@
   body .tl-x{display:none}
   body nav.tabs a{padding:8px 6px;font-size:.92rem;gap:6px}
   body nav.tabs svg{width:18px;height:18px}
-  body .topbar{gap:8px}
-  body .topright{gap:6px}
-  body .topright .discbtn,body .topright .acct,body .topright button,body .topright a{padding:7px 10px;font-size:.86rem}
+  body .tl-m{display:inline}
+  /* Duas linhas arrumadas: separadores a toda a largura; por baixo, Cartões | perfil (estica) | conta */
+  body .topbar{display:grid;grid-template-columns:minmax(0,1fr);gap:8px}
+  body nav.tabs{display:flex;width:100%;box-sizing:border-box}
+  body nav.tabs a{flex:1}
+  body .topright{display:flex;flex-wrap:nowrap;align-items:center;gap:6px;width:100%;margin:0;justify-content:flex-start}
+  body .topright .discbtn{flex:none;padding:8px 12px;font-size:.88rem;border-radius:10px;min-height:42px}
+  body .topright .acct{flex:1;min-width:0;display:flex;justify-content:flex-end;gap:6px}
+  body .topright .acctprof{flex:1;min-width:0;display:flex}
+  body .topright .acctprof select{width:100%;max-width:none;min-height:42px;padding:6px 8px;font-size:.88rem}
+  body .topright .acctbtn{min-height:42px;padding:6px 14px;box-sizing:border-box}
+  body .topright .acctbtn.me{padding:4px}
   body header{gap:6px}
   body h1{font-size:1.65rem}
   body .sub{display:none}

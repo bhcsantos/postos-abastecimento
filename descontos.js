@@ -137,7 +137,7 @@
     renderButton(){
       const b=document.getElementById("discBtn"); if(!b)return;
       const n=this.prefs.programas.length;
-      b.innerHTML=`<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h4"/></svg>${n?`Os meus cartões (${n})`:"Os meus cartões de desconto"}`;
+      b.innerHTML=`<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h4"/></svg>${n?`<span class="tl-x">Os meus cartões (${n})</span><span class="tl-m">Cartões (${n})</span>`:`<span class="tl-x">Os meus cartões de desconto</span><span class="tl-m">Cartões</span>`}`;
       b.setAttribute("aria-pressed",n?"true":"false");
     },
 
