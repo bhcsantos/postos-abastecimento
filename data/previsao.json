@@ -1,17 +1,23 @@
 {
- "semanaInicio": "2026-11-23",
- "semanaFim": "2026-11-29",
- "gasoleo": -0.045,
- "gasolina": -0.045,
+ "semanaInicio": "2026-11-30",
+ "semanaFim": "2026-12-06",
+ "gasoleo": -0.085,
+ "gasolina": -0.05,
  "fonte": "Estimativa do setor publicada às sextas-feiras (ACP e imprensa), recolhida do Ativos.pt",
  "url": "https://www.ativos.pt/combustiveis/precos-proxima-semana",
- "obtido": "2026-11-27T09:17+00:00",
+ "obtido": "2026-11-27T10:59+00:00",
  "historico": [
   {
    "semanaInicio": "2026-11-23",
    "semanaFim": "2026-11-29",
    "gasoleo": -0.045,
    "gasolina": -0.045
+  },
+  {
+   "semanaInicio": "2026-11-30",
+   "semanaFim": "2026-12-06",
+   "gasoleo": -0.085,
+   "gasolina": -0.05
   }
  ]
 }
