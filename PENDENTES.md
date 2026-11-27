@@ -4,7 +4,7 @@ Lista do que ficou combinado para mais tarde.
 
 - Cada ponto tem um número fixo, para se poder dizer "ponto 7 resolvido".
 - Quando um ponto fica feito, sai da lista e o número não volta a ser usado. O histórico fica nos commits.
-- Pontos novos recebem o número seguinte ao maior já usado (último usado: 16).
+- Pontos novos recebem o número seguinte ao maior já usado (último usado: 18).
 
 ## Funcionalidades
 
@@ -21,6 +21,8 @@ Lista do que ficou combinado para mais tarde.
 3. **Verificação semanal das campanhas de desconto.**
    - Uma tarefa agendada que revê as páginas das campanhas e propõe alterações a `data/descontos.json` num pull request, para aprovação.
    - Deve também verificar as campanhas na data em que terminam.
+17. **Favoritos por tipo de combustível.** Quando o perfil tem mais de um combustível (ex.: 95 simples e 95 especial), ordenar os favoritos por tipo de combustível e mostrar o valor desse combustível, em vez de só o mais barato de cada posto.
+18. **Ficha do posto com os combustíveis do perfil.** Ao abrir um favorito (a linha que abre ao tocar), mostrar os valores de todos os combustíveis escolhidos no perfil do carro.
 
 ## Descontos por confirmar ou acrescentar
 
