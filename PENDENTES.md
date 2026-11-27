@@ -37,12 +37,6 @@ Lista do que ficou combinado para mais tarde.
 12. **BP:** confirmar se o Poupa Mais acumula com o ACP quando se paga com o ACP Master.
 13. **Outras marcas,** quando houver ligações: Prio, Intermarché, Shell, Auchan (carregamentos), Pingo Doce (postos próprios), etc.
 
-## Para o dono do site testar (com sessão iniciada)
-
-14. Confirmar que os cartões ficam gravados na conta:
-    - com "Já tenho, acrescentar" na ficha do posto;
-    - com o painel "Os meus cartões" aberto a partir da ficha.
-
 ## Para verificar
 
 16. **Postos escondidos pela DGEG.** Confirmar que a tarefa diária de 27/11 (09:17 UTC) gerou `data/escondidos.json` sem erros no GitHub Actions; até agora foi gerado à mão.
