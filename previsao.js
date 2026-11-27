@@ -24,9 +24,10 @@
       const ft=this.fuelType, v=ft?d[ft]:null, chave=d.semanaInicio+(antes?"a":"d");
       /* Fechado: fica uma linha pequena com os valores, que volta a abrir o aviso completo */
       if(store.get("prev-fechado")===chave){
-        const curto=k=>{const x=d[k];return x<-0.0005?`<span class="pv-dn">▼ ${cent(x).replace("/l","")}</span>`:x>0.0005?`<span class="pv-up">▲ ${cent(x).replace("/l","")}</span>`:`<span class="pv-eq">=</span>`};
+        const num=x=>(Math.abs(x)*100).toLocaleString("pt-PT",{maximumFractionDigits:1});
+        const curto=k=>{const x=d[k];return x<-0.0005?`<span class="pv-dn">▼${num(x)}</span>`:x>0.0005?`<span class="pv-up">▲${num(x)}</span>`:`<span class="pv-eq">=</span>`};
         box.className="prevban mini";
-        box.innerHTML=`<button type="button" class="pv-open" aria-expanded="false"><span>Previsão ${antes?"da próxima semana":"desta semana"}: gasóleo ${curto("gasoleo")} · gasolina ${curto("gasolina")}</span><span class="pv-more">Mostrar ▾</span></button>${this.justClosed?`<span class="pv-hint" role="status">Aviso encolhido. Toque nesta linha para o voltar a abrir. Quando sair a previsão seguinte, volta a aparecer aberto.</span>`:""}`;
+        box.innerHTML=`<button type="button" class="pv-open" aria-expanded="false" aria-label="Mostrar a previsão ${antes?"da próxima semana":"desta semana"}"><span class="pv-line">${antes?"Próx. semana":"Esta semana"}: gasóleo ${curto("gasoleo")} · gasolina ${curto("gasolina")} cênt.</span><span class="pv-more">▾</span></button>${this.justClosed?`<span class="pv-hint" role="status">Aviso encolhido. Toque nesta linha para o voltar a abrir. Quando sair a previsão seguinte, volta a aparecer aberto.</span>`:""}`;
         box.hidden=false;
         box.querySelector(".pv-open").onclick=()=>{store.set("prev-fechado","");this.justClosed=false;this.render()};
         return;
@@ -56,8 +57,9 @@
 .pv-src{flex-basis:100%;font-size:.78rem;color:var(--muted)}.pv-src a{color:var(--accent)}
 .pv-x{border:0;background:none;color:var(--muted);cursor:pointer;font-size:1rem}
 .prevban.mini{padding:0;display:grid;gap:0;--pvc:#8a94a3}
-.pv-open{font:inherit;font-size:.86rem;display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center;justify-content:space-between;width:100%;text-align:left;background:none;border:0;color:var(--fg);padding:8px 14px;cursor:pointer}
-.pv-more{color:var(--accent);font-weight:600;white-space:nowrap}
+.pv-open{font:inherit;font-size:.86rem;display:flex;flex-wrap:nowrap;gap:8px;align-items:center;justify-content:space-between;width:100%;text-align:left;background:none;border:0;color:var(--fg);padding:7px 12px;cursor:pointer}
+.pv-line{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pv-more{color:var(--accent);font-weight:700;font-size:1rem;flex:none}
 .pv-hint{font-size:.78rem;color:var(--muted);padding:0 14px 8px}`;
   document.head.appendChild(css);
   window.Previsao=P;
