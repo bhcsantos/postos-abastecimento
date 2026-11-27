@@ -38,4 +38,9 @@ Lista do que ficou combinado para mais tarde. Quando um ponto fica feito, sai da
 
 - Com sessão iniciada:
   - confirmar que "Já tenho, acrescentar" na ficha do posto fica gravado nos cartões da conta;
-  - confirmar o mesmo para o painel "Os meus cartões" aberto a partir da ficha.
+  - confirmar o mesmo para o painel "Os meus cartões" aberto a partir da ficha;
+  - confirmar no telemóvel que o topo (Cartões, perfil do carro e conta) fica em duas linhas arrumadas.
+
+## Para verificar
+
+- **Postos escondidos pela DGEG.** Confirmar que a tarefa diária de 27/11 (09:17 UTC) gerou `data/escondidos.json` sem erros no GitHub Actions; até agora foi gerado à mão.
