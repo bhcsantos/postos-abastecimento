@@ -5792,17 +5792,17 @@
    "percSaldo": 0.05,
    "saldoOnde": "cashback MB WAY",
    "cumulativo": true,
-   "condicoes": "5% de cashback ao pagar com MB WAY nos postos bp aderentes (campanha 'Cashback Imediato' do MB WAY UP!). O valor volta para a conta associada ao MB WAY. Como é um meio de pagamento, o site soma-o aos cartões bp.",
+   "condicoes": "5% de cashback ao pagar com MB WAY nos postos bp aderentes, em todos os combustíveis (campanha 'Cashback Imediato' do MB WAY UP!). O valor fica no saldo MB WAY UP! da app. Como é um meio de pagamento, o site soma-o aos cartões bp.",
    "comoUsar": "Adira ao MB WAY UP! na app MB WAY e confirme que a campanha bp aparece em 'Cashbacks Imediatos'. Pague o abastecimento com MB WAY (QR Code, NFC ou número de telemóvel).",
-   "limite": "Numa edição anterior havia um mínimo de 30 € por abastecimento. O máximo por pessoa e a data de fim estão só na app: confirme lá antes de abastecer.",
+   "limite": "O artigo do MB WAY sobre esta campanha indicava validade até 31 de agosto e um mínimo de 30 € por abastecimento. Não há confirmação de que esteja ativa agora: veja em 'Cashbacks Imediatos' na app antes de abastecer.",
    "fonte": "https://www.mbway.pt/mb-way-up/cashback-e-desafios/",
    "fontes": [
     "https://www.mbway.pt/mb-way-up/cashback-e-desafios/",
     "https://www.mbway.pt/mais-do-que-descontos-na-bp-o-mb-way-da-te-dinheiro-de-volta/"
    ],
-   "verificado": "2026-11-26",
+   "verificado": "2026-11-27",
    "estado": "a confirmar",
-   "nota": "Não consegui abrir a página do MB WAY (bloqueia acessos automáticos); a percentagem vem dos resultados de pesquisa dessa página."
+   "nota": "Não consegui abrir as páginas do MB WAY (bloqueiam acessos automáticos); os dados vêm dos resultados de pesquisa dessas páginas."
   }
  ],
  "fontesGerais": [
