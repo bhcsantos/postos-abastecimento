@@ -24,9 +24,6 @@ Lista do que ficou combinado para mais tarde.
 
 ## Descontos por confirmar ou acrescentar
 
-4. **MB WAY UP!** O site tem 5% de cashback na bp, marcado "a confirmar". Falta uma captura ou os termos da campanha na app, para acertar:
-   - o mínimo e o máximo por pessoa;
-   - a data de fim.
 5. **Moeve Gow:** o saldo Gow normal, fora das promoções.
 6. **Moeve Gow:** o desconto do cartão DECO PROteste no combustível.
 7. **Alves Bandeira (Pontos AB):** os valores são "até 12 / até 6 cênt."; confirmar se são na hora ou em pontos.
