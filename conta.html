@@ -66,6 +66,7 @@ textarea{min-height:110px;resize:vertical}
 .li a{color:var(--accent);font-weight:600;text-decoration:none}
 .muted{color:var(--muted);font-size:.86rem}
 .kind{font-size:.72rem;border-radius:4px;padding:1px 6px;color:#fff}
+.fp{display:block;margin-top:4px;font-size:.9rem;font-family:var(--mono)}.fp .best{font-family:var(--body);font-size:.72rem;font-weight:700;background:var(--good,#1d8a4a);color:#fff;border-radius:999px;padding:1px 8px;margin-right:4px}.fp .good{color:var(--good,#1d8a4a)}.fp .stale{font-family:var(--body);font-size:.78rem;color:#b35c00}
 .kind.fuel{background:#1d1f23}.kind.ev{background:#1d8a4a}
 .state{font-size:.72rem;border-radius:999px;padding:1px 8px;background:var(--accent-soft);color:var(--accent)}
 a{color:var(--accent)}
@@ -126,6 +127,7 @@ a{color:var(--accent)}
     <section class="card">
       <h2>Postos favoritos</h2>
       <p>Marque um posto com ☆ na lista para o guardar aqui.</p>
+      <p id="favHead" class="muted" style="margin:0"></p>
       <div id="favs" class="list"></div>
     </section>
 
@@ -164,6 +166,7 @@ a{color:var(--accent)}
   <p class="muted" id="loading">A carregar…</p>
 </div>
 
+<script src="descontos.js"></script>
 <script type="module">
 import "./account.js";
 const A=window.Account, $=id=>document.getElementById(id);
@@ -308,12 +311,55 @@ async function openPicker(box,p){
 function bindAsk(box,p){const a=box.querySelector("[data-ask]");if(a)a.onclick=e=>{e.preventDefault();$("reqText").value=`Acrescentar ao catálogo de carros (${({combustivel:"combustível",hibrido:"híbrido plug-in",eletrico:"elétrico"})[p.tipo]}): marca, modelo, ano e versão = `;$("reqText").oninput();document.getElementById("ideas").scrollIntoView({behavior:"smooth"});$("reqText").focus()}}
 
 /* ---------- Favoritos, locais, alertas ---------- */
-function renderFavs(){
-  const f=A.data?.favoritos||[];
-  $("favs").innerHTML=f.length?f.map((x,i)=>`<div class="li"><span class="kind ${x.k}">${x.k==="ev"?"Carregador":"Combustível"}</span><span class="t"><strong>${esc(x.t)}</strong><br><span class="muted">${esc(x.sub||"")}</span></span>
+/* Favoritos: os postos de combustível aparecem com o preço do combustível do perfil ativo (com os seus descontos),
+   do mais barato para o mais caro. Os preços vêm da ficha de cada posto na DGEG (pelo Worker, com cache de 15 min). */
+const FICHA_NOME={2101:"Gasóleo simples",2105:"Gasóleo especial",3201:"Gasolina simples 95",3205:"Gasolina especial 95",3405:"Gasolina especial 98",1120:"GPL Auto"};
+const fichas=new Map(); // id -> {p,t}
+const eur=v=>v.toFixed(3).replace(".",",")+" €";
+const pnum=v=>parseFloat(String(v).replace(/[^\d,.-]/g,"").replace(",","."));
+async function ficha(id){
+  const m=fichas.get(id); if(m&&Date.now()-m.t<15*60e3)return m.p;
+  if(!m){try{const s=JSON.parse(localStorage.getItem("pp-p1:"+id));if(s&&s.p)fichas.set(id,{p:s.p,t:0})}catch(e){}}
+  let p=null;
+  try{const r=await fetch(`https://mobie-proxy.bhcsantos.workers.dev/dgeg/GetDadosPosto?id=${id}`);if(r.ok){const j=await r.json();if(j.status)p=j.resultado}}catch(e){}
+  if(!p)try{const r=await fetch(`https://precoscombustiveis.dgeg.gov.pt/api/PrecoComb/GetDadosPosto?id=${id}`);if(r.ok){const j=await r.json();if(j.status)p=j.resultado}}catch(e){}
+  if(p){if(/^cepsa$/i.test(String(p.Marca||"").trim()))p.Marca="MOEVE";fichas.set(id,{p,t:Date.now()})}
+  return(fichas.get(id)||{}).p||null;
+}
+let favSeq=0;
+function favRow(x,i,extra=""){
+  return `<div class="li${extra?" fav":""}"><span class="kind ${x.k}">${x.k==="ev"?"Carregador":"Combustível"}</span><span class="t"><strong>${esc(x.t)}</strong><br><span class="muted">${esc(x.sub||"")}</span>${extra}</span>
     ${x.k==="fuel"?`<a href="posto.html?id=${esc(x.id)}">Abrir ficha</a>`:`<a href="https://www.google.com/maps/search/?api=1&query=${x.lat},${x.lng}" target="_blank" rel="noopener">Google Maps ↗</a>`}
-    <button type="button" class="btn ghost" data-rmf="${i}">Retirar</button></div>`).join(""):`<p class="muted">Ainda não tem favoritos.</p>`;
-  $("favs").querySelectorAll("[data-rmf]").forEach(b=>b.onclick=()=>{const l=[...f];l.splice(+b.dataset.rmf,1);A.save({favoritos:l},true);A.emit()});
+    <button type="button" class="btn ghost" data-rmf="${i}">Retirar</button></div>`;
+}
+async function renderFavs(){
+  const seq=++favSeq, f=A.data?.favoritos||[], prof=A.profile(), box=$("favs");
+  const fid=prof&&prof.tipo!=="eletrico"?+prof.combustivel:null, fname=fid?FICHA_NOME[fid]:null;
+  const bind=()=>box.querySelectorAll("[data-rmf]").forEach(b=>b.onclick=()=>{const l=[...f];l.splice(+b.dataset.rmf,1);A.save({favoritos:l},true);A.emit()});
+  if(!f.length){box.innerHTML=`<p class="muted">Ainda não tem favoritos.</p>`;$("favHead").textContent="";return}
+  const fuels=f.map((x,i)=>({x,i})).filter(o=>o.x.k==="fuel"), evs=f.map((x,i)=>({x,i})).filter(o=>o.x.k!=="fuel");
+  $("favHead").textContent=fname&&fuels.length?`${fname} para ${prof.nome||"o perfil ativo"}${prof.matricula?" · "+prof.matricula:""}, do mais barato para o mais caro (com os seus cartões de desconto).`:fuels.length&&prof&&prof.tipo==="eletrico"?"O perfil ativo é elétrico: escolha um perfil a combustível ou híbrido para ver os preços dos postos.":"";
+  const draw=(rows)=>{box.innerHTML=rows.map(r=>r.html).join("")+evs.map(o=>favRow(o.x,o.i)).join("");bind()};
+  /* 1) desenha já, com o que houver guardado */
+  const build=()=>{
+    const rows=fuels.map(o=>{
+      const p=(fichas.get(o.x.id)||{}).p, c=p&&fname?(p.Combustiveis||[]).find(c=>c.TipoCombustivel===fname):null;
+      if(!fname)return{v:1e9,html:favRow(o.x,o.i)};
+      if(!p)return{v:1e8,html:favRow(o.x,o.i,`<span class="fp muted">A obter o preço…</span>`)};
+      if(!c)return{v:1e7,html:favRow(o.x,o.i,`<span class="fp muted">Este posto não vende ${esc(fname)}.</span>`)};
+      const price=pnum(c.Preco), a=window.Discounts&&Discounts.data?Discounts.apply(p.Marca,fname,price):{final:price,efetivo:price,regras:[]};
+      const velho=Date.now()-new Date(String(c.DataAtualizacao||"").replace(" ","T"))>10*864e5;
+      const fill=prof.deposito?`<br><span class="muted">Atestar ${prof.deposito} L: ${(a.final*prof.deposito).toFixed(2).replace(".",",")} €</span>`:"";
+      const pay=a.final<price-1e-9?`Na bomba ${eur(price)} · paga <strong>${eur(a.final)}</strong>`:`Paga <strong>${eur(a.final)}</strong>`;
+      return{v:a.efetivo+(velho?0.5:0),ok:true,velho,html:favRow(o.x,o.i,`<span class="fp">${pay}${a.efetivo<a.final-1e-9?`<br>Custo real <strong class="good">${eur(a.efetivo)}</strong> <span class="muted">(com o saldo dos cartões)</span>`:""}${fill}${velho?`<br><span class="stale">⚠ Preço de ${esc(String(c.DataAtualizacao).slice(0,10).split("-").reverse().join("/"))}: o posto não atualiza o preço há mais de 10 dias.</span>`:""}</span>`)};
+    }).sort((a,b)=>a.v-b.v);
+    const comPreco=rows.filter(r=>r.ok), best=comPreco.find(r=>!r.velho);
+    if(best&&comPreco.length>1)best.html=best.html.replace('<span class="fp">','<span class="fp"><span class="best">Mais barato</span> ');
+    return rows;
+  };
+  draw(build());
+  /* 2) pede os preços atuais e volta a desenhar */
+  if(fname){await Promise.all([window.Discounts?Discounts.load():null,...fuels.map(o=>ficha(o.x.id))]);if(seq===favSeq)draw(build())}
 }
 function renderPlaces(){
   const L=A.data?.locais||{};
