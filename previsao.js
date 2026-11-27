@@ -21,8 +21,16 @@
       if(!d||!d.semanaInicio){box.hidden=true;return}
       const hoje=hojeLisboa(), antes=hoje<d.semanaInicio, durante=hoje>=d.semanaInicio&&hoje<=d.semanaFim;
       if(!antes&&!durante){box.hidden=true;return}
-      if(store.get("prev-fechado")===d.semanaInicio+(antes?"a":"d")){box.hidden=true;return}
-      const ft=this.fuelType, v=ft?d[ft]:null;
+      const ft=this.fuelType, v=ft?d[ft]:null, chave=d.semanaInicio+(antes?"a":"d");
+      /* Fechado: fica uma linha pequena com os valores, que volta a abrir o aviso completo */
+      if(store.get("prev-fechado")===chave){
+        const curto=k=>{const x=d[k];return x<-0.0005?`<span class="pv-dn">▼ ${cent(x).replace("/l","")}</span>`:x>0.0005?`<span class="pv-up">▲ ${cent(x).replace("/l","")}</span>`:`<span class="pv-eq">=</span>`};
+        box.className="prevban mini";
+        box.innerHTML=`<button type="button" class="pv-open" aria-expanded="false"><span>Previsão ${antes?"da próxima semana":"desta semana"}: gasóleo ${curto("gasoleo")} · gasolina ${curto("gasolina")}</span><span class="pv-more">Mostrar ▾</span></button>${this.justClosed?`<span class="pv-hint" role="status">Aviso encolhido. Toque nesta linha para o voltar a abrir. Quando sair a previsão seguinte, volta a aparecer aberto.</span>`:""}`;
+        box.hidden=false;
+        box.querySelector(".pv-open").onclick=()=>{store.set("prev-fechado","");this.justClosed=false;this.render()};
+        return;
+      }
       let conselho="";
       if(antes&&v!=null){conselho=v<-0.005?"Se puder, espere por segunda-feira para abastecer.":v>0.005?"Se puder, abasteça até domingo.":"Pode abastecer quando quiser: o preço deve ficar praticamente igual."}
       const linha=(k,n)=>`<span class="pv-f${ft===k?" pv-me":""}">${n}: ${seta(d[k])}</span>`;
@@ -31,9 +39,9 @@
           <span class="pv-vals">${linha("gasoleo","Gasóleo")}${linha("gasolina","Gasolina")}</span>
           ${conselho?`<span class="pv-cons">${esc(conselho)}</span>`:""}
           <span class="pv-src">Estimativa do setor, não oficial${d.obtido?` · atualizada ${quando(d.obtido)}`:""} · <a href="${esc(d.url)}" target="_blank" rel="noopener">fonte ↗</a>${durante?" · a próxima previsão sai na sexta-feira":""}</span></div>
-        <button type="button" class="pv-x" aria-label="Esconder até à próxima previsão">✕</button>`;
+        <button type="button" class="pv-x" aria-label="Encolher o aviso" title="Encolher (pode voltar a abrir)">✕</button>`;
       box.hidden=false;
-      box.querySelector(".pv-x").onclick=()=>{store.set("prev-fechado",d.semanaInicio+(antes?"a":"d"));box.hidden=true};
+      box.querySelector(".pv-x").onclick=()=>{store.set("prev-fechado",chave);this.justClosed=true;this.render();box.querySelector(".pv-open")?.focus()};
     }
   };
   const css=document.createElement("style");
@@ -46,7 +54,11 @@
 @media (prefers-color-scheme:dark){.pv-dn{color:#5cc98a}.pv-up{color:#f2847b}}
 .pv-cons{flex-basis:100%;font-weight:600}
 .pv-src{flex-basis:100%;font-size:.78rem;color:var(--muted)}.pv-src a{color:var(--accent)}
-.pv-x{border:0;background:none;color:var(--muted);cursor:pointer;font-size:1rem}`;
+.pv-x{border:0;background:none;color:var(--muted);cursor:pointer;font-size:1rem}
+.prevban.mini{padding:0;display:grid;gap:0;--pvc:#8a94a3}
+.pv-open{font:inherit;font-size:.86rem;display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center;justify-content:space-between;width:100%;text-align:left;background:none;border:0;color:var(--fg);padding:8px 14px;cursor:pointer}
+.pv-more{color:var(--accent);font-weight:600;white-space:nowrap}
+.pv-hint{font-size:.78rem;color:var(--muted);padding:0 14px 8px}`;
   document.head.appendChild(css);
   window.Previsao=P;
 })();
