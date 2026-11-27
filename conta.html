@@ -83,6 +83,7 @@ textarea{min-height:110px;resize:vertical}
 .fdet .row{display:flex;gap:12px;align-items:center;margin-top:4px}
 .fdet .stale{color:#b35c00}
 @media (prefers-color-scheme:dark){.favd.old .fv{color:#f0a35a}}
+.fuels{border:1px solid var(--line);border-radius:8px;padding:8px 10px;display:grid;gap:4px;margin:0}.fuels legend{padding:0 4px}.chk{display:flex;gap:8px;align-items:center;font-weight:400}.chk input{width:18px;height:18px}
 .kind.fuel{background:#1d1f23}.kind.ev{background:#1d8a4a}
 .state{font-size:.72rem;border-radius:999px;padding:1px 8px;background:var(--accent-soft);color:var(--accent)}
 a{color:var(--accent)}
@@ -211,11 +212,12 @@ const TIPO={combustivel:"Combustível",eletrico:"Elétrico",hibrido:"Híbrido pl
 const editing=new Map(); // id do perfil -> rascunho em edição (só grava ao carregar em "Gravar")
 const clone=o=>JSON.parse(JSON.stringify(o));
 const fuelName=id=>(FUELS.find(f=>f[0]==id)||[,""])[1];
+const profFuels=p=>(p.combustiveis&&p.combustiveis.length?p.combustiveis:[p.combustivel]).map(Number).filter(f=>fuelName(f));
 const nf=v=>String(v).replace(".",",");
 /* Matrícula portuguesa: 3 pares (AA-00-AA, 00-AA-00, 00-00-AA…); aceita com ou sem traços */
 function normPlate(v){const s=String(v||"").toUpperCase().replace(/[^A-Z0-9]/g,"");if(!s)return"";return /^[A-Z0-9]{6}$/.test(s)?`${s.slice(0,2)}-${s.slice(2,4)}-${s.slice(4)}`:null}
 function summary(p){
-  return [p.tipo!=="eletrico"&&p.combustivel?fuelName(p.combustivel):"",p.deposito?`depósito ${p.deposito} L`:"",p.bateria?`bateria ${nf(p.bateria)} kWh`:"",
+  return [p.tipo!=="eletrico"&&p.combustivel?profFuels(p).map(fuelName).join(" ou "):"",p.deposito?`depósito ${p.deposito} L`:"",p.bateria?`bateria ${nf(p.bateria)} kWh`:"",
     p.tipo!=="combustivel"&&(p.fichas||[]).length?`fichas ${(p.fichas||[]).map(f=>f==="Mennekes"?"Tipo 2":f).join(", ")}`:"",
     p.consumo?`${nf(p.consumo)} ${p.tipo==="eletrico"?"kWh":"L"}/100 km`:"",p.consumoEletrico?`${nf(p.consumoEletrico)} kWh/100 km`:""].filter(Boolean).join(" · ")||"Ainda sem dados do carro — carregue em Editar";
 }
@@ -238,7 +240,7 @@ function editCard(p,active,isNew){
     <div class="grid2">
       <label class="f">Nome<input type="text" data-k="nome" value="${esc(p.nome)}" maxlength="40" placeholder="ex.: BMW 530e"></label>
       <label class="f">Matrícula (opcional)<input type="text" data-k="matricula" value="${esc(p.matricula||"")}" maxlength="10" placeholder="ex.: AA-00-BB" autocapitalize="characters" style="text-transform:uppercase"></label>
-      ${fuel?`<label class="f">Combustível<select data-k="combustivel">${FUELS.filter(([v])=>p.tipo!=="hibrido"||v!==1120).map(([v,l])=>`<option value="${v}" ${p.combustivel==v?"selected":""}>${l}</option>`).join("")}</select></label>`:""}
+      ${fuel?`<fieldset class="f fuels"><legend>Combustíveis que pode usar <span class="muted">(escolha um ou mais; em cada posto conta o mais barato)</span></legend>${FUELS.filter(([v])=>p.tipo!=="hibrido"||v!==1120).map(([v,l])=>`<label class="chk"><input type="checkbox" data-fuel value="${v}" ${profFuels(p).includes(v)?"checked":""}> ${l}</label>`).join("")}</fieldset>`:""}
       ${fuel?num("deposito","Depósito (litros)",10,150,1,"ex.: 45")+num("consumo","Consumo a combustível (L/100 km)",1,30,0.1,p.tipo==="hibrido"?"ex.: 5,5":"ex.: 6,5"):""}
       ${ev?`<label class="f">Potência mínima do carregador<select data-k="potenciaMin">${[[0,"Qualquer"],[11,"≥ 11 kW"],[22,"≥ 22 kW"],[50,"≥ 50 kW"],[150,"≥ 150 kW"]].map(([v,l])=>`<option value="${v}" ${(p.potenciaMin||0)==v?"selected":""}>${l}</option>`).join("")}</select></label>`:""}
       ${ev?num("bateria","Bateria (kWh)",3,200,0.1,p.tipo==="hibrido"?"ex.: 13":"ex.: 60")+num(p.tipo==="hibrido"?"consumoEletrico":"consumo","Consumo elétrico (kWh/100 km)",5,40,0.1,"ex.: 17"):""}
@@ -259,6 +261,7 @@ function renderProfiles(){
     el.querySelector('[data-act="edit"]')?.addEventListener("click",()=>{editing.set(id,clone(saved.find(x=>x.id===id)));renderProfiles()});
     if(!editing.has(id))return;
     const dr=editing.get(id);
+    el.querySelectorAll("[data-fuel]").forEach(c=>c.onchange=()=>{const l=[...el.querySelectorAll("[data-fuel]:checked")].map(x=>+x.value);if(!l.length){c.checked=true;return}dr.combustiveis=l;dr.combustivel=l[0]});
     el.querySelectorAll("[data-k]").forEach(inp=>inp.oninput=inp.onchange=()=>{const k=inp.dataset.k;let v=inp.value;if(inp.type==="number"||k==="combustivel"||k==="potenciaMin")v=v===""?null:Number(String(v).replace(",","."));dr[k]=v});
     el.querySelectorAll("[data-conn]").forEach(c=>c.onchange=()=>{dr.fichas=[...el.querySelectorAll("[data-conn]:checked")].map(x=>x.dataset.conn)});
     el.querySelector('[data-act="pick"]').onclick=()=>openPicker(el.querySelector("[data-picker]"),dr);
@@ -314,7 +317,7 @@ async function openPicker(box,p){
     const defaults=["","O meu carro","O meu elétrico","Carro a combustível","Carro elétrico","Híbrido plug-in"];
     if(defaults.includes(p.nome||""))p.nome=`${c.marca} ${c.modelo}`.slice(0,40);
     if(c.deposito!=null)p.deposito=c.deposito;
-    if(c.combustivel!=null)p.combustivel=c.combustivel;
+    if(c.combustivel!=null){p.combustivel=c.combustivel;p.combustiveis=[c.combustivel]}
     if(c.consumo!=null)p.consumo=c.consumo;
     if(c.bateria!=null)p.bateria=c.bateria;
     if(c.fichas&&c.fichas.length&&p.tipo!=="combustivel")p.fichas=[...c.fichas];
@@ -350,11 +353,11 @@ function favRow(x,i,extra=""){
 }
 async function renderFavs(){
   const seq=++favSeq, f=A.data?.favoritos||[], prof=A.profile(), box=$("favs");
-  const fid=prof&&prof.tipo!=="eletrico"?+prof.combustivel:null, fname=fid?FICHA_NOME[fid]:null;
+  const fids=prof&&prof.tipo!=="eletrico"?profFuels(prof):[], fname=fids.length?fids.map(f=>FICHA_NOME[f]).join(" ou "):null;
   const bind=()=>box.querySelectorAll("[data-rmf]").forEach(b=>b.onclick=()=>{const l=[...f];l.splice(+b.dataset.rmf,1);A.save({favoritos:l},true);A.emit()});
   if(!f.length){box.innerHTML=`<p class="muted">Ainda não tem favoritos.</p>`;$("favHead").textContent="";return}
   const fuels=f.map((x,i)=>({x,i})).filter(o=>o.x.k==="fuel"), evs=f.map((x,i)=>({x,i})).filter(o=>o.x.k!=="fuel");
-  $("favHead").textContent=fname&&fuels.length?`Custo real de ${fname.toLowerCase()} (${prof.nome||"perfil ativo"}), do mais barato para o mais caro. Toque num posto para ver mais.`:fuels.length&&prof&&prof.tipo==="eletrico"?"O perfil ativo é elétrico: escolha um perfil a combustível ou híbrido para ver os preços dos postos.":"";
+  $("favHead").textContent=fname&&fuels.length?`Custo real de ${fname.toLowerCase()} (${prof.nome||"perfil ativo"}), do mais barato para o mais caro${fids.length>1?"; em cada posto conta o combustível mais barato":""}. Toque num posto para ver mais.`:fuels.length&&prof&&prof.tipo==="eletrico"?"O perfil ativo é elétrico: escolha um perfil a combustível ou híbrido para ver os preços dos postos.":"";
   const draw=(rows)=>{box.innerHTML=rows.map(r=>r.html).join("")+evs.map(o=>favRow(o.x,o.i)).join("");bind();
     box.querySelectorAll("details.favd").forEach(d=>d.ontoggle=()=>{d.open?favOpen.add(d.dataset.fid):favOpen.delete(d.dataset.fid)})};
   /* Uma linha por posto: nome e custo real; ao tocar abre o resto (preço na bomba, atestar, morada, ficha, retirar) */
@@ -362,13 +365,16 @@ async function renderFavs(){
     <div class="fdet"><span class="muted">${esc(o.x.sub||"")}</span>${detalhe}<div class="row"><a href="posto.html?id=${esc(o.x.id)}">Abrir ficha</a><button type="button" class="btn ghost" data-rmf="${o.i}">Retirar</button></div></div></details>`;
   const build=()=>{
     const rows=fuels.map(o=>{
-      const p=(fichas.get(o.x.id)||{}).p, c=p&&fname?(p.Combustiveis||[]).find(c=>c.TipoCombustivel===fname):null;
+      const p=(fichas.get(o.x.id)||{}).p;
+      /* entre os combustíveis do perfil que o posto vende, o que fica mais barato com os cartões */
+      let c=null,a=null;
+      if(p&&fname)for(const fid of fids){const cc=(p.Combustiveis||[]).find(x=>x.TipoCombustivel===FICHA_NOME[fid]);if(!cc)continue;const pr=pnum(cc.Preco),aa=window.Discounts&&Discounts.data?Discounts.apply(p.Marca,FICHA_NOME[fid],pr):{final:pr,efetivo:pr,regras:[]};if(!a||aa.efetivo<a.efetivo){a=aa;c=cc}}
       if(!fname)return{v:1e9,html:row(o,"","")};
       if(!p)return{v:1e8,html:row(o,`<span class="muted">…</span>`,"")};
-      if(!c)return{v:1e7,html:row(o,`<span class="muted">sem ${esc(fname.split(" ")[0].toLowerCase())}</span>`,`<span class="muted">Este posto não vende ${esc(fname)}.</span>`)};
-      const price=pnum(c.Preco), a=window.Discounts&&Discounts.data?Discounts.apply(p.Marca,fname,price):{final:price,efetivo:price,regras:[]};
+      if(!c)return{v:1e7,html:row(o,`<span class="muted">não vende</span>`,`<span class="muted">Este posto não vende ${esc(fname)}.</span>`)};
+      const price=pnum(c.Preco);
       const velho=Date.now()-new Date(String(c.DataAtualizacao||"").replace(" ","T"))>10*864e5;
-      const det=[a.final<price-1e-9?`Na bomba ${eur(price)} · paga ${eur(a.final)}`:`Paga ${eur(a.final)}`,
+      const det=[fids.length>1?`${esc(c.TipoCombustivel)}`:"",a.final<price-1e-9?`Na bomba ${eur(price)} · paga ${eur(a.final)}`:`Paga ${eur(a.final)}`,
         a.efetivo<a.final-1e-9?`Custo real ${eur(a.efetivo)} (com o saldo dos cartões)`:"",
         prof.deposito?`Atestar ${prof.deposito} L: ${(a.final*prof.deposito).toFixed(2).replace(".",",")} €`:"",
 ""].filter(Boolean).map(t=>`<span>${t}</span>`).join("");

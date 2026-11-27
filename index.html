@@ -300,7 +300,9 @@ let activeConc=new Set(store.get("pp-conc",[])), activeLoc=new Set();
 if(scope==="c192"){scope="d13";activeConc=new Set(["Porto"])}
 if(!SCOPES.some(x=>x[0]===scope))scope="pt";
 if(scope==="pt")activeConc.clear();
-let fuelId=store.get("pp-fuel",2101); if(!FUEL_NAME[fuelId])fuelId=2101;
+/* Combustíveis escolhidos (pode ser mais de um, ex.: 95 simples e 95 especial): em cada posto conta o que sai mais barato */
+let fuelIds=(store.get("pp-fuels",null)||[store.get("pp-fuel",2101)]).map(Number).filter(f=>FUEL_NAME[f]); if(!fuelIds.length)fuelIds=[2101];
+let fuelId=fuelIds[0]; // o principal: previsão da semana e cópia de reserva do Porto
 let data=[], activeBrands=new Set(), shown=50, sortBy="price", me=null, watchId=null;
 const cache=new Map();
 
@@ -308,14 +310,32 @@ const cache=new Map();
 $("scope").innerHTML=SCOPES.map(([v,l])=>`<option value="${v}">${l}</option>`).join("");
 $("scope").value=scope;
 $("scope").onchange=()=>{scope=$("scope").value;store.set("pp-scope",scope);activeBrands.clear();activeConc.clear();activeLoc.clear();store.set("pp-conc",[]);load(true)};
-const ddFuel=Dropdown.create($("filters"),{label:"Combustível",multi:false,search:false,onChange:id=>setFuel(+id)});
+const ddFuel=Dropdown.create($("filters"),{label:"Combustível",allLabel:"Escolha um",search:false,onChange:v=>{if(!v.length){buildFuels();return}setFuels(v.map(Number))}});
 const ddConc=Dropdown.create($("filters"),{label:"Concelho",allLabel:"Todos",onChange:v=>{activeConc=new Set(v);activeLoc.clear();areaChanged()}});
 const ddLoc=Dropdown.create($("filters"),{label:"Localidade",allLabel:"Todas",onChange:v=>{activeLoc=new Set(v);areaChanged()}});
 const ddBrand=Dropdown.create($("filters"),{label:"Marca",allLabel:"Todas",onChange:v=>{activeBrands=new Set(v);drawPins();renderList()}});
-function buildFuels(){ddFuel.setOptions(FUELS.map(([id,name])=>({value:id,label:name,html:fuelBadge(name,22)+esc(name),selected:id===fuelId})))}
-function setFuel(id){
-  if(!FUEL_NAME[id])return;
-  fuelId=id;store.set("pp-fuel",id);window.Previsao&&Previsao.setFuel([2101,2105].includes(+id)?"gasoleo":[3201,3205,3405].includes(+id)?"gasolina":null);buildFuels();load(false);
+function buildFuels(){ddFuel.setOptions(FUELS.map(([id,name])=>({value:id,label:name,html:fuelBadge(name,22)+esc(name),selected:fuelIds.includes(id)})))}
+function setFuels(ids){
+  ids=FUELS.map(f=>f[0]).filter(f=>ids.map(Number).includes(f)); if(!ids.length)return;
+  fuelIds=ids;fuelId=ids[0];store.set("pp-fuels",ids);store.set("pp-fuel",fuelId);
+  window.Previsao&&Previsao.setFuel([2101,2105].includes(fuelId)?"gasoleo":[3201,3205,3405].includes(fuelId)?"gasolina":null);buildFuels();load(false);
+}
+const setFuel=id=>setFuels([id]);
+/* Em cada posto, o combustível escolhido que sai mais barato com os cartões (preços desatualizados só se não houver outro) */
+function pick(s){
+  let best=null;
+  for(const [f,price] of Object.entries(s.o||{[fuelId]:s.price})){
+    const velho=!!(s.ov?s.ov[f]:s.velho), dc=Discounts.apply(s.b,FUEL_NAME[f],price);
+    const r={...dc,f:+f,velho}; if(!best||(r.velho-best.velho||r.efetivo-best.efetivo)<0)best=r;
+  }
+  return best;
+}
+/* Junta as listas de vários combustíveis: um posto por linha, com o preço de cada combustível que vende */
+async function fetchMulti(sc){
+  const rs=await Promise.all(fuelIds.map(f=>fetchScope(sc,f))), by=new Map();
+  rs.forEach((r,i)=>{const f=fuelIds[i];r.rows.forEach(x=>{let m=by.get(x.id);if(!m){m={...x,o:{},ov:{}};delete m.velho;by.set(x.id,m)}m.o[f]=x.price;m.ov[f]=!!x.velho;if(x.price<m.price)m.price=x.price})});
+  const rows=[...by.values()];rows.forEach(m=>m.velho=Object.values(m.ov).every(Boolean));
+  return{rows,t:Math.min(...rs.map(r=>r.t)),antiga:rs.some(r=>r.antiga)};
 }
 buildFuels();
 
@@ -371,7 +391,7 @@ async function fetchScope(sc,fid){
     e.filter(x=>x.p[fid]!=null&&!ids.has(x.id)&&(dist==null||x.dist===dist)).forEach(x=>rows.push({id:x.id,n:x.n,b:brandOf(x.b),a:x.a,cp:x.cp,loc:[x.locn,x.mun].filter(Boolean).join(", "),mun:x.mun,locn:x.locn,lat:x.lat,lon:x.lon,price:x.p[fid],d:x.d,velho:true}));
   }catch(e){}
   const out={rows,t:Date.now(),antiga};
-  cache.set(key,out); if(!antiga)lsPut(key,{rows,t:out.t}); return out;
+  cache.set(key,out); return out;
 }
 let loadSeq=0;
 function show(fit){
@@ -383,9 +403,9 @@ function show(fit){
   drawPins(); renderList();
 }
 async function load(fit){
-  const seq=++loadSeq, key=scope+"|"+fuelId, name=FUEL_NAME[fuelId]; shown=50;
+  const seq=++loadSeq, key=scope+"|"+fuelIds.join(","), name=FUEL_NAME[fuelId]; shown=50;
   /* 1) mostra já a cópia guardada, se houver */
-  const saved=!cache.has(key)&&lsGet(key);
+  const saved=!fuelIds.every(f=>cache.has(scope+"|"+f))&&lsGet(key);
   if(saved&&saved.rows&&saved.rows.length){
     data=saved.rows;
     $("srcinfo").textContent=`A mostrar os preços guardados às ${hhmm(saved.t)} de ${new Date(saved.t).toLocaleDateString("pt-PT")}; a atualizar…`;
@@ -394,8 +414,8 @@ async function load(fit){
   $("loading").hidden=false;
   /* 2) pede os preços atuais */
   try{
-    const r=await fetchScope(scope,fuelId); if(seq!==loadSeq)return;
-    data=r.rows;
+    const r=await fetchMulti(scope); if(seq!==loadSeq)return;
+    data=r.rows; if(!r.antiga)lsPut(key,{rows:r.rows,t:r.t});
     $("srcinfo").textContent=r.antiga?"A DGEG não está a responder: a mostrar a última cópia guardada (pode ter até 7 dias).":`Preços da DGEG obtidos às ${hhmm(r.t)} de ${new Date(r.t).toLocaleDateString("pt-PT")}.`;
   }catch(e){
     if(seq!==loadSeq)return;
@@ -465,24 +485,24 @@ const km=d=>d<1?Math.round(d*100)*10+" m":d.toFixed(1).replace(".",",")+" km";
 function renderList(){
   const bounds=map.getBounds();
   const all=data.filter(matches);
-  const name0=FUEL_NAME[fuelId], D=new Map(all.map(s=>[s.id,Discounts.apply(s.b,name0,s.price)]));
+  const D=new Map(all.map(s=>[s.id,pick(s)]));
   const vis=all.filter(s=>bounds.contains([s.lat,s.lon])).sort((a,b)=>D.get(a.id).efetivo-D.get(b.id).efetivo);
-  const fresh=vis.filter(s=>!s.velho), best=fresh.length?D.get(fresh[0].id).efetivo:vis.length?D.get(vis[0].id).efetivo:null; // preços desatualizados não contam como "o mais barato"
+  const fresh=vis.filter(s=>!D.get(s.id).velho), best=fresh.length?D.get(fresh[0].id).efetivo:vis.length?D.get(vis[0].id).efetivo:null; // preços desatualizados não contam como "o mais barato"
   if(me&&sortBy==="dist")vis.sort((a,b)=>distKm(me,a)-distKm(me,b));
   vis.sort((a,b)=>isSel(b.id)-isSel(a.id)); // selecionados primeiro, pela ordem atual
-  const name=FUEL_NAME[fuelId];
+  const name=fuelIds.map(f=>FUEL_NAME[f]).join(" ou ");
   $("count").textContent=vis.length?`${vis.length} ${vis.length===1?"posto":"postos"} com ${name} nesta zona do mapa (${all.length} no total), ${me&&sortBy==="dist"?"do mais perto para o mais longe":Discounts.active()?"ordenados pelo custo real (com os seus descontos), do mais baixo para o mais alto":"do mais barato para o mais caro"}`:"";
   $("items").innerHTML=vis.length?vis.slice(0,shown).map(s=>{
-    const dc=D.get(s.id), diff=dc.efetivo-best, on=isSel(s.id), has=dc.regras.length>0;
+    const dc=D.get(s.id), velho=dc.velho, diff=dc.efetivo-best, on=isSel(s.id), has=dc.regras.length>0;
     return `<div class="item${on?" on":""}"><button type="button" class="st" data-id="${s.id}" aria-pressed="${on}">
       <span class="brand" style="background:${colorOf(s.b)}" title="${esc(s.b)}">${esc(s.b)}</span>
-      <span><h3>${esc(s.n)}</h3><span class="addr">${me?`<span class="dist">${km(distKm(me,s))}</span> · `:""}${esc(s.a)} · ${esc(s.cp)}${s.loc?" · "+esc(s.loc):""}</span>${curProfile&&curProfile.deposito?`<span class="fill">Atestar ${curProfile.deposito} L: <strong>${(dc.final*curProfile.deposito).toFixed(2).replace(".",",")} €</strong>${curProfile.consumo?` · ${(dc.final*curProfile.consumo/100).toFixed(2).replace(".",",")} € por 100 km`:""}</span>`:""}${has?`<span class="disc">${Discounts.describe(dc)}</span>`:""}${s.velho?`<span class="stale">⚠ Preço de ${esc(fmtD(s.d))}: o posto não atualiza o preço na DGEG há mais de 10 dias, por isso a DGEG deixou de o mostrar. Confirme no local.</span>`:""}</span>
-      ${has?`<span class="price ps${!s.velho&&diff<0.0005?" best":""}">
-        <span class="ps-row ps-pump" title="Preço afixado no posto"><span class="ps-l">Na bomba</span><span class="ps-v">${eur(s.price)}</span></span>
-        <span class="ps-row ps-pay" title="O que paga no momento, já com o desconto imediato"><span class="ps-l">Paga</span><span class="pv">${fuelBadge(FUEL_NAME[fuelId],20)}${eur(dc.final)}</span></span>
+      <span><h3>${esc(s.n)}</h3><span class="addr">${me?`<span class="dist">${km(distKm(me,s))}</span> · `:""}${esc(s.a)} · ${esc(s.cp)}${s.loc?" · "+esc(s.loc):""}</span>${curProfile&&curProfile.deposito?`<span class="fill">Atestar ${curProfile.deposito} L: <strong>${(dc.final*curProfile.deposito).toFixed(2).replace(".",",")} €</strong>${curProfile.consumo?` · ${(dc.final*curProfile.consumo/100).toFixed(2).replace(".",",")} € por 100 km`:""}</span>`:""}${has?`<span class="disc">${Discounts.describe(dc)}</span>`:""}${velho?`<span class="stale">⚠ Preço de ${esc(fmtD(s.d))}: o posto não atualiza o preço na DGEG há mais de 10 dias, por isso a DGEG deixou de o mostrar. Confirme no local.</span>`:""}</span>
+      ${has?`<span class="price ps${!velho&&diff<0.0005?" best":""}">
+        <span class="ps-row ps-pump" title="Preço afixado no posto"><span class="ps-l">Na bomba</span><span class="ps-v">${eur(dc.price)}</span></span>
+        <span class="ps-row ps-pay" title="O que paga no momento, já com o desconto imediato"><span class="ps-l">Paga</span><span class="pv">${fuelBadge(FUEL_NAME[dc.f],20)}${eur(dc.final)}</span></span>
         ${dc.saldo?`<span class="ps-row ps-real" title="Descontando também o saldo que recebe para usar mais tarde"><span class="ps-l">Custo real</span><span class="ps-v">${eur(dc.efetivo)}</span></span>`:""}
-        <small>${s.velho?"preço desatualizado":diff<0.0005?"o mais barato aqui":"+"+(diff*100).toFixed(1).replace(".",",")+" cênt. que o mais barato"}</small></span>`
-      :`<span class="price${!s.velho&&diff<0.0005?" best":""}"><span class="pv">${fuelBadge(FUEL_NAME[fuelId],20)}${eur(dc.final)}</span><small>${s.velho?"preço desatualizado":diff<0.0005?"o mais barato aqui":"+"+(diff*100).toFixed(1).replace(".",",")+" cênt. que o mais barato"}</small></span>`}
+        <small>${velho?"preço desatualizado":diff<0.0005?"o mais barato aqui":"+"+(diff*100).toFixed(1).replace(".",",")+" cênt. que o mais barato"}</small></span>`
+      :`<span class="price${!velho&&diff<0.0005?" best":""}"><span class="pv">${fuelBadge(FUEL_NAME[dc.f],20)}${eur(dc.final)}</span><small>${velho?"preço desatualizado":diff<0.0005?"o mais barato aqui":"+"+(diff*100).toFixed(1).replace(".",",")+" cênt. que o mais barato"}</small></span>`}
       <span class="check" aria-hidden="true">✓</span></button>
       ${has?`<details class="discd"><summary>Como obter este desconto</summary>${Discounts.explain(dc)}</details>`:""}
       <div class="gm"><a class="enter" href="posto.html?id=${s.id}">Entrar no posto →</a><button type="button" class="favbtn${window.Account?.isFav("fuel",s.id)?" on":""}" data-fav="${s.id}">${window.Account?.isFav("fuel",s.id)?"★ Favorito":"☆ Favorito"}</button><a href="${gmView(s)}" target="_blank" rel="noopener" class="gmview">Ver no Google Maps ↗</a><a href="${gmGo(s)}" target="_blank" rel="noopener">Navegar até aqui ↗</a></div></div>`}).join("")
@@ -494,7 +514,7 @@ function renderList(){
   renderTray();
 }
 function toggle(s,fromMap){
-  Route.toggle({k:"fuel",id:s.id,t:s.n,b:s.b,sub:[s.a,s.cp,s.loc].filter(Boolean).join(", "),lat:s.lat,lng:s.lon,info:`${FUEL_NAME[fuelId]} ${eur(s.price)}`});
+  Route.toggle({k:"fuel",id:s.id,t:s.n,b:s.b,sub:[s.a,s.cp,s.loc].filter(Boolean).join(", "),lat:s.lat,lng:s.lon,info:(()=>{const k=pick(s);return `${FUEL_NAME[k.f]} ${eur(k.price)}`})()});
   if(fromMap&&isSel(s.id))document.querySelector(`.st[data-id="${s.id}"]`)?.closest(".item")?.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",block:"nearest"});
 }
 function renderTray(){Route.render()}
@@ -537,7 +557,8 @@ let curProfile=null;
 /* Perfil ativo da conta: escolhe o combustível e mostra o custo de atestar */
 window.onProfile=p=>{
   curProfile=p&&(p.tipo==="combustivel"||p.tipo==="hibrido")?p:null;
-  if(curProfile&&curProfile.combustivel&&+curProfile.combustivel!==+fuelId){setFuel(+curProfile.combustivel);return}
+  const pf=curProfile?(curProfile.combustiveis&&curProfile.combustiveis.length?curProfile.combustiveis:[curProfile.combustivel]).map(Number).filter(f=>FUEL_NAME[f]):[];
+  if(pf.length&&pf.slice().sort().join()!==fuelIds.slice().sort().join()){setFuels(pf);return}
   Route.places=window.Account?.data?.locais||{};Route.render();
   if(data.length)renderList();
 };
