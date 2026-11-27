@@ -42,7 +42,6 @@ Lista do que ficou combinado para mais tarde.
 14. Confirmar que os cartões ficam gravados na conta:
     - com "Já tenho, acrescentar" na ficha do posto;
     - com o painel "Os meus cartões" aberto a partir da ficha.
-15. Confirmar no telemóvel que o topo (Cartões, perfil do carro e conta) fica em duas linhas arrumadas.
 
 ## Para verificar
 
