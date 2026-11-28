@@ -84,6 +84,14 @@ textarea{min-height:110px;resize:vertical}
 .fdet .stale{color:#b35c00}
 @media (prefers-color-scheme:dark){.favd.old .fv{color:#f0a35a}}
 .fuels{border:1px solid var(--line);border-radius:8px;padding:8px 10px;display:grid;gap:4px;margin:0}.fuels legend{padding:0 4px}.chk{display:flex;gap:8px;align-items:center;font-weight:400}.chk input{width:18px;height:18px}
+.fsec{font-size:.78rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin:10px 0 2px;font-family:var(--body)}
+.ftab{border-collapse:collapse;font-size:.86rem;width:100%;max-width:420px}
+.ftab th{font-size:.7rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);text-align:left;font-weight:600;padding:2px 6px 2px 0}
+.ftab td{padding:3px 6px 3px 0;border-top:1px solid var(--line)}
+.ftab .n{text-align:right;font-family:var(--mono);white-space:nowrap}
+.ftab tr.cur td{font-weight:600}
+.ftab .good{color:var(--good)}
+.ftab .fwarn{display:inline;font-size:.75rem}
 .kind.fuel{background:#1d1f23}.kind.ev{background:#1d8a4a}
 .state{font-size:.72rem;border-radius:999px;padding:1px 8px;background:var(--accent-soft);color:var(--accent)}
 a{color:var(--accent)}
@@ -357,33 +365,42 @@ async function renderFavs(){
   const bind=()=>box.querySelectorAll("[data-rmf]").forEach(b=>b.onclick=()=>{const l=[...f];l.splice(+b.dataset.rmf,1);A.save({favoritos:l},true);A.emit()});
   if(!f.length){box.innerHTML=`<p class="muted">Ainda não tem favoritos.</p>`;$("favHead").textContent="";return}
   const fuels=f.map((x,i)=>({x,i})).filter(o=>o.x.k==="fuel"), evs=f.map((x,i)=>({x,i})).filter(o=>o.x.k!=="fuel");
-  $("favHead").textContent=fname&&fuels.length?`Custo real de ${fname.toLowerCase()} (${prof.nome||"perfil ativo"}), do mais barato para o mais caro${fids.length>1?"; em cada posto conta o combustível mais barato":""}. Toque num posto para ver mais.`:fuels.length&&prof&&prof.tipo==="eletrico"?"O perfil ativo é elétrico: escolha um perfil a combustível ou híbrido para ver os preços dos postos.":"";
-  const draw=(rows)=>{box.innerHTML=rows.map(r=>r.html).join("")+evs.map(o=>favRow(o.x,o.i)).join("");bind();
+  $("favHead").textContent=fname&&fuels.length?`Custo real com os seus cartões, do mais barato para o mais caro${fids.length>1?", separado por combustível":""} (${prof.nome||"perfil ativo"}). Toque num posto para ver os preços de todos os combustíveis do perfil.`:fuels.length&&prof&&prof.tipo==="eletrico"?"O perfil ativo é elétrico: escolha um perfil a combustível ou híbrido para ver os preços dos postos.":"";
+  const draw=html=>{box.innerHTML=html+evs.map(o=>favRow(o.x,o.i)).join("");bind();
     box.querySelectorAll("details.favd").forEach(d=>d.ontoggle=()=>{d.open?favOpen.add(d.dataset.fid):favOpen.delete(d.dataset.fid)})};
-  /* Uma linha por posto: nome e custo real; ao tocar abre o resto (preço na bomba, atestar, morada, ficha, retirar) */
-  const row=(o,valor,detalhe,cls="",aviso="")=>`<details class="favd${cls}" data-fid="${esc(o.x.id)}"${favOpen.has(String(o.x.id))?" open":""}><summary><span class="fn">${esc(o.x.t)}${aviso?`<span class="fwarn">${aviso}</span>`:""}</span><span class="fv">${valor}</span></summary>
+  const dt=c=>String(c.DataAtualizacao||"").slice(0,10).split("-").reverse().join("/");
+  const isOld=c=>Date.now()-new Date(String(c.DataAtualizacao||"").replace(" ","T"))>10*864e5;
+  /* Preço de um combustível num posto: na bomba, paga e custo real (com os cartões) */
+  const val=(p,fid)=>{const c=(p.Combustiveis||[]).find(x=>x.TipoCombustivel===FICHA_NOME[fid]);if(!c)return null;const pr=pnum(c.Preco);
+    const a=window.Discounts&&Discounts.data?Discounts.apply(p.Marca,FICHA_NOME[fid],pr):{final:pr,efetivo:pr,regras:[]};return{c,pr,a,velho:isOld(c)}};
+  /* Uma linha por posto; ao tocar abre os preços de todos os combustíveis do perfil, o custo de atestar, a morada, a ficha e "Retirar" */
+  const row=(o,key,valor,detalhe,cls="",aviso="")=>`<details class="favd${cls}" data-fid="${esc(key)}"${favOpen.has(key)?" open":""}><summary><span class="fn">${esc(o.x.t)}${aviso?`<span class="fwarn">${aviso}</span>`:""}</span><span class="fv">${valor}</span></summary>
     <div class="fdet"><span class="muted">${esc(o.x.sub||"")}</span>${detalhe}<div class="row"><a href="posto.html?id=${esc(o.x.id)}">Abrir ficha</a><button type="button" class="btn ghost" data-rmf="${o.i}">Retirar</button></div></div></details>`;
+  const detalhe=(p,fid)=>{
+    const linhas=fids.map(g=>{const v=val(p,g);const nm=FICHA_NOME[g];
+      if(!v)return`<tr${g===fid?' class="cur"':""}><td>${esc(nm)}</td><td colspan="2" class="muted">não vende</td></tr>`;
+      return`<tr${g===fid?' class="cur"':""}><td>${esc(nm)}${v.velho?` <span class="fwarn">⚠ ${dt(v.c)}</span>`:""}</td><td class="n">${v.a.final<v.pr-1e-9?`<s class="muted">${eur(v.pr)}</s> `:""}${eur(v.a.final)}</td><td class="n good">${v.a.efetivo<v.a.final-1e-9?eur(v.a.efetivo):""}</td></tr>`}).join("");
+    const v=val(p,fid);
+    return`<table class="ftab"><thead><tr><th>Combustível</th><th class="n">Paga</th><th class="n">Custo real</th></tr></thead><tbody>${linhas}</tbody></table>`
+      +(v&&prof.deposito?`<span class="muted">Atestar ${prof.deposito} L de ${esc(FICHA_NOME[fid].toLowerCase())}: ${(v.a.final*prof.deposito).toFixed(2).replace(".",",")} €</span>`:"");
+  };
   const build=()=>{
-    const rows=fuels.map(o=>{
-      const p=(fichas.get(o.x.id)||{}).p;
-      /* entre os combustíveis do perfil que o posto vende, o que fica mais barato com os cartões */
-      let c=null,a=null;
-      if(p&&fname)for(const fid of fids){const cc=(p.Combustiveis||[]).find(x=>x.TipoCombustivel===FICHA_NOME[fid]);if(!cc)continue;const pr=pnum(cc.Preco),aa=window.Discounts&&Discounts.data?Discounts.apply(p.Marca,FICHA_NOME[fid],pr):{final:pr,efetivo:pr,regras:[]};if(!a||aa.efetivo<a.efetivo){a=aa;c=cc}}
-      if(!fname)return{v:1e9,html:row(o,"","")};
-      if(!p)return{v:1e8,html:row(o,`<span class="muted">…</span>`,"")};
-      if(!c)return{v:1e7,html:row(o,`<span class="muted">não vende</span>`,`<span class="muted">Este posto não vende ${esc(fname)}.</span>`)};
-      const price=pnum(c.Preco);
-      const velho=Date.now()-new Date(String(c.DataAtualizacao||"").replace(" ","T"))>10*864e5;
-      const det=[fids.length>1?`${esc(c.TipoCombustivel)}`:"",a.final<price-1e-9?`Na bomba ${eur(price)} · paga ${eur(a.final)}`:`Paga ${eur(a.final)}`,
-        a.efetivo<a.final-1e-9?`Custo real ${eur(a.efetivo)} (com o saldo dos cartões)`:"",
-        prof.deposito?`Atestar ${prof.deposito} L: ${(a.final*prof.deposito).toFixed(2).replace(".",",")} €`:"",
-""].filter(Boolean).map(t=>`<span>${t}</span>`).join("");
-      const aviso=velho?`⚠ Preço de ${esc(String(c.DataAtualizacao).slice(0,10).split("-").reverse().join("/"))}: não atualiza há mais de 10 dias`:"";
-      return{v:a.efetivo+(velho?0.5:0),ok:true,velho,o,a,det,aviso};
-    }).sort((x,y)=>x.v-y.v);
-    const best=rows.find(r=>r.ok&&!r.velho);
-    rows.forEach(r=>{if(r.ok)r.html=row(r.o,eur(r.a.efetivo),r.det,r===best&&rows.filter(x=>x.ok).length>1?" best":r.velho?" old":"",r.aviso)});
-    return rows;
+    if(!fname)return fuels.map(o=>row(o,String(o.x.id),"","")).join("");
+    const carregados=fuels.every(o=>fichas.get(o.x.id));
+    if(!carregados&&!fuels.some(o=>fichas.get(o.x.id)))return fuels.map(o=>row(o,String(o.x.id),`<span class="muted">…</span>`,"")).join("");
+    /* Uma secção por combustível do perfil, cada uma ordenada pelo custo real desse combustível */
+    let html="";const semNada=new Set(fuels.map(o=>o.x.id));
+    for(const fid of fids){
+      const rows=fuels.map(o=>{const p=(fichas.get(o.x.id)||{}).p;if(!p)return null;const v=val(p,fid);if(!v)return null;semNada.delete(o.x.id);return{o,p,v}}).filter(Boolean)
+        .sort((x,y)=>(x.v.velho-y.v.velho)||(x.v.a.efetivo-y.v.a.efetivo));
+      if(!rows.length)continue;
+      const best=rows.find(r=>!r.v.velho);
+      if(fids.length>1)html+=`<h3 class="fsec">${esc(FICHA_NOME[fid])}</h3>`;
+      html+=rows.map(r=>row(r.o,r.o.x.id+":"+fid,eur(r.v.a.efetivo),detalhe(r.p,fid),r===best&&rows.length>1?" best":r.v.velho?" old":"",r.v.velho?`⚠ Preço de ${dt(r.v.c)}: não atualiza há mais de 10 dias`:"")).join("");
+    }
+    const resto=fuels.filter(o=>semNada.has(o.x.id));
+    if(resto.length){if(fids.length>1||html)html+=`<h3 class="fsec">Sem os combustíveis do perfil</h3>`;html+=resto.map(o=>row(o,String(o.x.id),fichas.get(o.x.id)?`<span class="muted">não vende</span>`:`<span class="muted">…</span>`,fichas.get(o.x.id)?`<span class="muted">Este posto não vende ${esc(fname)}.</span>`:"")).join("")}
+    return html;
   };
   draw(build());
   /* 2) pede os preços atuais e volta a desenhar */
