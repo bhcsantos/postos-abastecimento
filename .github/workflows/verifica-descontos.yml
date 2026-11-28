@@ -1,0 +1,38 @@
+name: Verificação dos descontos
+on:
+  schedule:
+    - cron: "41 7 * * *"   # todos os dias às 07:41 UTC; às segundas verifica também as páginas das campanhas
+  workflow_dispatch:
+    inputs:
+      tudo:
+        description: "Verificar também as páginas das campanhas"
+        type: boolean
+        default: true
+permissions:
+  contents: write
+  issues: write
+concurrency:
+  group: dados
+  cancel-in-progress: false
+jobs:
+  verificar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Verificar campanhas
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python scripts/verifica_descontos.py ${{ inputs.tudo && '--tudo' || '' }}
+      - name: Gravar no repositório
+        run: |
+          git config user.name "descontos-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/verificacao-descontos.json
+          git diff --cached --quiet && exit 0
+          git commit -m "Verificação dos descontos: $(date -u +%F)"
+          git pull --rebase --autostash
+          git push
