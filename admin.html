@@ -104,7 +104,12 @@ function render(){
     <p style="margin:0;white-space:pre-wrap">${esc(x.texto)}</p>
     <div class="grid2"><label class="f">Estado<select data-k="estado">${Object.entries(EST).map(([v,n])=>`<option value="${v}" ${x.estado===v?"selected":""}>${n}</option>`).join("")}</select></label>
     <label class="f">Resposta ao utilizador<input type="text" data-k="resposta" value="${esc(x.resposta||"")}" maxlength="500"></label></div>
-    <div class="row"><button type="button" class="btn" data-save>Guardar</button><span class="msg" data-msg></span></div></div>`).join(""):`<p class="muted">Não há pedidos${f?" neste estado":""}.</p>`;
+    <div class="row"><button type="button" class="btn" data-save>Guardar</button><button type="button" class="btn ghost" data-copy>Copiar para o Claude</button><span class="msg" data-msg></span></div></div>`).join(""):`<p class="muted">Não há pedidos${f?" neste estado":""}.</p>`;
+  /* Copia o pedido (número, estado, data e texto, sem nome nem email) para colar numa conversa com o Claude */
+  $("list").querySelectorAll("[data-copy]").forEach(b=>b.onclick=async()=>{const c=b.closest(".card"),x=all.find(y=>y.id===c.dataset.id);if(!x)return;
+    const t=`Pedido de funcionalidade ${x.numero?"#"+x.numero:"(sem número)"} — estado: ${EST[x.estado]||x.estado}${x.criado?" — enviado a "+new Date(x.criado.seconds*1000).toLocaleDateString("pt-PT"):""}${x.pagina?" — a partir de "+x.pagina:""}\n\n${x.texto}${x.resposta?"\n\nResposta já dada: "+x.resposta:""}`;
+    const m=c.querySelector("[data-msg]");
+    try{await navigator.clipboard.writeText(t);m.textContent="Copiado. Cole na conversa com o Claude."}catch(e){window.prompt("Copie este texto:",t)}});
   $("list").querySelectorAll("[data-save]").forEach(b=>b.onclick=async()=>{const c=b.closest(".card"),id=c.dataset.id,e=c.querySelector('[data-k=estado]').value,r=c.querySelector('[data-k=resposta]').value.trim();
     try{await A.setRequestState(id,e,r);Object.assign(all.find(x=>x.id===id),{estado:e,resposta:r});c.querySelector("[data-msg]").textContent="Guardado."}catch(err){c.querySelector("[data-msg]").textContent=A.msg(err)}});
 }
