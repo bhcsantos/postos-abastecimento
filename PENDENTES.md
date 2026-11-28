@@ -18,9 +18,6 @@ Lista do que ficou combinado para mais tarde.
    - Falta definir o que mais é preciso. Por exemplo:
      - aviso por email ao administrador quando chega uma sugestão nova;
      - estado de cada pedido visível para quem o fez.
-3. **Verificação semanal das campanhas de desconto.**
-   - Uma tarefa agendada que revê as páginas das campanhas e propõe alterações a `data/descontos.json` num pull request, para aprovação.
-   - Deve também verificar as campanhas na data em que terminam.
 
 ## Descontos por confirmar ou acrescentar
 
