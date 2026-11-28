@@ -157,7 +157,17 @@ const A = {
     const s = await getDocs(query(collection(db, "pedidos"), orderBy("criado", "desc")));
     return s.docs.map(d => ({ id: d.id, ...d.data() }));
   },
-  async setRequestState(id, estado, resposta) { return updateDoc(doc(db, "pedidos", id), resposta != null ? { estado, resposta } : { estado }) },
+  async setRequestState(id, estado, resposta) { await updateDoc(doc(db, "pedidos", id), resposta != null ? { estado, resposta } : { estado }); this._novosT = 0; this.checkNovos() },
+  /* Administradores: número de pedidos de funcionalidades ainda por ver (estado "novo"), no topo de todas as páginas */
+  async checkNovos() {
+    if (!this.user || this._novosUid === this.user.uid && Date.now() - (this._novosT || 0) < 5 * 60e3) return;
+    this._novosUid = this.user.uid; this._novosT = Date.now();
+    if (!(await this.isAdmin())) return;
+    try {
+      const n = (await getDocs(query(collection(db, "pedidos"), where("estado", "==", "novo")))).size;
+      if (n !== this._novos) { this._novos = n; this.renderBadge() }
+    } catch (e) { }
+  },
   async isAdmin() { if (!this.user) return false; try { return (await getDoc(doc(db, "admins", this.user.uid))).exists() } catch (e) { return false } },
   msg,
 
@@ -178,7 +188,9 @@ const A = {
     const ini = (u.displayName || u.email || "?").trim().charAt(0).toUpperCase();
     const perfis = this.data?.perfis || [];
     box.innerHTML = `${perfis.length > 1 ? `<label class="acctprof"><span class="sr">Perfil</span><select id="acctProf">${perfis.map(x => `<option value="${esc(x.id)}" ${p && x.id === p.id ? "selected" : ""}>${x.tipo === "eletrico" ? "⚡ " : x.tipo === "hibrido" ? "⛽⚡ " : "⛽ "}${esc(x.nome)}${x.matricula ? " · " + esc(x.matricula) : ""}</option>`).join("")}</select></label>` : ""}
+      ${this._novos ? `<a class="acctbtn novos" href="admin.html" title="${this._novos} ${this._novos === 1 ? "pedido novo" : "pedidos novos"} de funcionalidades" aria-label="${this._novos} ${this._novos === 1 ? "pedido novo" : "pedidos novos"}">📥<span class="nb">${this._novos}</span></a>` : ""}
       <a class="acctbtn me" href="conta.html" title="A minha conta"><span class="av">${esc(ini)}</span><span class="nm">${esc((u.displayName || u.email || "").split(" ")[0])}</span></a>`;
+    this.checkNovos();
     const sel = document.getElementById("acctProf"); if (sel) sel.onchange = () => this.switchProfile(sel.value);
   }
 };
@@ -194,6 +206,8 @@ css.textContent = `.topbar{display:flex;flex-wrap:wrap;align-items:center;justif
 .acctbtn.me{padding:5px 12px 5px 5px}
 .acctbtn .av{width:30px;height:30px;border-radius:50%;background:var(--accent);color:var(--surface);display:grid;place-items:center;font-weight:700}
 .acctprof select{font:inherit;font-weight:600;padding:8px 10px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--fg);max-width:46vw}
+.acctbtn.novos{position:relative;padding:6px 12px;gap:6px;border-color:#c0392b}
+.acctbtn.novos .nb{background:#c0392b;color:#fff;border-radius:999px;font-size:.78rem;font-weight:700;min-width:20px;height:20px;display:grid;place-items:center;padding:0 6px}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 @media (max-width:520px){.acctbtn .nm{display:none}}`;
 document.head.appendChild(css);
