@@ -1,6 +1,6 @@
 {
  "verificado": "2026-11-28",
- "paginasVerificadas": true,
+ "paginasVerificadas": false,
  "terminaEmBreve": [
   {
    "id": "petroprix-black-2026",
@@ -11,56 +11,7 @@
  ],
  "terminouRecentemente": [],
  "paginasQueMudaram": [],
- "paginasSemAcesso": [
-  {
-   "url": "https://cartaocontinente.pt/ParceiroDetalhe.aspx?InsigniaId=2",
-   "erro": "HTTP Error 400: Bad Request",
-   "campanhas": [
-    "Cartão Continente + eletricidade Galp — cupão de combustível (compras de 30 € ou mais)",
-    "Cartão Continente — cupão de combustível (compras de 30 € ou mais)",
-    "Cupão Cartão Continente",
-    "Cupão Cartão Continente (cliente de eletricidade Galp)"
-   ]
-  },
-  {
-   "url": "https://www.bp.com/content/dam/bp/country-sites/pt_pt/portugal/home/products-and-services/campanhas/litro-a-litro/Termos%20e%20Condi%C3%A7%C3%B5es_campanha%20Litro%20a%20Litro%20Q4%202026.pdf",
-   "erro": "HTTP Error 403: Forbidden",
-   "campanhas": [
-    "Campanha bp Litro a Litro",
-    "Campanha bp Litro a Litro (bp Ultimate)"
-   ]
-  },
-  {
-   "url": "https://www.bp.com/pt_pt/portugal/home/campanhas/campanha-litro-a-litro.html",
-   "erro": "HTTP Error 403: Forbidden",
-   "campanhas": [
-    "Campanha bp Litro a Litro",
-    "Campanha bp Litro a Litro (bp Ultimate)"
-   ]
-  },
-  {
-   "url": "https://www.bp.com/pt_pt/portugal/home/campanhas/feitas-as-contas--a-bp-compensa.html",
-   "erro": "HTTP Error 403: Forbidden",
-   "campanhas": [
-    "BP — cartão BP premierplus",
-    "BP — cartão Poupa Mais (Pingo Doce)",
-    "Desconto na fatura EDP Comercial",
-    "Desconto na fatura EDP Comercial (Pack EDP)",
-    "EDP Comercial associada ao cartão Poupa Mais"
-   ]
-  },
-  {
-   "url": "https://www.bp.com/pt_pt/portugal/home/produtos-e-servicos/solucoes-particulares/parcerias-e-descontos.html",
-   "erro": "HTTP Error 403: Forbidden",
-   "campanhas": [
-    "BP — cartão ACP (sócio ACP)",
-    "BP — cartão BP Bonus (grupos e associações)",
-    "Cartão ACP na bp (dia 15, bp Ultimate)",
-    "Cartão ACP na bp (dias úteis)",
-    "Cartão ACP na bp (dias úteis, bp Ultimate)"
-   ]
-  }
- ],
+ "paginasSemAcesso": [],
  "hashes": {
   "https://petroprix.pt/black-weekend-2026/": "c80a24e245fcaad9a4635d735fc39ea80e5c90ba2bd59826006d67f7260d1ffa",
   "https://petroprix.pt/termos-e-condicoes-black-weekend-2026/": "77d93ab2155242a3d2636081ab513fb2ee57da4d2d40682384d6c62038f2d424",
