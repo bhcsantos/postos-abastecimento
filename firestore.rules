@@ -10,7 +10,7 @@ service cloud.firestore {
     match /users/{uid} {
       allow read, delete: if signedIn() && request.auth.uid == uid;
       allow create, update: if signedIn() && request.auth.uid == uid
-        && request.resource.data.keys().hasOnly(['nome', 'perfis', 'perfilAtivo', 'favoritos', 'locais', 'alertas', 'percurso', 'criado', 'atualizado', 'emailAlertas']);
+        && request.resource.data.keys().hasOnly(['nome', 'perfis', 'perfilAtivo', 'favoritos', 'locais', 'alertas', 'percurso', 'criado', 'atualizado', 'emailAlertas', 'previsao', 'push']);
     }
 
     // Pedidos de funcionalidades: qualquer utilizador com sessão cria; só o autor e os administradores leem.

@@ -8,16 +8,11 @@ Lista do que ficou combinado para mais tarde.
 
 ## Funcionalidades
 
-1. **Envio de emails e notificações push.**
-   - Alertas de preço (já se criam na conta, mas ainda não enviam nada).
-   - Aviso da previsão semanal de preços.
-   - Precisa de uma conta Resend (ou outro serviço de email) e de uma conta de serviço do Firebase, guardadas como segredos no GitHub.
-   - Ficou para mais tarde por decisão do dono do site.
-2. **Caixa de sugestões.**
-   - Os pedidos já se gravam em `conta.html#ideas` e veem-se em `admin.html`.
-   - Falta definir o que mais é preciso. Por exemplo:
-     - aviso por email ao administrador quando chega uma sugestão nova;
-     - estado de cada pedido visível para quem o fez.
+1. **Emails e notificações push — falta o dono do site ligar o serviço.** O código está feito (`scripts/notificacoes.py`, a cada 30 min). Falta:
+   - publicar as regras novas (`firestore.rules`, campos `previsao` e `push`);
+   - criar a palavra-passe de aplicação do Gmail;
+   - guardar no GitHub os segredos `FIREBASE_SERVICE_ACCOUNT`, `GMAIL_USER` e `GMAIL_APP_PASSWORD`;
+   - testar um alerta, a previsão e um pedido de funcionalidade.
 
 ## Descontos por confirmar ou acrescentar
 

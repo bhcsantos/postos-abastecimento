@@ -167,8 +167,16 @@ a{color:var(--accent)}
       <h2>Alertas de preço</h2>
       <p>Crie alertas na ficha de cada posto ("Avisar-me quando baixar de…").</p>
       <div id="alerts" class="list"></div>
-      <label class="chk"><label><input type="checkbox" id="emailAlerts"> Enviar os alertas para o meu email</label></label>
-      <p class="muted" style="margin:0">O envio de alertas por email está a ser preparado. Os alertas que criar ficam guardados e começam a ser enviados assim que o serviço estiver ligado.</p>
+      <p class="muted" style="margin:0">Quando o preço baixar até ao valor do alerta, recebe um aviso (veja como em "Avisos", abaixo). Volta a avisar se descer mais, ou depois de o preço subir outra vez acima do alerta.</p>
+    </section>
+
+    <section class="card" id="avisos">
+      <h2>Avisos</h2>
+      <p>Como quer ser avisado dos alertas de preço, da previsão da semana e das respostas aos seus pedidos. Os avisos são verificados a cada 30 minutos.</p>
+      <label class="chk"><input type="checkbox" id="emailAlerts"> <span>Por email <span class="muted" id="avEmail"></span></span></label>
+      <label class="chk"><input type="checkbox" id="prevAviso"> Receber a previsão de preços da semana seguinte (às sextas-feiras)</label>
+      <div class="row"><button type="button" class="btn ghost" id="pushBtn">Ativar notificações neste dispositivo</button></div>
+      <p class="muted" id="pushMsg" style="margin:0"></p>
     </section>
 
     <section class="card" id="ideas">
@@ -423,8 +431,41 @@ function renderAlerts(){
   $("alerts").innerHTML=a.length?a.map((x,i)=>`<div class="li"><span class="t"><strong>${esc(x.nome)}</strong><br><span class="muted">${esc(x.combustivel)} abaixo de ${Number(x.limite).toFixed(3).replace(".",",")} €</span></span><a href="posto.html?id=${esc(x.posto)}">Abrir ficha</a><button type="button" class="btn ghost" data-rma="${i}">Apagar</button></div>`).join(""):`<p class="muted">Ainda não tem alertas.</p>`;
   $("alerts").querySelectorAll("[data-rma]").forEach(b=>b.onclick=()=>{const l=[...a];l.splice(+b.dataset.rma,1);A.save({alertas:l},true);A.emit()});
   $("emailAlerts").checked=A.data?.emailAlertas!==false;
+  $("prevAviso").checked=!!A.data?.previsao;
+  $("avEmail").textContent=A.user?.email?` (${A.user.email})`:"";
+  renderPush();
 }
 $("emailAlerts").onchange=()=>A.save({emailAlertas:$("emailAlerts").checked},true);
+$("prevAviso").onchange=()=>A.save({previsao:$("prevAviso").checked},true);
+/* ---------- Notificações push neste dispositivo ---------- */
+const b64u=s=>{const p="=".repeat((4-s.length%4)%4),b=atob((s+p).replace(/-/g,"+").replace(/_/g,"/"));return Uint8Array.from(b,c=>c.charCodeAt(0))};
+const pushOk=()=>"serviceWorker" in navigator&&"PushManager" in window&&"Notification" in window;
+async function pushSub(){if(!pushOk())return null;const r=await navigator.serviceWorker.ready;return r.pushManager.getSubscription()}
+async function renderPush(){
+  const btn=$("pushBtn"), msg=$("pushMsg");
+  if(!pushOk()){btn.hidden=true;msg.textContent=/iphone|ipad/i.test(navigator.userAgent)?"No iPhone, as notificações só funcionam com o site instalado no ecrã principal: no Safari, toque em Partilhar → Adicionar ao ecrã principal, e abra-o a partir daí.":"Este navegador não permite notificações.";return}
+  const sub=await pushSub(), on=!!(sub&&(A.data?.push||[]).some(x=>x.endpoint===sub.endpoint));
+  btn.hidden=false; btn.textContent=on?"Desligar as notificações neste dispositivo":"Ativar notificações neste dispositivo";
+  const n=(A.data?.push||[]).length;
+  msg.textContent=Notification.permission==="denied"?"As notificações estão bloqueadas para este site nas definições do navegador.":on?`Ativas neste dispositivo${n>1?` (e em mais ${n-1})`:""}.`:n?`Ativas em ${n} ${n===1?"outro dispositivo":"outros dispositivos"}.`:"";
+}
+$("pushBtn").onclick=async()=>{
+  const msg=$("pushMsg");
+  try{
+    let sub=await pushSub();
+    if(sub&&(A.data?.push||[]).some(x=>x.endpoint===sub.endpoint)){
+      await sub.unsubscribe().catch(()=>{});await A.save({push:(A.data.push||[]).filter(x=>x.endpoint!==sub.endpoint)},true);renderPush();return}
+    if(await Notification.requestPermission()!=="granted"){msg.textContent="Sem autorização para mostrar notificações.";return}
+    const k=await fetch("data/push.json",{cache:"no-cache"}).then(r=>r.ok?r.json():null).catch(()=>null);
+    if(!k||!k.vapidPublicKey){msg.textContent="O serviço de notificações ainda não está ligado. Tente mais tarde.";return}
+    const reg=await navigator.serviceWorker.ready;
+    if(sub)await sub.unsubscribe().catch(()=>{});
+    sub=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:b64u(k.vapidPublicKey)});
+    const j=sub.toJSON(), l=(A.data?.push||[]).filter(x=>x.endpoint!==j.endpoint);
+    l.push({endpoint:j.endpoint,keys:j.keys,disp:(navigator.userAgentData?.platform||navigator.platform||"").slice(0,40),criado:new Date().toISOString()});
+    await A.save({push:l.slice(-10)},true);renderPush();
+  }catch(e){msg.textContent="Não foi possível ativar: "+(e.message||e)}
+};
 
 /* ---------- Pedidos ---------- */
 $("reqText").oninput=()=>$("reqCount").textContent=`${$("reqText").value.length} / 2000`;
