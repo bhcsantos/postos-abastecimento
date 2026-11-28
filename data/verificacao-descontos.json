@@ -1,0 +1,120 @@
+{
+ "verificado": "2026-11-28",
+ "paginasVerificadas": true,
+ "terminaEmBreve": [
+  {
+   "id": "petroprix-black-2026",
+   "titulo": "Petroprix — Black Weekend",
+   "fim": "2026-11-29",
+   "fonte": "https://petroprix.pt/black-weekend-2026/"
+  }
+ ],
+ "terminouRecentemente": [],
+ "paginasQueMudaram": [],
+ "paginasSemAcesso": [
+  {
+   "url": "https://cartaocontinente.pt/ParceiroDetalhe.aspx?InsigniaId=2",
+   "erro": "HTTP Error 400: Bad Request",
+   "campanhas": [
+    "Cartão Continente + eletricidade Galp — cupão de combustível (compras de 30 € ou mais)",
+    "Cartão Continente — cupão de combustível (compras de 30 € ou mais)",
+    "Cupão Cartão Continente",
+    "Cupão Cartão Continente (cliente de eletricidade Galp)"
+   ]
+  },
+  {
+   "url": "https://www.bp.com/content/dam/bp/country-sites/pt_pt/portugal/home/products-and-services/campanhas/litro-a-litro/Termos%20e%20Condi%C3%A7%C3%B5es_campanha%20Litro%20a%20Litro%20Q4%202026.pdf",
+   "erro": "HTTP Error 403: Forbidden",
+   "campanhas": [
+    "Campanha bp Litro a Litro",
+    "Campanha bp Litro a Litro (bp Ultimate)"
+   ]
+  },
+  {
+   "url": "https://www.bp.com/pt_pt/portugal/home/campanhas/campanha-litro-a-litro.html",
+   "erro": "HTTP Error 403: Forbidden",
+   "campanhas": [
+    "Campanha bp Litro a Litro",
+    "Campanha bp Litro a Litro (bp Ultimate)"
+   ]
+  },
+  {
+   "url": "https://www.bp.com/pt_pt/portugal/home/campanhas/feitas-as-contas--a-bp-compensa.html",
+   "erro": "HTTP Error 403: Forbidden",
+   "campanhas": [
+    "BP — cartão BP premierplus",
+    "BP — cartão Poupa Mais (Pingo Doce)",
+    "Desconto na fatura EDP Comercial",
+    "Desconto na fatura EDP Comercial (Pack EDP)",
+    "EDP Comercial associada ao cartão Poupa Mais"
+   ]
+  },
+  {
+   "url": "https://www.bp.com/pt_pt/portugal/home/produtos-e-servicos/solucoes-particulares/parcerias-e-descontos.html",
+   "erro": "HTTP Error 403: Forbidden",
+   "campanhas": [
+    "BP — cartão ACP (sócio ACP)",
+    "BP — cartão BP Bonus (grupos e associações)",
+    "Cartão ACP na bp (dia 15, bp Ultimate)",
+    "Cartão ACP na bp (dias úteis)",
+    "Cartão ACP na bp (dias úteis, bp Ultimate)"
+   ]
+  }
+ ],
+ "hashes": {
+  "https://petroprix.pt/black-weekend-2026/": "c80a24e245fcaad9a4635d735fc39ea80e5c90ba2bd59826006d67f7260d1ffa",
+  "https://petroprix.pt/termos-e-condicoes-black-weekend-2026/": "77d93ab2155242a3d2636081ab513fb2ee57da4d2d40682384d6c62038f2d424",
+  "https://pt.moeveglobal.com/stfls/cepsa-pt/Ficheros/condicoes-gerais-campanha-saldo-gow.pdf": "deb6159b020e0ca10aa173731eb286bd39a8d73b47df6592aa9c094d61315186",
+  "https://pt.moeveglobal.com/stfls/cepsa-pt/Ficheros/condicoes-gerais-da-promocao-opc-ceme-moeve-260831.pdf": "9f99975172f7553e6de519b8cbf44ee0f04e3e9deafe7b6afd7808a65a077f5d",
+  "https://pt.moeveglobal.com/stfls/cepsa-pt/Ficheros/poupe-a-dobrar-bases-legais.pdf": "036e91c7f81ae19aa9de425f41c9033242f40a726d8d2c55530a2962d8b1bfa9",
+  "https://www.alvesbandeira.pt/pt/pontos-ab/": "44d99ceaff3683436aa034653d931a3340db83c6e9c4e4f8e16e2be513d83921",
+  "https://www.auchan.pt/pt/termos-condicoes/termos-e-condicoes.html": "7673503f789d434863296bc499691b89888b7ad2857dabdeb7a745aec6a6a1d1",
+  "https://www.galp.com/pt/energias/pt/combina": "225fb765652f5f858b7606d7436ce98157a3d9cfc98c37758f0f0aa7e78842e2",
+  "https://www.galp.com/pt/energias/system/files/2026-05/combina-termos-e-condicoes.pdf": "0d38c20ce6a21274b940b08c5deeea5b7de4c3661f2e1546f085358640a354f1",
+  "https://www.galp.com/pt/pt/particulares/estrada/galp-continente": "0876fc2f0e5ea57057fbc489e09bea72e16f46d93d389496f2d6029de2f41ff1",
+  "https://www.mbway.pt/mais-do-que-descontos-na-bp-o-mb-way-da-te-dinheiro-de-volta/": "81c30f35215f3f069fae2a19db837828b8f1acb3f1792f659adbe9dc0f5b7251",
+  "https://www.mbway.pt/mb-way-up/cashback-e-desafios/": "9550ac7bd9f5623aca23a0e6ddd5cfd96ddb3fcf88d89589c569222e13bd0498",
+  "https://www.pingodoce.pt/parcerias/desconto-poupa-mais-bp/": "dd2a4e91af9e013f0a3355c2518d6bf844ece3b64bc78f8b1871585db4d745b6",
+  "https://www.repsol.pt/particulares/beneficios/": "4d67808ca51be0fef53038bb3ce09247241528e7d189b7c62b1eee0b17e334bc",
+  "https://www.repsol.pt/particulares/beneficios/plano-motor-luz-calor/": "d465180409c8a5d5a676c4f996b18620eb5ca213c1bb58044ec94ecb9347353d",
+  "https://www.repsol.pt/particulares/beneficios/plano-motor-luz/": "d071a16d5f7fcdce0d3959cf119ba9be617e908532f078ab37fda4c229b7fd01",
+  "https://www.repsol.pt/particulares/beneficios/plano-motor/": "fb9b60924e15f42aa090bba0d5b5fdb521004f474b52a1a01adfb15ef229dab2",
+  "https://www.repsol.pt/particulares/parceiros/banca-e-seguros/ageas/": "f503253b093fa137bbead0f1b9279822eee525617a4da475f7ec6e763a5896f6",
+  "https://www.repsol.pt/particulares/parceiros/banca-e-seguros/cgd/": "fce26399a9a3767fa6c92eb788d4db31dd2273639738c0a1977f5c83b023c2a0",
+  "https://www.repsol.pt/particulares/parceiros/banca-e-seguros/edenred/": "8e79eb14eec5df326d6bcd7020c69d500fd705252489f35068e51a33f721f8a3",
+  "https://www.repsol.pt/particulares/parceiros/banca-e-seguros/montepio/": "88ee2340bbe6c569e03f375432f3b962febb39b2c6c8ea16450290b2c8d75e53",
+  "https://www.repsol.pt/particulares/parceiros/banca-e-seguros/santander/": "d1ce9e7df758b219da25857ae2d8ec6a9b379a2be07ad511566d75686f85cd9b",
+  "https://www.repsol.pt/particulares/parceiros/banca-e-seguros/seguro-directo/": "d69bafc6d849fbc51ba632f19487e11277483aa06a32c4ef7763b4a63bf7590b",
+  "https://www.repsol.pt/particulares/parceiros/desporto/Betano/": "75f7207c7e1bbf74697d7b3ba886340e6e4e3ef8280e3c882f8d3819c222ee59",
+  "https://www.repsol.pt/particulares/parceiros/desporto/benfica/": "003bfb4f2aacce0f21f4cc12a1cfbbe92f6cf980188f02a8823420f1658502b4",
+  "https://www.repsol.pt/particulares/parceiros/desporto/braga/": "5fd272cbac1706f3feb045d85269779809ddd5d451251de12d5f31a92b69e8c0",
+  "https://www.repsol.pt/particulares/parceiros/desporto/casa-pia/": "11adce0e02fef781415dbf83120e4cdd7366b2a33c775bf01a01cd0cc2388da3",
+  "https://www.repsol.pt/particulares/parceiros/desporto/cop/": "8acb5cdcaf2931132d66fad5a67cf73d02c7b8f91fc8f6111c5cd652f56daec2",
+  "https://www.repsol.pt/particulares/parceiros/desporto/maritimo/": "aebc2ec477394f7aa9b2e549e5332509daa300e2680df883eac9cab75208ff41",
+  "https://www.repsol.pt/particulares/parceiros/desporto/os-belenenses/": "eae5ce6beb3501976e88a8041ebaf05d87fadee80895c7965cd6d697d558d4b6",
+  "https://www.repsol.pt/particulares/parceiros/desporto/porto/": "dde53432a65fbb35ecd4578facc3b201e785f91d64c22f033307db4846cfd1f0",
+  "https://www.repsol.pt/particulares/parceiros/desporto/sporting/": "d40ee19690b478b3c1322ae10b6d4f948fb4fe0c39ff1db6be13cae4527ab2bc",
+  "https://www.repsol.pt/particulares/parceiros/grande-distribuicao/el-corte-ingles/": "2fdabb2936295b7648f25c300787956e3fb7f50e30b37c4c666a6cc9722e5fa2",
+  "https://www.repsol.pt/particulares/parceiros/grande-distribuicao/fnac/": "a077cdc8defd26f6d271417e3bcf0d5707cdfd6a2acec2d153331d8d3e064675",
+  "https://www.repsol.pt/particulares/parceiros/grande-distribuicao/lidl/": "876a08991e777aa318bb15ab8043d2f6cd72ffbb2331294009472dba6cb92f5d",
+  "https://www.repsol.pt/particulares/parceiros/grande-distribuicao/staples/": "f06d015c7f41908f18516c2dfc5fe3890170669115412bb2b3289317f684e22e",
+  "https://www.repsol.pt/particulares/parceiros/mundo-automovel/my-peugeot/": "e52e2e5ef607159d81bd16c779be1f836685a5567759bea6e6bbdb9e0477891c",
+  "https://www.repsol.pt/particulares/parceiros/mundo-automovel/norauto/": "163e9b591b2823c2536dcbbea55d0025d53e66abc140eb80489a06c1cbd2127d",
+  "https://www.repsol.pt/particulares/parceiros/outros-parceiros/associacao-sorriso-solidario/": "4e4a41b15af90cdc1448b6ceff4a06fb76b0b7ccd2e2e777d3b50456af7e2927",
+  "https://www.repsol.pt/particulares/parceiros/outros-parceiros/interpass/": "ecb4d58cf7ea404a9ea1551852221c8ea03a37462ee2ace2974e509c41c7194e",
+  "https://www.repsol.pt/particulares/parceiros/outros-parceiros/vodafone/": "05e5ea0dc271dd01b08ed2af2b14f25c91e91b27b12bd14f9704e800c195fa0a",
+  "https://www.repsol.pt/perguntas-frequentes/my-repsol/": "946302f53fe92855fa0e2dd11f53ab29075366738142a7155695b88f3852d5fe",
+  "https://www.repsol.pt/profissionais/parceiros/grande-distribuicao/recheio/": "7b9f3425baa3d33fef167bd4ad03e21d6844d505d71c56321c40a2535c44fe9b",
+  "https://www.repsol.pt/profissionais/parceiros/ordens-profissionais/ordem-contabilistas-certificados/": "bdc906f28517beacbb4618b4a7a3de3fc4fc5b8a65b06578479f7058d4bc6d76",
+  "https://www.repsol.pt/profissionais/parceiros/ordens-profissionais/ordem-economistas/": "bc8ae9c53bbeb4d34ac9b22b289a84dc409bb1f0d4c5e844b744f5161e7582db",
+  "https://www.repsol.pt/profissionais/parceiros/ordens-profissionais/ordem-enfermeiros/": "9c5424e06d93d4e8d34c09b914a57834202816cacc808511877bb704237c0f15",
+  "https://www.repsol.pt/profissionais/parceiros/ordens-profissionais/ordem-engenheiros-sul/": "1d93fc3b77593d9749d51547aa53b64a124cd1678f92ed5558920d07420b1a67",
+  "https://www.repsol.pt/profissionais/parceiros/ordens-profissionais/ordem-medicos-veterinarios/": "264885192c7534bc8c7c39cefc0935a26470ae3414803cb2b0b541a5afb7bd10",
+  "https://www.repsol.pt/profissionais/parceiros/ordens-profissionais/ordem-psicologos/": "7929db427b5db0b5c3fcc79568db512c24dc670482aa0e98c6cda9deae045efd",
+  "https://www.repsol.pt/profissionais/parceiros/setor-transportes/aitram/": "4789bafbc7743bd457de83dc648c22aae9f76005ae06357c819e5c6b1223a45c",
+  "https://www.repsol.pt/profissionais/parceiros/setor-transportes/antral/": "99776a037db9b0176f6906cb42767314d584a72d5a8c855c027e81ec6bdfff8b",
+  "https://www.repsol.pt/profissionais/parceiros/setor-transportes/federacao-portuguesa-taxi/": "e45b83549c61ded0a0ba79176a623150b79a260f69c94581c2e9065d1665f7ce",
+  "https://www.repsol.pt/profissionais/parceiros/setor-transportes/taxisRam/": "cb685efd2ed2a06b9b6d403c0378b5db778cbde00f0123ad0834e0f0cc0826e9"
+ },
+ "ultimaVerificacaoPaginas": "2026-11-28"
+}
