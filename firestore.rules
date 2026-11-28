@@ -16,7 +16,8 @@ service cloud.firestore {
     // Pedidos de funcionalidades: qualquer utilizador com sessão cria; só o autor e os administradores leem.
     match /pedidos/{id} {
       allow create: if signedIn()
-        && request.resource.data.keys().hasOnly(['uid', 'nome', 'texto', 'pagina', 'criado', 'estado'])
+        && request.resource.data.keys().hasOnly(['uid', 'nome', 'texto', 'pagina', 'criado', 'estado', 'numero'])
+        && request.resource.data.numero == getAfter(/databases/$(database)/documents/contadores/pedidos).data.n
         && request.resource.data.uid == request.auth.uid
         && request.resource.data.texto is string
         && request.resource.data.texto.size() >= 5 && request.resource.data.texto.size() <= 2000
@@ -24,6 +25,13 @@ service cloud.firestore {
       allow read: if isAdmin() || (signedIn() && resource.data.uid == request.auth.uid);
       allow update: if isAdmin() && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['estado', 'resposta']);
       allow delete: if isAdmin() || (signedIn() && resource.data.uid == request.auth.uid);
+    }
+
+    // Contador dos números dos pedidos (#1, #2…): só sobe de 1 em 1, na mesma transação que cria o pedido.
+    match /contadores/pedidos {
+      allow read: if signedIn();
+      allow create: if signedIn() && request.resource.data.keys().hasOnly(['n']) && request.resource.data.n == 1;
+      allow update: if signedIn() && request.resource.data.keys().hasOnly(['n']) && request.resource.data.n == resource.data.n + 1;
     }
 
     // Lista de administradores: criada à mão na consola (documento com o UID do administrador).

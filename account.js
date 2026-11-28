@@ -6,7 +6,7 @@ import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, creat
   signInWithEmailAndPassword, sendPasswordResetEmail, sendEmailVerification, signOut, deleteUser, updateProfile,
   setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { getFirestore, doc, getDoc, setDoc, deleteDoc, addDoc, collection, serverTimestamp, query, where,
-  getDocs, orderBy, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  getDocs, orderBy, updateDoc, runTransaction } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 // Configuração pública da aplicação web (não é um segredo: a proteção está nas regras do Firestore)
 const firebaseConfig = {
@@ -146,7 +146,20 @@ const A = {
   },
   async sendRequest(texto, pagina) {
     if (!this.user) throw { code: "auth/required" };
-    return addDoc(collection(db, "pedidos"), { uid: this.user.uid, nome: this.user.displayName || "", texto, pagina: pagina || "", criado: serverTimestamp(), estado: "novo" });
+    /* Número sequencial (#1, #2…) para se poder falar de cada pedido: contador em contadores/pedidos, na mesma transação */
+    const cRef = doc(db, "contadores", "pedidos"), pRef = doc(collection(db, "pedidos"));
+    const base = { uid: this.user.uid, nome: this.user.displayName || "", texto, pagina: pagina || "", criado: serverTimestamp(), estado: "novo" };
+    try {
+      await runTransaction(db, async tx => {
+        const c = await tx.get(cRef), numero = (c.exists() ? c.data().n : 0) + 1;
+        tx.set(cRef, { n: numero });
+        tx.set(pRef, { ...base, numero });
+      });
+      return pRef;
+    } catch (e) {
+      if (e && e.code === "permission-denied") return addDoc(collection(db, "pedidos"), base); // regras antigas ainda publicadas: grava sem número
+      throw e;
+    }
   },
   async myRequests() {
     if (!this.user) return [];

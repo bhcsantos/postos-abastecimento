@@ -69,6 +69,7 @@ textarea{min-height:110px;resize:vertical}
 .kind.fuel{background:#1d1f23}.kind.ev{background:#1d8a4a}
 .state{font-size:.72rem;border-radius:999px;padding:1px 8px;background:var(--accent-soft);color:var(--accent)}
 a{color:var(--accent)}
+.pnum{font-family:var(--mono);background:var(--accent);color:var(--surface);border-radius:6px;padding:1px 7px;margin-right:4px}
 </style>
 <meta name="robots" content="noindex">
 <link rel="stylesheet" href="mobile.css">
@@ -99,7 +100,7 @@ let all=[];
 function render(){
   const f=$("fState").value, l=all.filter(x=>!f||x.estado===f);
   $("list").innerHTML=l.length?l.map(x=>`<div class="card" data-id="${esc(x.id)}">
-    <div class="row" style="justify-content:space-between"><strong>${esc(x.nome||"Sem nome")}</strong><span class="muted">${x.criado?new Date(x.criado.seconds*1000).toLocaleString("pt-PT"):""}${x.pagina?` · a partir de ${esc(x.pagina)}`:""}</span></div>
+    <div class="row" style="justify-content:space-between"><strong>${x.numero?`<span class="pnum">#${x.numero}</span> `:""}${esc(x.nome||"Sem nome")}</strong><span class="muted">${x.criado?new Date(x.criado.seconds*1000).toLocaleString("pt-PT"):""}${x.pagina?` · a partir de ${esc(x.pagina)}`:""}</span></div>
     <p style="margin:0;white-space:pre-wrap">${esc(x.texto)}</p>
     <div class="grid2"><label class="f">Estado<select data-k="estado">${Object.entries(EST).map(([v,n])=>`<option value="${v}" ${x.estado===v?"selected":""}>${n}</option>`).join("")}</select></label>
     <label class="f">Resposta ao utilizador<input type="text" data-k="resposta" value="${esc(x.resposta||"")}" maxlength="500"></label></div>

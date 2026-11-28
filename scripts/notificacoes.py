@@ -203,14 +203,14 @@ def main():
         x, ref, upd = d.to_dict(), d.reference, {}
         if not x.get("notificadoAdmin"):
             for aid in admins:
-                t = f"Pedido novo de {x.get('nome') or 'um utilizador'}"
+                t = f"Pedido novo{(' #' + str(x['numero'])) if x.get('numero') else ''} de {x.get('nome') or 'um utilizador'}"
                 mail.enviar(email_de(aid), "Postos: " + t, (x.get("texto") or "") + f"\n\nPágina: {x.get('pagina') or '—'}", SITE + "admin.html")
                 push.enviar(aid, users.get(aid), t, (x.get("texto") or "")[:120], SITE + "admin.html")
             upd["notificadoAdmin"] = True
         marca = f"{x.get('estado')}|{x.get('resposta') or ''}"
         if x.get("estado") != "novo" and x.get("avisadoEstado") != marca and x.get("uid"):
             u = users.get(x["uid"]) or {}
-            t = f"O seu pedido está: {ESTADO.get(x.get('estado'), x.get('estado'))}"
+            t = f"O seu pedido{(' #' + str(x['numero'])) if x.get('numero') else ''} está: {ESTADO.get(x.get('estado'), x.get('estado'))}"
             corpo = f"Pedido: {(x.get('texto') or '')[:300]}" + (f"\n\nResposta: {x['resposta']}" if x.get("resposta") else "")
             if u.get("emailAlertas", True) is not False:
                 mail.enviar(email_de(x["uid"]), "Postos: " + t, corpo, SITE + "conta.html#ideas")
