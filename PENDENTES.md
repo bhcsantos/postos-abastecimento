@@ -8,11 +8,10 @@ Lista do que ficou combinado para mais tarde.
 
 ## Funcionalidades
 
-1. **Emails e notificações push — falta o dono do site ligar o serviço.** O código está feito (`scripts/notificacoes.py`, a cada 30 min). Falta:
-   - publicar as regras novas (`firestore.rules`, campos `previsao` e `push`);
-   - criar a palavra-passe de aplicação do Gmail;
-   - guardar no GitHub os segredos `FIREBASE_SERVICE_ACCOUNT`, `GMAIL_USER` e `GMAIL_APP_PASSWORD`;
-   - testar um alerta, a previsão e um pedido de funcionalidade (inclui o ponto 2: aviso ao administrador de pedidos novos e aviso a quem pediu quando o estado muda).
+1. **Emails e notificações push — serviço ligado a 28/11 (primeira volta: 8 emails enviados).** Falta confirmar com o dono do site:
+   - que os emails chegaram (e não foram para o spam);
+   - ativar as notificações push num dispositivo e receber uma;
+   - um alerta de preço e um pedido novo com número (#1…), depois de publicadas as regras novas.
 
 ## Descontos por confirmar ou acrescentar
 
