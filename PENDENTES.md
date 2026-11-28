@@ -12,7 +12,7 @@ Lista do que ficou combinado para mais tarde.
    - publicar as regras novas (`firestore.rules`, campos `previsao` e `push`);
    - criar a palavra-passe de aplicação do Gmail;
    - guardar no GitHub os segredos `FIREBASE_SERVICE_ACCOUNT`, `GMAIL_USER` e `GMAIL_APP_PASSWORD`;
-   - testar um alerta, a previsão e um pedido de funcionalidade.
+   - testar um alerta, a previsão e um pedido de funcionalidade (inclui o ponto 2: aviso ao administrador de pedidos novos e aviso a quem pediu quando o estado muda).
 
 ## Descontos por confirmar ou acrescentar
 
